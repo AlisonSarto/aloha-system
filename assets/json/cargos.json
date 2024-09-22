@@ -1,0 +1,55 @@
+{
+  "cargos": {
+
+    "aloha-id": {
+      "title": "Aloha ID",
+      "func": [
+        "Gerenciar",
+        "Verificar"
+      ]
+    },
+    
+    "entrada": {
+      "title": "Entradas",
+      "func": [
+        "Visualizar",
+        "Adicionar"
+      ]
+    },
+
+    "saida": {
+      "title": "Saída",
+      "func": [
+        "Visualizar",
+        "Adicionar"
+      ]
+    },
+
+    "marcas": {
+      "title": "Marcas",
+      "func": [
+        "Visualizar",
+        "Entrada",
+        "Saida"
+      ]
+    },
+    
+    "sabores": {
+      "title": "Sabores",
+      "func": [
+        "Visualizar",
+        "Entrada",
+        "Saida"
+      ]
+    },
+    
+    "pacotes": {
+      "title": "Pacotes",
+      "func": [
+        "Visualizar",
+        "Mov"
+      ]
+    }
+
+  }
+}

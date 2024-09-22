@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/assets/imgs/favicon.ico" type="image/x-icon">
+  <title>Dev - Gelo System</title>
+  <link rel="stylesheet" href="/libs/bootstrap/bootstrap.css">
+</head>
+<body>
+  
+  <main class="container">
+
+    <br>
+
+    <a href="/">
+      <i class="fas fa-arrow-left me-2"></i>
+      Voltar para o site
+    </a>
+
+    <h1 class="py-4 d-flex align-items-center">
+      <i class="fas fa-code me-2"></i>
+      Dev
+    </h1>
+
+    <h5>
+      SIM! Essa página foi feita especialmente para você, desenvolvedor, que está trabalhando no Gelo System.
+    </h5>
+    <p>
+      Aqui você encontra algumas ferramentas que podem te ajudar no desenvolvimento do sistema, como por exemplo, a
+      documentação do banco de dados, a documentação do front-end e a possibilidade de criar/resetar o banco de dados.
+    </p>
+
+    <hr>
+
+    <div id="pages"></div>
+
+  </main>
+
+  <script src="/libs/bootstrap/bootstrap.js"></script>
+  <script src="/libs/font-aweresome/font-aweresome.js"></script>
+  <script src="/libs/jquery/jquery.js"></script>
+  <script>
+    $(document).ready(function(){
+      pages = [
+        {
+          type: 'titulo',
+          titulo: 'Bem-vindo(a) ao Gelo System!',
+        },
+        {
+          type: 'card',
+          titulo: 'Variáveis de ambiente',
+          descricao: 'Primeiro passo para começar a desenvolver no Gelo System é configurar as variáveis de ambiente.',
+          link: './pages/docs?wellcome/variaveis-de-ambiente',
+        },
+        {
+          type: 'card',
+          titulo: 'Configurações do banco de dados',
+          descricao: 'Configure em apenas um click o banco de dados!',
+          link: './pages/docs?wellcome/banco-de-dados',
+        },
+        {
+          type: 'card',
+          titulo: 'Entendedo a estrutura do projeto',
+          descricao: 'Aprenda a estrutura de pastas e arquivos e como funciona o sistema de rotas.',
+          link: './pages/docs?wellcome/estrutura-do-projeto',
+        },
+        {
+          type: 'card',
+          titulo: 'Criando uma nova página',
+          descricao: 'Aprenda desde adicionar ela na rota até criar o arquivo de visualização.',
+          link: './pages/docs?wellcome/criando-primeira-pagina',
+        },
+        {
+          type: 'titulo',
+          titulo: 'Ferramentas Banco de Dados',
+        },
+        {
+          type: 'card',
+          titulo: 'Status do banco de dados',
+          descricao: 'Verifique o status do banco de dados.',
+          link: './pages/status-db',
+        },
+        {
+          type: 'card',
+          titulo: 'Criar/Resetar banco de dados',
+          descricao: 'Crie ou resete o banco de dados com apenas um click!',
+          link: './pages/create-db',
+        },
+      ];
+
+      // percorre o array de páginas
+      pages.forEach(function(page){
+
+        if (page.type === 'titulo') {
+
+          titulo = $(`
+            <h2 class="mb-3">${page.titulo}</h2>
+          `);
+          row = $('<div class="row"></div>');
+          $('#pages').append(titulo);
+          $('#pages').append(row);
+          
+        }else if (page.type === 'card') {
+          card = $(`
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h5 class="card-title">${page.titulo}</h5>
+                  <p class="card-text">${page.descricao}</p>
+                  <a href="${page.link}" class="btn btn-primary">Acessar</a>
+                </div>
+              </div>
+            </div>
+          `);
+          $('.row').last().append(card);
+        }
+
+      });      
+
+    });
+  </script>
+</body>
+</html>

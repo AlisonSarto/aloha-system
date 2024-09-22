@@ -1,0 +1,42 @@
+.keyboard {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f2f2f2;
+  padding: 10px;
+  z-index: 10;
+}
+
+.button {
+  display: inline-block;
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+#delete {
+  background-color: #ff9999;
+}
+
+#enter {
+  background-color: #99ff99;
+}
+
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.keyboard .button,
+.keyboard .button#delete,
+.keyboard .button#enter {
+  width: calc(9% - 4px);
+  margin: 2px;
+}
+
+.virtual-keyboard {
+  padding: 10px;
+  box-sizing: border-box;
+}
