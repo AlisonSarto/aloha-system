@@ -1,8 +1,8 @@
-# [Gelo System](https://www.alohasystem.com.br/)
+# [Aloha System](https://www.alohasystem.com.br/)
 
 ## Instalar e rodar o sistema
 
-Rodar o Gelo System em sua máquina local é uma tarefa extremamente simples.
+Rodar o Aloha System em sua máquina local é uma tarefa extremamente simples.
 
 ### Dependências globais
 
