@@ -55,6 +55,7 @@
     }
 
     $producao[$dia] += $db['qtd'];
+    $producao_total += $db['qtd'];
   }
 
   //? Meta da semana
@@ -69,6 +70,7 @@
   send([
     'status' => 200,
     'meta' => $meta,
+    'producao_total' => $producao_total,
     'producao' => $producao
   ]);
 
