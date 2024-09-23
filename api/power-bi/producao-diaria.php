@@ -21,7 +21,6 @@
   //? Verifica o Turno
   $turno = verificarTurno();
   $turno_id = $turno['turno_id'];
-  $turno_id = 1;
 
   $sql = "SELECT * FROM turnos WHERE id = $turno_id";
   $res = $conn->query($sql);
