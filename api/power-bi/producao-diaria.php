@@ -45,7 +45,6 @@
   $res = $conn->query($sql);
   
   $producao = [];
-  $ptroducao_total = 0;
   while ($db = $res->fetch_assoc()) {
     $dia = new DateTime($db['dia']);
     $dia = $dia->format('Y-m-d');
@@ -55,7 +54,6 @@
     }
 
     $producao[$dia] += $db['qtd'];
-    $producao_total += $db['qtd'];
   }
 
   //? Meta da semana
