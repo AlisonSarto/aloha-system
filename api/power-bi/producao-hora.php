@@ -108,7 +108,7 @@
         'atual'=> $producao[$n] ?? 0,
         'estimativa' => 0
       ];
-    }elseif ($n <= $hora_ultima_entrada) {
+    }elseif ($n <= date('H')) {
       $data[] = [
         'hora' => $n.':00',
         'producao' => $producao[$n] ?? 0,
