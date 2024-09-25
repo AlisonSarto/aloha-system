@@ -49,24 +49,23 @@
     $dia = $dia->format('Y-m-d');
     
     if (!isset($producao[$dia])) {
-      $producao[$dia] = [
-        'dia' => $dia,
-        'qtd' => 0
-      ];
+      $producao[$dia] = 0;
     }
 
-    $producao[$dia]['qtd'] += $db['qtd'];
+    $producao[$dia] += $db['qtd'];
   }
 
-  //? Meta da semana
-  $sql = "SELECT * FROM modos WHERE ativo = 'true'";
-  $res = $conn->query($sql);
-  $db = $res->fetch_assoc();
+  $data = [];
+  foreach ($producao as $key => $value) {
+    $data[] = [
+      'dia' => $key,
+      'producao' => $value
+    ];
+  }
 
-  $meta = $db['meta'];
-  $meta = $meta * $horas;
-  $meta = $meta * 6;
-
-  send($producao);
+  send([
+    'status' => 200,
+    'producao' => $data
+  ]);
 
 ?>
