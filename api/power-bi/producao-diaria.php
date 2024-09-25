@@ -49,10 +49,13 @@
     $dia = $dia->format('Y-m-d');
     
     if (!isset($producao[$dia])) {
-      $producao[$dia] = 0;
+      $producao[$dia] = [
+        'dia' => $dia,
+        'qtd' => 0
+      ];
     }
 
-    $producao[$dia] += $db['qtd'];
+    $producao[$dia]['qtd'] += $db['qtd'];
   }
 
   //? Meta da semana
