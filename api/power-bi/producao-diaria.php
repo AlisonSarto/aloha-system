@@ -64,9 +64,6 @@
   $meta = $meta * $horas;
   $meta = $meta * 6;
 
-  send([
-    'status' => 200,
-    'producao' => $producao
-  ]);
+  send($producao);
 
 ?>
