@@ -66,7 +66,6 @@
 
   send([
     'status' => 200,
-    'meta' => $meta,
     'producao' => $producao
   ]);
 
