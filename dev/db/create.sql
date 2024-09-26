@@ -16,23 +16,6 @@ CREATE TABLE usuarios (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE rostos (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `biopass_id` VARCHAR(45) NOT NULL,
-  `nome` VARCHAR(45) NOT NULL,
-  `img` LONGBLOB NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
-CREATE TABLE pontos (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `rosto_id` INT NOT NULL,
-  `rosto_nome` VARCHAR(45) NOT NULL,
-  `tipo` VARCHAR(45) NOT NULL,
-  `dia` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
 CREATE TABLE sabores (
   `id` INT NOT NULL AUTO_INCREMENT,
   `sabor` VARCHAR(45) NOT NULL,
@@ -132,11 +115,12 @@ CREATE TABLE saidas (
 
 CREATE TABLE funcionarios (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `rosto_id` VARCHAR(45) NOT NULL,
+  `nome` VARCHAR(45) NOT NULL,
   `turno_id` INT NOT NULL,
   `pontuacao` INT NOT NULL DEFAULT '0',
   `gerente` VARCHAR(45) NOT NULL DEFAULT 'false',
   `usuario_id` INT NOT NULL DEFAULT '0',
+  `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`)
 );
 

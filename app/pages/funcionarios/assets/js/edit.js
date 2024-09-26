@@ -16,8 +16,8 @@ $(document).on('click', '.edit-funcionario', function () {
     <div class="row">
 
       <div class="col-12">
-        <label class="form-label">Rosto</label>
-        <input type="text" id="rosto" class="form-control" disabled>
+        <label class="form-label">Nome</label>
+        <input type="text" id="nome" class="form-control" disabled>
       </div>
       
       <div class="col-12">
@@ -63,7 +63,7 @@ $(document).on('click', '.edit-funcionario', function () {
     success: function (data) {
       funcionario = data.funcionarios;
 
-      $('#rosto').val(funcionario.rosto);
+      $('#nome').val(funcionario.nome);
       $('#turno').val(funcionario.turno_id);
       $('#pontuacao').val(funcionario.pontuacao);
 

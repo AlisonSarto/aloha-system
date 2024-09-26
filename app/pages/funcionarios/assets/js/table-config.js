@@ -12,6 +12,7 @@ function newTable() {
   tableContent = `
     <thead>
       <tr>
+        <th>Trabalhando</th>
         <th>Nome</th>
         <th>Turno</th>
         <th>Pontos</th>
@@ -29,13 +30,29 @@ function newTable() {
 
       //? Passa por cada item do array e adiciona na tabela
       funcionarios.forEach(db => {
+        if (db.ativo == 'true') {
+          db.ativo = [
+            'table-success',
+            'checked'
+          ];
+        }else {
+          db.ativo = [
+            'table-secondary',
+            ''
+          ];
+        }
         tableContent += `
-          <tr>
-            <td>${db.rosto}</td>
+          <tr class="${db.ativo[0]}">
+            <td>
+              <div class="form-check form-switch ativo" data-id="${db.id}">
+                <input class="form-check-input" type="checkbox" role="switch" ${db.ativo[1]}>
+              </div>
+            </td>
+            <td>${db.nome}</td>
             <td>${db.turno}</td>
             <td>${db.pontuacao}</td>
             <td>
-              <div class="d-flex flex-nowrap" data-id="${db.id}" data-name="${db.rosto}">
+              <div class="d-flex flex-nowrap" data-id="${db.id}" data-name="${db.nome}">
                 <button class="btn btn-sm btn-success mov-funcionario"><i class="fas fa-arrow-right-arrow-left"></i></button>
                 <button class="btn btn-sm btn-warning mx-2 edit-funcionario"><i class="fas fa-pen-to-square"></i></button>
                 <button class="btn btn-sm btn-danger delete-funcionario"><i class="fas fa-trash"></i></button>

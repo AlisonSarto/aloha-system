@@ -15,17 +15,17 @@
   
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $rosto_id = $_POST['rosto'] ?? null;
+    $nome = $_POST['nome'] ?? null;
     $turno_id = $_POST['turno'] ?? null;
 
-    if ($rosto_id && $turno_id) {
+    if ($nome && $turno_id) {
 
       //* Previne o SQL Injection
-      $rosto_id = $conn->real_escape_string($rosto_id);
+      $nome = $conn->real_escape_string($nome);
       $turno_id = $conn->real_escape_string($turno_id);
 
       //? Verifica se já existe um funcionário
-      $sql = "SELECT * FROM funcionarios WHERE rosto_id = '$rosto_id'";
+      $sql = "SELECT * FROM funcionarios WHERE nome = '$nome'";
       $res = $conn->query($sql);
 
       if ($res === false) {
@@ -42,7 +42,7 @@
       }
 
       //? Cria o funcionário
-      $sql = "INSERT INTO funcionarios (rosto_id, turno_id) VALUES ('$rosto_id', $turno_id)";
+      $sql = "INSERT INTO funcionarios (nome, turno_id) VALUES ('$nome', $turno_id)";
       $res = $conn->query($sql);
 
       if ($res === false) {

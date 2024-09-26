@@ -17,14 +17,14 @@
 
     if (isset($_GET['id'])) {
 
-      //? Puxa um usuario específico
+      //? Puxa um funcionario específico
       $id = $_GET['id'];
       $id = mysqli_real_escape_string($conn, $id);
-      $sql = "SELECT * FROM funcionarios WHERE id = $id";
+      $sql = "SELECT * FROM funcionarios WHERE id = $id ORDER BY ativo DESC, turno_id ASC";
     } else {
       
-      //? Puxa todos os usuários
-      $sql = "SELECT * FROM funcionarios WHERE gerente = 'false'";
+      //? Puxa todos os funcionarios
+      $sql = "SELECT * FROM funcionarios WHERE gerente = 'false' ORDER BY ativo DESC, turno_id ASC";
     }
 
     $res = $conn->query($sql);
@@ -32,7 +32,7 @@
     if ($res === false) {
       send([
         'status' => 500,
-        'message' => 'Erro ao consultar usuários',
+        'message' => 'Erro ao consultar funcionarios',
         'error' => $conn->error
       ]);
     }
@@ -51,16 +51,8 @@
       $turnos[$db['id']] = $db['nome'];
     }
 
-    $sqlRostos = "SELECT * FROM rostos";
-    $resRostos = $conn->query($sqlRostos);
-    $rostos = [];
-    while ($db = $resRostos->fetch_assoc()) {
-      $rostos[$db['id']] = $db['nome'];
-    }
-
     while ($db = $res->fetch_assoc()) {
       $db['turno'] = $turnos[$db['turno_id']];
-      $db['rosto'] = $rostos[$db['rosto_id']];
       if (isset($_GET['id'])) {
         $data = $db;
       } else {

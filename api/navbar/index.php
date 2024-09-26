@@ -36,39 +36,6 @@
         [ 'type' => 'link', 'title' => 'Dashboard', 'icon' => 'tachometer-alt', 'path' => 'dashboard' ],
       2);
     }
-
-    //? Aloha ID
-    $acess['aloha-id'] = $acess['aloha-id'] ?? null;
-    if (isset($acess['aloha-id']) || $admin) {
-
-      $acess['aloha-id'] = $acess['aloha-id'] ?? [];
-
-      $collapse = [ 'type' => 'collapse', 'title' => 'Aloha ID', 'icon' => 'face-smile far', 'pages' => []];
-      
-      // Gerenciar
-      if (in_array('gerenciar', $acess['aloha-id']) || $admin) {
-
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Rostos', 'icon' => 'face-smile far', 'path' => 'rostos' ]
-        );
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Pontos', 'icon' => 'circle-dot far', 'path' => 'pontos' ]
-        );
-
-      }
-      
-      // Verificar
-      if (in_array('verificar', $acess['aloha-id']) || $admin) {
-
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Marcar Ponto', 'icon' => 'id-badge far', 'path' => 'marcar-ponto' ]
-        );
-
-      }
-
-      array_push($navbar, $collapse);
-      
-    }
     
     //? Lançar
     if (isset($acess['entrada']) || isset($acess['saida']) || $admin) {
@@ -119,13 +86,6 @@
     if (isset($acess['bonificacao']) || $admin) {
 
       $collapse = [ 'type' => 'collapse', 'title' => 'Bonificação', 'icon' => 'gift', 'pages' => []];
-      
-      //* Funcionários
-      if (isset($acess['funcionarios']) || $admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Funcionários', 'icon' => 'users', 'path' => 'funcionarios' ],
-        );
-      }
 
       //* Pontuação
       if (isset($acess['pontuacao']) || $admin) {
@@ -168,6 +128,13 @@
         array_push($collapse['pages'],
           [ 'type' => 'link', 'title' => 'Controle', 'icon' => 'flag-checkered', 'path' => 'controle' ],
         );
+
+        // Funcionários
+        if (isset($acess['funcionarios']) || $admin) {
+          array_push($collapse['pages'],
+            [ 'type' => 'link', 'title' => 'Funcionários', 'icon' => 'users', 'path' => 'funcionarios' ],
+          );
+        }
 
         // Entradas
         array_push($collapse['pages'],
