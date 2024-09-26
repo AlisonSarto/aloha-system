@@ -55,47 +55,9 @@
     ];
   }
 
-  function getPoints() {
-    global $conn;
-    $points = [];
-
-    $sql = "SELECT * FROM rostos";
-    $res = $conn->query($sql);
-    while ($db = $res->fetch_assoc()) {
-      $face_id = $db['id'];
-      $face_nome = $db['nome'];
-
-      $sql = "SELECT * FROM pontos WHERE rosto_id = '$face_id' ORDER BY dia DESC LIMIT 1";
-      $res2 = $conn->query($sql);
-      
-      if ($res2->num_rows > 0) {
-        $base = $res2->fetch_assoc();
-        
-        $stade = $base['tipo'] == 'entrada' ? 'true' : 'false';
-        $dia = date('d/m  H:i', strtotime($base['dia']));
-  
-        $points[] = [
-          'stade' => $stade,
-          'nome' => $face_nome,
-          'dia' => $dia,
-        ];
-      }
-    }
-    usort($points, function($a, $b) {
-      if ($a['stade'] === $b['stade']) {
-        return 0;
-      }
-      return ($a['stade'] > $b['stade']) ? -1 : 1;
-    });
-
-    return $points;
-  }
-
   $fabri = getFabri();
   $producao = $fabri['producao'];
   $camp_turno = $fabri['camp'];
-
-  $points = getPoints();
 
 ?>
 <!DOCTYPE html>
@@ -214,17 +176,18 @@
           <div class="card-body">
             <table class="table table-sm">
               <?php
-                foreach ($points as $point) {
-                  $color = $point['stade'] == 'true' ? '#20EE42' : '#949494';
-                  $nome = $point['nome'];
-                  $dia = $point['dia'];
+                $sql = "SELECT * FROM funcionarios WHERE gerente = 'false' ORDER BY ativo DESC, turno_id ASC";
+                $res = $conn->query($sql);
+                
+                while ($db = $res->fetch_assoc()) {
+                  $color = $db['ativo'] === 'true' ? '#20EE42' : '#949494';
+                  $nome = $db['nome'];
                   ?>
                     <tr>
                       <th>
                         <i class="fa-solid fa-circle fa-sm" style="color: <?= $color ?>"></i>
                       </th>
                       <th><?= $nome ?></th>
-                      <th><?= $dia ?></th>
                     </tr>
                   <?php
                 }

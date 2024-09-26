@@ -4,11 +4,11 @@ $(document).on('click', '.mov-funcionario', function () {
   btn.html('<i class="fas fa-spinner fa-spin"></i>');
   btn.attr('disabled', true);
   id = $(this).parent().data('id');
-  sabor = $(this).parent().data('name');
+  nome = $(this).parent().data('name');
 
   const modal = $('#modal');
   modal.find('.modal-dialog').addClass('modal-lg');
-  modal.find('.modal-title').text(`Movimentação ${sabor}`);
+  modal.find('.modal-title').text(`Movimentação ${nome}`);
   modal.find('.modal-footer').html(`
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
   `);

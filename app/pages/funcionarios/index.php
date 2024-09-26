@@ -74,9 +74,9 @@
   <!-- Controls -->
   <script src="./assets/js/table-config.js"></script>
   <script src="./assets/js/add.js"></script>
-  <script src="./assets/js/view.js"></script>
   <script src="./assets/js/edit.js"></script>
   <script src="./assets/js/delete.js"></script>
   <script src="./assets/js/mov.js"></script>
+  <script src="./assets/js/switch.js"></script>
 </body>
 </html>

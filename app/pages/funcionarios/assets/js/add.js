@@ -15,10 +15,8 @@ $(document).on('click', '#add-funcionario', function() {
     <div class="row">
 
       <div class="col-12">
-        <label class="form-label">Rosto</label>
-        <select id="rosto" class="form-select">
-          <option selected disabled>Selecione...</option>
-        </select>
+        <label class="form-label">Nome</label>
+        <input type="text" class="form-control" id="nome" placeholder="Nome do funcionário">
       </div>
       
       <div class="col-12">
@@ -48,26 +46,10 @@ $(document).on('click', '#add-funcionario', function() {
 
   });
 
-  //? Carregar rostos no select
-  $.getJSON('/api/rostos/view', function(data) {
-
-    var rostos = data.rostos;
-    $.each(rostos, function(i, item) {
-      $('#rosto').append(`
-        <option value="${item.id}">${item.nome}</option>
-      `);
-    });
-
-    modal.modal('show');
-    btn.html('<i class="fas fa-plus"></i> Adicionar');
-    btn.attr('disabled', false);
-
-  });
-
   //* Salvar
   $('#salvar').click(function() {
 
-    var rosto = $('#rosto').val();
+    var nome = $('#nome').val();
     var turno = $('#turno').val();
 
     if (turno == null || turno == undefined) {
@@ -75,13 +57,13 @@ $(document).on('click', '#add-funcionario', function() {
       return;
     }
 
-    if (rosto == null || rosto == undefined) {
+    if (nome == null || nome == undefined) {
       toast('Preencha todos os campos', 'danger');
       return;
     }
 
     dados = {
-      rosto: rosto,
+      nome: nome,
       turno: turno,
     };
 
