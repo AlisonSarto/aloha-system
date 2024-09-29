@@ -74,14 +74,6 @@ CREATE TABLE mov (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE logs (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `mensagem` json NOT NULL,
-  `arquivo` VARCHAR(200) NOT NULL,
-  `dia` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
 CREATE TABLE turnos (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
@@ -99,8 +91,6 @@ CREATE TABLE entradas (
   `turno_id` VARCHAR(45) NOT NULL,
   `turno` VARCHAR(45) NOT NULL,
   `turno_dia` VARCHAR(45) NOT NULL,
-  `modo_id` INT NOT NULL DEFAULT 0,
-  `modo` VARCHAR(45) NOT NULL,
   `dia` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`)
 ); 
@@ -118,8 +108,6 @@ CREATE TABLE funcionarios (
   `nome` VARCHAR(45) NOT NULL,
   `turno_id` INT NOT NULL,
   `pontuacao` INT NOT NULL DEFAULT '0',
-  `gerente` VARCHAR(45) NOT NULL DEFAULT 'false',
-  `usuario_id` INT NOT NULL DEFAULT '0',
   `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`)
 );
@@ -150,66 +138,11 @@ CREATE TABLE situacoes (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE modos (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(45) NOT NULL,
-  `descricao` VARCHAR(225) NOT NULL,
-  `minimo` INT NOT NULL,
-  `meta` INT NOT NULL,
-  `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
-  PRIMARY KEY (`id`)
-);
-
-CREATE TABLE controle_fabricacao (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `situacao` VARCHAR(45) NOT NULL,
-  `turno_id` INT NOT NULL,
-  `dia` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
-CREATE TABLE automacoes (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `ativo` VARCHAR(45) NOT NULL,
-  `nome` VARCHAR(45) NOT NULL,
-  `descricao` VARCHAR(225) NOT NULL,
-  `pontuacao` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
 CREATE TABLE vendas_gc (
   `codigo` INT NOT NULL,
   PRIMARY KEY (`codigo`)
 );
 
-CREATE TABLE proxima_bonificacao (
-  `dia` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`dia`)
-);
-
-CREATE TABLE tarefas (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
-  `nome` VARCHAR(45) NOT NULL,
-  `descricao` VARCHAR(225) NOT NULL,
-  `intervalo` INT NOT NULL,
-  `prazo` INT NOT NULL,
-  `pontuacao` INT NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
-CREATE TABLE controle_tarefas (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `tarefa_id` INT NOT NULL,
-  `prazo` VARCHAR(45) NOT NULL,
-  `prox_intervalo` VARCHAR(45) NOT NULL,
-  `status` VARCHAR(45) NOT NULL DEFAULT 'Em andamento',
-  `notificacao_status` INT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
-);
-
 -- ? Inserção de dados
 INSERT INTO cargos (id, cargo, acess) VALUES (1, 'Admin', '{"nome":"Admin"}');
 INSERT INTO usuarios (nome, email, senha, cargo_id, cargo) VALUES ('Admin', 'admin@aloha.com', '123', 1, '{"nome":"Admin"}');
-INSERT INTO automacoes (id, ativo, nome, descricao, pontuacao) VALUES (1, 'false', 'Bater meta de produção', 'Caso uma equipe bata a meta estabelacida pela meta do modo', '0');
-INSERT INTO proxima_bonificacao (dia) VALUES ('2020-01-01 00:00:00');

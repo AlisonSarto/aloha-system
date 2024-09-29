@@ -2,14 +2,6 @@
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
   acessApi('funcionarios', 'visualizar');
-
-	function send($message) {
-    logs($message, __FILE__);
-		header('Content-Type: application/json;');
-		http_response_code($message['status'] ?? 200);
-    echo json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit;
-	}
   
 	if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
@@ -24,7 +16,7 @@
     } else {
       
       //? Puxa todos os funcionarios
-      $sql = "SELECT * FROM funcionarios WHERE gerente = 'false' ORDER BY ativo DESC, turno_id ASC";
+      $sql = "SELECT * FROM funcionarios ORDER BY ativo DESC, turno_id ASC";
     }
 
     $res = $conn->query($sql);

@@ -3,7 +3,7 @@ $(document).on('click', '.view-situacao', function() {
   id = $(this).parent().data('id');
 
   const modal = $('#modal');
-  modal.find('.modal-title').text('Visualizar Modo de Produção');
+  modal.find('.modal-title').text('Visualizar Situação');
   modal.find('.modal-footer').html(`
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
   `);

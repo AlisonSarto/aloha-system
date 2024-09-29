@@ -15,7 +15,6 @@ function newTable() {
         <th>Qtd</th>
         <th>Pacote</th>
         <th>Turno</th>
-        <th>Modo</th>
         <th>Dia</th>
       </tr>
     </thead>
@@ -56,7 +55,6 @@ function newTable() {
             <td>${db.qtd}</td>
             <td>${db.pacote}</td>
             <td>${db.turno}</td>
-            <td>${db.modo}</td>
             <td>${db.dia}</td>
           </tr>
         `;

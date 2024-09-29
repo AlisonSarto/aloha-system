@@ -197,7 +197,7 @@ $(document).on('click', '#add-advertencia', function() {
         message = data.message;
         modal.modal('hide');
         toast(message, 'success');
-        //! newTable();
+        newTable();
       },
       error: function(error) {
         console.log(error);

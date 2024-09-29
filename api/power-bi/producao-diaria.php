@@ -4,13 +4,6 @@
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/verificar-turno.php';
   acessApi('dashboard', 'visualizar');
 
-  function send($message) {
-		header('Content-Type: application/json;');
-		http_response_code($message['status'] ?? 200);
-    echo json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit;
-	}
-
   if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     send([
       'status' => 405,

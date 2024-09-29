@@ -4,16 +4,7 @@
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/verificar-turno.php';
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/bonificacao_automatica.php';
   acessApi('entrada', 'adicionar');
-
-	function send($message) {
-    logs($message, __FILE__);
-		header('Content-Type: application/json;');
-		http_response_code($message['status'] ?? 200);
-    echo json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit;
-	}
   
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -21,27 +12,6 @@
     $sabor_id = $_POST['sabor'] ?? null;
     $qtd = $_POST['qtd'] ?? null;
     $dia = $_POST['dia'] ?? date('Y-m-d H:i:s');
-
-    //* Verifica se fabricação está ativa
-    $sql = "SELECT * FROM controle_fabricacao ORDER BY dia DESC LIMIT 1";
-    $res = $conn->query($sql);
-
-    if ($res === false) {
-      send([
-        'status' => 500,
-        'message' => 'Erro ao buscar a fabricação',
-        'error' => $conn->error
-      ]);
-    }elseif ($res->num_rows > 0) {
-      $db = $res->fetch_assoc();
-      $situacao_controle = $db['situacao'];
-      if ($situacao_controle != 'inicio' && $situacao_controle != 'retorno') {
-        send([
-          'status' => 400,
-          'message' => 'Fabricação não está ativa, ative a fabricação para lançar entradas'
-        ]);
-      }
-    }
 
     if ($marca_id && $sabor_id && $qtd) {
 
@@ -237,26 +207,8 @@
       }
 
       //? Cria a entrada
-      $sql = "SELECT * FROM modos WHERE ativo = 'true'";
-      $res = $conn->query($sql);
-
-      if ($res === false) {
-        send([
-          'status' => 500,
-          'message' => 'Erro ao buscar o modo',
-          'error' => $conn->error
-        ]);
-      }elseif ($res->num_rows === 0) {
-        $modo_id = 0;
-        $modo = '';
-      }else {
-        $db = $res->fetch_assoc();
-        $modo_id = $db['id'];
-        $modo = $db['nome'];
-      }
-
-      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, modo_id, modo, qtd, dia)
-              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', $modo_id, '$modo', '$qtd', '$dia')";
+      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, dia)
+              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', '$dia')";
       $res = $conn->query($sql);
 
       if ($res === false) {
@@ -320,9 +272,6 @@
           'error' => $conn->error
         ]);
       }
-
-      //? Bonificação 
-      bonificacao_automatica();
 
       send([
         'status' => 200,
