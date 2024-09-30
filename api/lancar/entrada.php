@@ -206,9 +206,32 @@
         ]);
       }
 
+      //* Cria a entrada
+      //? Puxa a meta atual
+      $sql = "SELECT SUM(meta) as meta FROM maquinas WHERE ativo = 'true'";
+      $res = $conn->query($sql);
+
+      if ($res === false) {
+        send([
+          'status' => 500,
+          'message' => 'Erro ao buscar a meta',
+          'error' => $conn->error
+        ]);
+      }
+
+      $db = $res->fetch_assoc();
+      $meta = (int) $db['meta'];
+
+      if ($meta === null || $meta === 0) {
+        send([
+          'status' => 404,
+          'message' => 'Pelo menos uma máquina deve estar ativa'
+        ]);
+      }
+
       //? Cria a entrada
-      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, dia)
-              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', '$dia')";
+      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, meta, dia)
+              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', $meta, '$dia')";
       $res = $conn->query($sql);
 
       if ($res === false) {

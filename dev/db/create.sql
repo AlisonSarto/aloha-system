@@ -91,6 +91,7 @@ CREATE TABLE entradas (
   `turno_id` VARCHAR(45) NOT NULL,
   `turno` VARCHAR(45) NOT NULL,
   `turno_dia` VARCHAR(45) NOT NULL,
+  `meta` INT NOT NULL DEFAULT 0,
   `dia` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`)
 ); 
