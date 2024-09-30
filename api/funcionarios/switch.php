@@ -4,14 +4,6 @@
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
   acessApi('funcionarios', 'alterar');
-
-	function send($message) {
-    logs($message, __FILE__);
-		header('Content-Type: application/json;');
-		http_response_code($message['status'] ?? 200);
-    echo json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit;
-	}
   
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -49,6 +41,37 @@
       send([
         'status' => 500,
         'message' => 'Erro ao alterar o funcionário',
+        'error' => $conn->error
+      ]);
+    }
+
+    //* Altera as situações das máquinas
+    //? Verifica quantos funcionários ativos tem
+    $sql = "SELECT * FROM funcionarios WHERE ativo = 'true'";
+    $res = $conn->query($sql);
+    
+    $qtd_funcionarios = $res->num_rows;
+
+    //? Ativa as máquinas
+    $sql = "UPDATE maquinas SET ativo = 'true' WHERE qtd_funcionarios <= $qtd_funcionarios";
+    $res = $conn->query($sql);
+
+    if ($res === false) {
+      send([
+        'status' => 500,
+        'message' => 'Erro ao ativar as máquinas',
+        'error' => $conn->error
+      ]);
+    }
+
+    //? Desativa as máquinas
+    $sql = "UPDATE maquinas SET ativo = 'false' WHERE qtd_funcionarios > $qtd_funcionarios";
+    $res = $conn->query($sql);
+
+    if ($res === false) {
+      send([
+        'status' => 500,
+        'message' => 'Erro ao desativar as máquinas',
         'error' => $conn->error
       ]);
     }

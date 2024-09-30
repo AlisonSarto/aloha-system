@@ -176,7 +176,7 @@
           <div class="card-body">
             <table class="table table-sm">
               <?php
-                $sql = "SELECT * FROM funcionarios WHERE gerente = 'false' ORDER BY ativo DESC, turno_id ASC";
+                $sql = "SELECT * FROM funcionarios ORDER BY ativo DESC, turno_id ASC";
                 $res = $conn->query($sql);
                 
                 while ($db = $res->fetch_assoc()) {

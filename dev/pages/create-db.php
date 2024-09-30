@@ -3,13 +3,6 @@
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
 
   if (isset($_POST['reset']) && $_POST['reset'] == true) {
-
-    function send($message) {
-      header('Content-Type: application/json;');
-      http_response_code($message['status'] ?? 200);
-      echo json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-      exit;
-    }
     
     $sql = "SHOW TABLES";
     $res = $conn->query($sql);

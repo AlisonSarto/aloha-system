@@ -11,7 +11,7 @@
 
   $conn = new mysqli($dbHost,$dbUsername,$dbPassword,$dbName);
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/logs.php';
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/send.php';
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/curl.php';
 
 ?>

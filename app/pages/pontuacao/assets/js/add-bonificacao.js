@@ -122,7 +122,7 @@ $(document).on('click', '#add-bonificacao', function() {
         message = data.message;
         modal.modal('hide');
         toast(message, 'success');
-        //! newTable();
+        newTable();
       },
       error: function(error) {
         console.log(error);

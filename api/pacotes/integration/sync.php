@@ -3,13 +3,6 @@
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
   acessApi('pacotes', 'visualizar');
 
-	function send($message) {
-		header('Content-Type: application/json;');
-		http_response_code($message['status'] ?? 200);
-    echo json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit;
-	}
-
   $token = env('G-CLICK_TOKEN');
   $secret = env('G-CLICK_SECRET');
   $loja_id = (int) env('G-CLICK_LOJA_ID_FABRICA');

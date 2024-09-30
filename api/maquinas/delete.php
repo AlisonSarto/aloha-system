@@ -1,9 +1,9 @@
 <?php
 
-  //? Delete um turno
+  //? Delete uma maquina
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('turnos', 'deletar');
+  acessApi('maquinas', 'deletar');
   
 	if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
@@ -12,33 +12,21 @@
       $id = $_GET['id'];
       $id = mysqli_real_escape_string($conn, $id);
 
-      //? Deleta o turno
-      $sql = "DELETE FROM turnos WHERE id = '$id'";
+      //? Deleta a máquina
+      $sql = "DELETE FROM maquinas WHERE id = '$id'";
       $res = $conn->query($sql);
 
       if ($res === false) {
         send([
           'status' => 500,
-          'message' => 'Erro ao apagar o turno',
-          'error' => $conn->error
-        ]);  
-      }
-
-      //? Deleta os funcionarios vinculados
-      $sql = "DELETE FROM funcionarios WHERE turno_id = '$id'";
-      $res = $conn->query($sql);
-
-      if ($res === false) {
-        send([
-          'status' => 500,
-          'message' => 'Erro ao apagar os funcionarios',
+          'message' => 'Erro ao apagar a máquina',
           'error' => $conn->error
         ]);  
       }
 
       send([
         'status' => 200,
-        'message' => 'Turno deletado com sucesso'
+        'message' => 'Máquina deletada com sucesso'
       ]);
 
     }else {

@@ -2,14 +2,6 @@
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
   acessApi('mov', 'visualizar');
-
-	function send($message) {
-    logs($message, __FILE__);
-		header('Content-Type: application/json;');
-		http_response_code($message['status'] ?? 200);
-    echo json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit;
-	}
   
 	if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 		send([
@@ -93,19 +85,12 @@
   while ($db = $res->fetch_assoc()) {
 
     $db['dia'] = date('d/m/Y H:i:s', strtotime($db['dia']));
-
-    if ($db['modo_id'] == 0) {
-      $db['modo'] = 'Sem modo registrado';
-    }else {
-      $db['modo'] = 'Modo ' . $db['modo'];
-    }
     
     $entradas[] = [
       'qtd' => $db['qtd'],
       'pacote' => $pacotes[$db['pacote_id']]['nome'],
       'cor' => $pacotes[$db['pacote_id']]['cor'],
       'turno' => $db['turno'],
-      'modo' => $db['modo'],
       'dia' => $db['dia']
     ];
   }

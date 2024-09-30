@@ -4,14 +4,6 @@
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
   acessApi('usuarios', 'deletar');
-
-	function send($message) {
-    logs($message, __FILE__);
-		header('Content-Type: application/json;');
-		http_response_code($message['status'] ?? 200);
-    echo json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit;
-	}
   
 	if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
@@ -19,6 +11,28 @@
 
       $id = $_GET['id'];
       $id = mysqli_real_escape_string($conn, $id);
+
+      //? Verifica se o funcionarios está ativo
+      $sql = "SELECT * FROM funcionarios WHERE id = '$id'";
+      $res = $conn->query($sql);
+
+      if ($res === false) {
+        send([
+          'status' => 500,
+          'message' => 'Erro ao puxar o funcionário',
+          'error' => $conn->error
+        ]);
+      }
+
+      $db = $res->fetch_assoc();
+      $ativo = $db['ativo'];
+
+      if ($ativo === 'true') {
+        send([
+          'status' => 400,
+          'message' => 'Não é possível deletar um funcionário ativo, desative-o primeiro'
+        ]);
+      }
 
       //? Deleta o funcionário
       $sql = "DELETE FROM funcionarios WHERE id = '$id'";

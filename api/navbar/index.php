@@ -4,14 +4,6 @@
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
 
-	function send($message) {
-    logs($message, __FILE__);
-		header('Content-Type: application/json;');
-		http_response_code($message['status'] ?? 200);
-    echo json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit;
-	}
-
   if (env('ALOHA_ACESS') === 'false') {
     $_SESSION['cargo']['nome'] = 'Admin';
   }
@@ -30,7 +22,7 @@
     $acess = $_SESSION['cargo']['acess'] ?? [];
     $admin = $cargo['nome'] == 'Admin' ? true : false;
 
-    //? Dash
+    //? Dashboard
     if ($admin === true) {
       array_push($navbar,
         [ 'type' => 'link', 'title' => 'Dashboard', 'icon' => 'tachometer-alt', 'path' => 'dashboard' ],
@@ -52,40 +44,11 @@
       array_push($navbar, $collapse);
 
     }
-
-    //? Tarefas
-    if (isset($acess['tarefas']) || $admin) {
-        
-      $collapse = [ 'type' => 'collapse', 'title' => 'Tarefas', 'icon' => 'clipboard', 'pages' => []];
-      
-      // Tarefas
-      if (isset($acess['tarefas']) || $admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Tarefas', 'icon' => 'list-check', 'path' => 'tarefas' ],
-        );
-      }
-
-      // Gerentes
-      if (isset($acess['gerentes']) || $admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Gerentes', 'icon' => 'user-tie', 'path' => 'gerentes' ],
-        );
-      }
-
-      // Configurações
-      if (isset($acess['tarefas']) || $admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Configurações', 'icon' => 'gear', 'path' => 'config-tarefas' ],
-        );
-      }
-
-      array_push($navbar, $collapse);
-    }
     
-    //? Bonificação
-    if (isset($acess['bonificacao']) || $admin) {
+    //? Pontuações
+    if (isset($acess['pontuacoes']) || $admin) {
 
-      $collapse = [ 'type' => 'collapse', 'title' => 'Bonificação', 'icon' => 'gift', 'pages' => []];
+      $collapse = [ 'type' => 'collapse', 'title' => 'Pontuações', 'icon' => 'gift', 'pages' => []];
 
       //* Pontuação
       if (isset($acess['pontuacao']) || $admin) {
@@ -107,13 +70,6 @@
           [ 'type' => 'link', 'title' => 'Grupos Situações', 'icon' => 'notes-medical', 'path' => 'grupos-situacoes' ],
         );
       }
-      
-      //* Configurações
-      if ($admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Configurações', 'icon' => 'cog', 'path' => 'config-bonificacao' ],
-        );
-      }
 
       array_push($navbar, $collapse);
 
@@ -122,26 +78,28 @@
     //? Fabricação	
     if (isset($acess['pacotes']) || $admin) {
         
-        $collapse = [ 'type' => 'collapse', 'title' => 'Fabricação', 'icon' => 'gears', 'pages' => []];
-        
-        // Controle
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Controle', 'icon' => 'flag-checkered', 'path' => 'controle' ],
-        );
+      $collapse = [ 'type' => 'collapse', 'title' => 'Fabricação', 'icon' => 'gears', 'pages' => []];
 
-        // Funcionários
-        if (isset($acess['funcionarios']) || $admin) {
-          array_push($collapse['pages'],
-            [ 'type' => 'link', 'title' => 'Funcionários', 'icon' => 'users', 'path' => 'funcionarios' ],
-          );
-        }
-
-        // Entradas
+      // Funcionários
+      if (isset($acess['funcionarios']) || $admin) {
         array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Entradas', 'icon' => 'arrow-right-long', 'path' => 'mov-entradas' ],
+          [ 'type' => 'link', 'title' => 'Funcionários', 'icon' => 'users', 'path' => 'funcionarios' ],
         );
-  
-        array_push($navbar, $collapse);
+      }
+      
+      // Máquinas
+      if (isset($acess['funcionarios']) || $admin) {
+        array_push($collapse['pages'],
+          [ 'type' => 'link', 'title' => 'Máquinas', 'icon' => 'gears', 'path' => 'maquinas' ],
+        );
+      }
+
+      // Entradas
+      array_push($collapse['pages'],
+        [ 'type' => 'link', 'title' => 'Entradas', 'icon' => 'arrow-right-long', 'path' => 'mov-entradas' ],
+      );
+
+      array_push($navbar, $collapse);
     }
 
     //? Estoque

@@ -62,7 +62,7 @@ $(document).on('click', '#add-usuario', function() {
   `);
   
   //? Carregar cargos no select
-  $.('/api/cargos/view', function(data) {
+  $.getJSON('/api/cargos/view', function(data) {
 
     cargos = data.cargos;
     $.each(cargos, function(i, item) {

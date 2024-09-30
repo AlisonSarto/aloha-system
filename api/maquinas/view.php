@@ -1,7 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('usuarios', 'visualizar');
+  acessApi('maquinas', 'visualizar');
   
 	if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
@@ -9,14 +9,14 @@
 
     if (isset($_GET['id'])) {
 
-      //? Puxa uma advertencia específicoa
+      //? Puxa um maquina específico
       $id = $_GET['id'];
       $id = mysqli_real_escape_string($conn, $id);
-      $sql = "SELECT * FROM situacoes WHERE tipo = '-' AND id = $id";
+      $sql = "SELECT * FROM maquinas WHERE id = $id";
     } else {
       
-      //? Puxa todos os usuários
-      $sql = "SELECT * FROM situacoes WHERE tipo = '-' ORDER BY pontuacao DESC";
+      //? Puxa todos os maquinas
+      $sql = "SELECT * FROM maquinas ORDER BY qtd_funcionarios";
     }
 
     $res = $conn->query($sql);
@@ -24,7 +24,7 @@
     if ($res === false) {
       send([
         'status' => 500,
-        'message' => 'Erro ao consultar usuários',
+        'message' => 'Erro ao consultar as maquinas',
         'error' => $conn->error
       ]);
     }
@@ -41,20 +41,20 @@
 
       send([
         'status' => 200,
-        'advertencias' => $data
+        'maquinas' => $data
       ]);
 
     } else {
       send([
         'status' => 404,
-        'message' => 'Advertência(s) não encontrada(s)'
+        'message' => 'Maquina(s) não encontrado(s)'
       ]);
     }
 
 	} else {
 		send([
       'status' => 404,
-      'message' => 'Método não aceito'
+      'message' => 'Não encontrado'
     ]);
 	}
 
