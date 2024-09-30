@@ -45,10 +45,10 @@
 
     }
     
-    //? Bonificação
-    if (isset($acess['bonificacao']) || $admin) {
+    //? Pontuações
+    if (isset($acess['pontuacoes']) || $admin) {
 
-      $collapse = [ 'type' => 'collapse', 'title' => 'Bonificação', 'icon' => 'gift', 'pages' => []];
+      $collapse = [ 'type' => 'collapse', 'title' => 'Pontuações', 'icon' => 'gift', 'pages' => []];
 
       //* Pontuação
       if (isset($acess['pontuacao']) || $admin) {
@@ -84,6 +84,13 @@
       if (isset($acess['funcionarios']) || $admin) {
         array_push($collapse['pages'],
           [ 'type' => 'link', 'title' => 'Funcionários', 'icon' => 'users', 'path' => 'funcionarios' ],
+        );
+      }
+      
+      // Máquinas
+      if (isset($acess['funcionarios']) || $admin) {
+        array_push($collapse['pages'],
+          [ 'type' => 'link', 'title' => 'Máquinas', 'icon' => 'gears', 'path' => 'maquinas' ],
         );
       }
 

@@ -143,6 +143,15 @@ CREATE TABLE vendas_gc (
   PRIMARY KEY (`codigo`)
 );
 
+CREATE TABLE maquinas (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NOT NULL,
+  `qtd_funcionarios` INT NOT NULL,
+  `meta` INT NOT NULL,
+  `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
+  PRIMARY KEY (`id`)
+);
+
 -- ? Inserção de dados
 INSERT INTO cargos (id, cargo, acess) VALUES (1, 'Admin', '{"nome":"Admin"}');
 INSERT INTO usuarios (nome, email, senha, cargo_id, cargo) VALUES ('Admin', 'admin@aloha.com', '123', 1, '{"nome":"Admin"}');

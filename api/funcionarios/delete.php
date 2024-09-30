@@ -12,6 +12,28 @@
       $id = $_GET['id'];
       $id = mysqli_real_escape_string($conn, $id);
 
+      //? Verifica se o funcionarios está ativo
+      $sql = "SELECT * FROM funcionarios WHERE id = '$id'";
+      $res = $conn->query($sql);
+
+      if ($res === false) {
+        send([
+          'status' => 500,
+          'message' => 'Erro ao puxar o funcionário',
+          'error' => $conn->error
+        ]);
+      }
+
+      $db = $res->fetch_assoc();
+      $ativo = $db['ativo'];
+
+      if ($ativo === 'true') {
+        send([
+          'status' => 400,
+          'message' => 'Não é possível deletar um funcionário ativo, desative-o primeiro'
+        ]);
+      }
+
       //? Deleta o funcionário
       $sql = "DELETE FROM funcionarios WHERE id = '$id'";
       $res = $conn->query($sql);

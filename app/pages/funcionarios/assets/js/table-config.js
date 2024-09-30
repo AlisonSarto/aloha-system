@@ -27,6 +27,7 @@ function newTable() {
     success: function(data) {
 
       var funcionarios = data.funcionarios;
+      var total_funcionarios = 0;
 
       //? Passa por cada item do array e adiciona na tabela
       funcionarios.forEach(db => {
@@ -35,6 +36,7 @@ function newTable() {
             'table-success',
             'checked'
           ];
+          total_funcionarios++;
         }else {
           db.ativo = [
             'table-secondary',
@@ -61,6 +63,14 @@ function newTable() {
           </tr>
         `;
       });
+
+      tableContent += `
+        <tr>
+          <td colspan="3" class="text-right">Total de funcionarios trabalhando:</td>
+          <td>${total_funcionarios}</td>
+          <td></td>
+        </tr>
+      `;
 
       dataTable(tableContent);
 
