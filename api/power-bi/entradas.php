@@ -11,11 +11,20 @@
     ]);
   }
 
+  $sql = "SELECT * FROM pacotes";
+  $res = $conn->query($sql);
+
+  $pacotes = [];
+  while ($db = $res->fetch_assoc()) {
+    $pacotes[$db['id']] = $db['sabor'] . ' - ' . $db['marca'];
+  }
+
   $sql = "SELECT * FROM entradas";
   $res = $conn->query($sql);
   
   $producao = [];
   while ($db = $res->fetch_assoc()) {
+    $db['pacote_id'] = $pacotes[$db['pacote_id']];
     $producao[] = $db;
   }
 
