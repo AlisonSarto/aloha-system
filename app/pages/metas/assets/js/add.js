@@ -1,17 +1,12 @@
-$(document).on('click', '#add-maquina', function() {
+$(document).on('click', '#add-meta', function() {
 
   const modal = $('#modal');
-  modal.find('.modal-title').text('Adicionar Máquina');
+  modal.find('.modal-title').text('Adicionar meta');
   modal.find('.modal-footer').html(`
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
     <button type="button" class="btn btn-primary" id="salvar">Salvar</button>
   `);
   modal.find('.modal-body').html(`
-
-    <div class="col-12">
-      <label class="form-label">Nome da máquina</label>
-      <input type="text" class="form-control" id="nome">
-    </div>
 
     <div class="col-12">
       <label class="form-label">Quantidade de funcionarios trabalhando</label>
@@ -23,23 +18,28 @@ $(document).on('click', '#add-maquina', function() {
       <input type="number" class="form-control" id="meta">
     </div>
 
+    <div class="col-12">
+      <label class="form-label">Cenário da meta</label>
+      <textarea class="form-control" id="cenario" rows="6"></textarea>
+    </div>
+
   `);
   modal.modal('show');
 
   //* Salvar
   $('#salvar').click(function() {
 
-    var nome = $('#nome').val();
+    var cenario = $('#cenario').val();
     var funcionarios = $('#funcionarios').val();
     var meta = $('#meta').val();
 
-    if (nome == '' || funcionarios == '' || meta == '') {
+    if (cenario == '' || funcionarios == '' || meta == '') {
       toast('Preencha todos os campos!', 'danger');
       return;
     }
 
     dados = {
-      nome: nome,
+      cenario: cenario,
       funcionarios: funcionarios,
       meta: meta
     };
@@ -49,7 +49,7 @@ $(document).on('click', '#add-maquina', function() {
     btn.attr('disabled', true);
 
     $.ajax({
-      url: '/api/maquinas/add',
+      url: '/api/metas/add',
       type: 'POST',
       data: dados,
       beforeSend: function() {

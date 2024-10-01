@@ -144,11 +144,11 @@ CREATE TABLE vendas_gc (
   PRIMARY KEY (`codigo`)
 );
 
-CREATE TABLE maquinas (
+CREATE TABLE metas (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(45) NOT NULL,
   `qtd_funcionarios` INT NOT NULL,
   `meta` INT NOT NULL,
+  `cenario` VARCHAR(500) NOT NULL,
   `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`)
 );

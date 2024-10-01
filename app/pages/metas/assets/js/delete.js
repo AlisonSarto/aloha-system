@@ -1,21 +1,19 @@
-$(document).on('click', '.delete-maquina', function() {
+$(document).on('click', '.delete-meta', function() {
   var id = $(this).parent().data('id');
   $this = $(this);
-  maquina = $this.parent().data('name');
 
   //? Tempo de espera em s
-  contador = 2;
+  contador = 1;
 
   //* Mostra modal de confirmação
-  $('#modal .modal-title').html('Deletar Máquina');
+  $('#modal .modal-title').html('Deletar meta');
   $('#modal .modal-footer').html(`
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
     <button type="button" class="btn btn-danger" id="delete" disabled>Deletar ${contador}s</button>
   `);
   $('#modal .modal-body').html(`
     <p>
-      Deseja realmente deletar a maquina <b>${maquina}</b>? <br>
-      <b>Obs:</b> A meta será ajustada automaticamente.
+      Deseja realmente deletar essa meta</b>? <br>
     </p>
   `);
   $('#modal').modal('show');
@@ -42,7 +40,7 @@ $(document).on('click', '.delete-maquina', function() {
   $('#delete').click(function() {
 
     $.ajax({
-      url: `/api/maquinas/delete?id=${id}`,
+      url: `/api/metas/delete?id=${id}`,
       type: 'DELETE',
       beforeSend: function() {
         $('#delete').html('<i class="fas fa-spinner fa-spin"></i> Deletando...');

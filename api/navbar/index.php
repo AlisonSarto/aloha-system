@@ -87,10 +87,10 @@
         );
       }
       
-      // Máquinas
+      // Metas
       if (isset($acess['funcionarios']) || $admin) {
         array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Máquinas', 'icon' => 'gears', 'path' => 'maquinas' ],
+          [ 'type' => 'link', 'title' => 'Metas', 'icon' => 'bullseye', 'path' => 'metas' ],
         );
       }
 
