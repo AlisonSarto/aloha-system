@@ -69,13 +69,13 @@
 
   }
 
-  //! Puxa a meta do dia
-  $sql = "SELECT * FROM modos WHERE ativo = 'true'";
+  //? Puxa a meta do dia
+  $sql = "SELECT * FROM metas WHERE ativo = 'true'";
   $res = $conn->query($sql);
   $db = $res->fetch_assoc();
 
   $meta_hora = (int) $db['meta'];
-  $meta_dia = (int) ($meta_hora * $horas_trabalhadas);
+  $meta_dia = (int) ($meta_hora * ($horas_trabalhadas - 1));
 
   //? Calculo estimativa do que falta
   $meta_falta = $meta_dia - $producao_total;
