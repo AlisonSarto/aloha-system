@@ -1,7 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acess('maquinas', 'visualizar');
+  acess('metas', 'visualizar');
 
 ?>
 <!DOCTYPE html>
@@ -10,7 +10,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="/assets/imgs/favicon.ico" type="image/x-icon">
-  <title>Máquinas - Gelo System</title>
+  <title>Metas - Gelo System</title>
   <link rel="stylesheet" href="/libs/bootstrap/bootstrap.css">
 </head>
 <body>
@@ -44,23 +44,23 @@
     </div>
 
     <h1 class="py-4 d-flex align-items-center">
-      <i class="fas fa-gears me-2"></i>
-      Máquinas
+      <i class="fas fa-bullseye me-2"></i>
+      Metas
     </h1>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-      <button class="btn btn-primary mb-3" id="add-maquina"><i class="fas fa-plus"></i> Adicionar</button>
+      <button class="btn btn-primary mb-3" id="add-meta"><i class="fas fa-plus"></i> Adicionar</button>
     </div>
 
     <div class="card mb-4">
 
       <div class="card-header">
         <i class="fas fa-table me-1"></i>
-        Máquinas
+        Metas
       </div>
 
       <div class="card-body">
-        <table id="data-table" data-table="maquinas"></table>
+        <table id="data-table" data-table="metas"></table>
       </div>
 
     </div>
@@ -74,6 +74,7 @@
   <!-- Controls -->
   <script src="./assets/js/table-config.js"></script>
   <script src="./assets/js/add.js"></script>
+  <script src="./assets/js/view.js"></script>
   <script src="./assets/js/edit.js"></script>
   <script src="./assets/js/delete.js"></script>
 </body>

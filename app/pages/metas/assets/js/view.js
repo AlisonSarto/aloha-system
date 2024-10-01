@@ -1,0 +1,64 @@
+$(document).on('click', '.view-meta', function () {
+
+  btn = $(this);
+  btn.html('<i class="fas fa-spinner fa-spin"></i>');
+  btn.attr('disabled', true);
+  id = $(this).parent().data('id');
+
+  modal = $('#modal');
+  modal.find('.modal-title').text('Visualizar meta');
+  modal.find('.modal-footer').html(`
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+  `);
+  modal.find('.modal-body').html(`
+
+    <div class="col-12">
+      <label class="form-label">Quantidade de funcionarios trabalhando</label>
+      <input type="number" class="form-control" id="funcionarios" disabled>
+    </div>
+
+    <div class="col-12">
+      <label class="form-label">Meta por hora</label>
+      <input type="number" class="form-control" id="meta" disabled>
+    </div>
+
+    <div class="col-12">
+      <label class="form-label">Cenário da meta</label>
+      <textarea class="form-control" id="cenario" rows="6" disabled></textarea>
+    </div>
+
+  `);
+
+  //? Carregar os dados do meta
+  $.ajax({
+    url: '/api/metas/view',
+    data: { id: id },
+    method: 'GET',
+    success: function (data) {
+      const meta = data.metas;
+
+      $('#cenario').val(meta.cenario);
+      $('#funcionarios').val(meta.qtd_funcionarios);
+      $('#meta').val(meta.meta);
+
+      btn.html('<i class="fas fa-magnifying-glass"></i>');
+      btn.attr('disabled', false);
+      modal.modal('show');
+    },
+    error: function (err) {
+      console.log(err);
+      message = err.responseJSON.message;
+      toast(message, 'danger');
+      btn.html('<i class="fas fa-magnifying-glass"></i>');
+      btn.attr('disabled', false);
+    }
+  });
+
+});
+
+function toast(text, color) {
+  $('.toast-header').removeClass('text-bg-success text-bg-danger text-bg-primary');
+  $('.toast-header').addClass('text-bg-' + color);
+  $('.toast-body').text(text);
+  $('#toast').toast('show');
+};

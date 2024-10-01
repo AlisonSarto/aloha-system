@@ -1,4 +1,4 @@
-$(document).on('click', '.edit-maquina', function () {
+$(document).on('click', '.edit-meta', function () {
 
   btn = $(this);
   btn.html('<i class="fas fa-spinner fa-spin"></i>');
@@ -6,17 +6,12 @@ $(document).on('click', '.edit-maquina', function () {
   id = $(this).parent().data('id');
 
   modal = $('#modal');
-  modal.find('.modal-title').text('Editar máquina');
+  modal.find('.modal-title').text('Editar meta');
   modal.find('.modal-footer').html(`
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
     <button type="button" class="btn btn-primary" id="salvar">Salvar</button>
   `);
   modal.find('.modal-body').html(`
-
-    <div class="col-12">
-      <label class="form-label">Nome da máquina</label>
-      <input type="text" class="form-control" id="nome">
-    </div>
 
     <div class="col-12">
       <label class="form-label">Quantidade de funcionarios trabalhando</label>
@@ -28,19 +23,24 @@ $(document).on('click', '.edit-maquina', function () {
       <input type="number" class="form-control" id="meta">
     </div>
 
+    <div class="col-12">
+      <label class="form-label">Cenário da meta</label>
+      <textarea class="form-control" id="cenario" rows="6"></textarea>
+    </div>
+
   `);
 
-  //? Carregar os dados do máquina
+  //? Carregar os dados do meta
   $.ajax({
-    url: '/api/maquinas/view',
+    url: '/api/metas/view',
     data: { id: id },
     method: 'GET',
     success: function (data) {
-      const maquina = data.maquinas;
+      const meta = data.metas;
 
-      $('#nome').val(maquina.nome);
-      $('#funcionarios').val(maquina.qtd_funcionarios);
-      $('#meta').val(maquina.meta);
+      $('#cenario').val(meta.cenario);
+      $('#funcionarios').val(meta.qtd_funcionarios);
+      $('#meta').val(meta.meta);
 
       btn.html('<i class="fas fa-pen-to-square"></i>');
       btn.attr('disabled', false);
@@ -58,13 +58,13 @@ $(document).on('click', '.edit-maquina', function () {
   //* Salvar
   $('#salvar').click(function () {
 
-    nome = $('#nome').val();
+    cenario = $('#cenario').val();
     funcionarios = $('#funcionarios').val();
     meta = $('#meta').val();
 
     dados = {
       id: id,
-      nome: nome,
+      cenario: cenario,
       funcionarios: funcionarios,
       meta: meta
     };
@@ -74,7 +74,7 @@ $(document).on('click', '.edit-maquina', function () {
     btn.attr('disabled', true);
 
     $.ajax({
-      url: '/api/maquinas/edit',
+      url: '/api/metas/edit',
       type: 'POST',
       data: dados,
       beforeSend: function () {

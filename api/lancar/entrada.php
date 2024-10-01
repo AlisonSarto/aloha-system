@@ -208,7 +208,7 @@
 
       //* Cria a entrada
       //? Puxa a meta atual
-      $sql = "SELECT SUM(meta) as meta FROM maquinas WHERE ativo = 'true'";
+      $sql = "SELECT meta as meta FROM metas WHERE ativo = 'true' LIMIT 1";
       $res = $conn->query($sql);
 
       if ($res === false) {
@@ -225,7 +225,7 @@
       if ($meta === null || $meta === 0) {
         send([
           'status' => 404,
-          'message' => 'Pelo menos uma máquina deve estar ativa'
+          'message' => 'Pelo menos uma meta deve estar ativa'
         ]);
       }
 

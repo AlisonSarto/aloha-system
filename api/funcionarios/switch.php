@@ -45,33 +45,33 @@
       ]);
     }
 
-    //* Altera as situações das máquinas
+    //* Altera as situações das metas
     //? Verifica quantos funcionários ativos tem
     $sql = "SELECT * FROM funcionarios WHERE ativo = 'true'";
     $res = $conn->query($sql);
     
     $qtd_funcionarios = $res->num_rows;
 
-    //? Ativa as máquinas
-    $sql = "UPDATE maquinas SET ativo = 'true' WHERE qtd_funcionarios <= $qtd_funcionarios";
+    //? Ativa as metas
+    $sql = "UPDATE metas SET ativo = 'true' WHERE qtd_funcionarios = $qtd_funcionarios";
     $res = $conn->query($sql);
 
     if ($res === false) {
       send([
         'status' => 500,
-        'message' => 'Erro ao ativar as máquinas',
+        'message' => 'Erro ao ativar as metas',
         'error' => $conn->error
       ]);
     }
 
-    //? Desativa as máquinas
-    $sql = "UPDATE maquinas SET ativo = 'false' WHERE qtd_funcionarios > $qtd_funcionarios";
+    //? Desativa as metas
+    $sql = "UPDATE metas SET ativo = 'false' WHERE qtd_funcionarios != $qtd_funcionarios";
     $res = $conn->query($sql);
 
     if ($res === false) {
       send([
         'status' => 500,
-        'message' => 'Erro ao desativar as máquinas',
+        'message' => 'Erro ao desativar as metas',
         'error' => $conn->error
       ]);
     }

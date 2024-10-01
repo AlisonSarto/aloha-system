@@ -1,7 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('maquinas', 'visualizar');
+  acessApi('metas', 'visualizar');
   
 	if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
@@ -9,14 +9,14 @@
 
     if (isset($_GET['id'])) {
 
-      //? Puxa um maquina específico
+      //? Puxa um meta específico
       $id = $_GET['id'];
       $id = mysqli_real_escape_string($conn, $id);
-      $sql = "SELECT * FROM maquinas WHERE id = $id";
+      $sql = "SELECT * FROM metas WHERE id = $id";
     } else {
       
-      //? Puxa todos os maquinas
-      $sql = "SELECT * FROM maquinas ORDER BY qtd_funcionarios";
+      //? Puxa todos os metas
+      $sql = "SELECT * FROM metas ORDER BY qtd_funcionarios DESC";
     }
 
     $res = $conn->query($sql);
@@ -24,7 +24,7 @@
     if ($res === false) {
       send([
         'status' => 500,
-        'message' => 'Erro ao consultar as maquinas',
+        'message' => 'Erro ao consultar as metas',
         'error' => $conn->error
       ]);
     }
@@ -41,13 +41,13 @@
 
       send([
         'status' => 200,
-        'maquinas' => $data
+        'metas' => $data
       ]);
 
     } else {
       send([
         'status' => 404,
-        'message' => 'Maquina(s) não encontrado(s)'
+        'message' => 'meta(s) não encontrado(s)'
       ]);
     }
 

@@ -3,8 +3,8 @@ function newTable() {
   var content = $('#data-table').data('table');
   var tableHasClass = $('#data-table').hasClass('datatable-table');
 
-  //? Se não for a tabela de maquinas, não executa o script
-  if ((content === undefined || content != 'maquinas') && tableHasClass == false) {
+  //? Se não for a tabela de metas, não executa o script
+  if ((content === undefined || content != 'metas') && tableHasClass == false) {
     return;
   }
 
@@ -12,8 +12,7 @@ function newTable() {
   tableContent = `
     <thead>
       <tr>
-        <th>Nome</th>
-        <th>Qtd. min. de funcionarios</th>
+        <th>Qtd. de colaboradores</th>
         <th>Meta hora</th>
         <th>Ações</th>
       </tr>
@@ -21,45 +20,35 @@ function newTable() {
   `;
 
   $.ajax({
-    url: '/api/maquinas/view',
+    url: '/api/metas/view',
     type: 'GET',
     success: function(data) {
 
-      maquinas = data.maquinas;
-      var meta_total = 0;
+      metas = data.metas;
 
       //? Passa por cada item do array e adiciona na tabela
-      maquinas.forEach(db => {
+      metas.forEach(db => {
 
         if (db.ativo == 'true') {
           ativo = 'table-success';
-          meta_total += parseFloat(db.meta);
         }else {
           ativo = 'table-danger';
         }
 
         tableContent += `
           <tr class="${ativo}">
-            <td>${db.nome}</td>
             <td>${db.qtd_funcionarios}</td>
             <td>${db.meta} pcts/h</td>
             <td>
               <div class="d-flex flex-nowrap" data-id="${db.id}" data-name="${db.nome}">
-                <button class="btn btn-sm btn-warning me-2 edit-maquina"><i class="fas fa-pen-to-square"></i></button>
-                <button class="btn btn-sm btn-danger delete-maquina"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-sm btn-primary view-meta"><i class="fas fa-magnifying-glass"></i></button>
+                <button class="btn btn-sm btn-warning mx-2 edit-meta"><i class="fas fa-pen-to-square"></i></button>
+                <button class="btn btn-sm btn-danger delete-meta"><i class="fas fa-trash"></i></button>
               </div>
             </td>
           </tr>
         `;
       });
-
-      tableContent += `
-        <tr>
-          <td colspan="2" class="text-right">Meta total:</td>
-          <td>${meta_total} pcts/h</td>
-          <td></td>
-        </tr>
-      `;
       dataTable(tableContent);
 
     },
@@ -71,7 +60,7 @@ function newTable() {
   function returnEmptyTable() {
     tableContent += `
       <tr>
-        <td colspan="99" class="text-center">Nenhuma máquina encontrada</td>
+        <td colspan="99" class="text-center">Nenhuma meta encontrada</td>
       </tr>
     `;
     dataTable(tableContent);
