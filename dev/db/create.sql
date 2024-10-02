@@ -92,7 +92,9 @@ CREATE TABLE entradas (
   `turno` VARCHAR(45) NOT NULL,
   `turno_dia` VARCHAR(45) NOT NULL,
   `meta` INT NOT NULL DEFAULT 0,
+  `horas_de_trabalho` DECIMAL(11, 2) NOT NULL DEFAULT 0,
   `dia` VARCHAR(45) NOT NULL,
+  `dia_real` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`)
 ); 
 

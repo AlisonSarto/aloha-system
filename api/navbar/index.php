@@ -80,6 +80,13 @@
         
       $collapse = [ 'type' => 'collapse', 'title' => 'Fabricação', 'icon' => 'gears', 'pages' => []];
 
+      // Turnos
+      if (isset($acess['turnos']) || $admin) {
+        array_push($collapse['pages'],
+          [ 'type' => 'link', 'title' => 'Turnos', 'icon' => 'user-clock', 'path' => 'turnos' ],
+        );
+      }
+
       // Funcionários
       if (isset($acess['funcionarios']) || $admin) {
         array_push($collapse['pages'],
@@ -138,10 +145,8 @@
       array_push($navbar,
         [ 'type' => 'collapse', 'title' => 'Configurações', 'icon' => 'cog', 'pages' => [
 
-          // [ 'type' => 'header', 'title' => 'Estoque'],
           [ 'type' => 'link', 'title' => 'Sabores', 'icon' => 'blender', 'path' => 'sabores' ],
-          [ 'type' => 'link', 'title' => 'Marcas', 'icon' => 'flag', 'path' => 'marcas' ],
-          [ 'type' => 'link', 'title' => 'Turnos', 'icon' => 'user-clock', 'path' => 'turnos' ],
+          [ 'type' => 'link', 'title' => 'Marcas', 'icon' => 'flag', 'path' => 'marcas' ]
 
         ]],
       );

@@ -25,6 +25,15 @@
       $turno_id = $turno['turno_id'];
       $turno_nome = $turno['turno'];
       $turno_dia = $turno['dia'];
+      $horas_de_trabalho = $turno['horas_de_trabalho'];
+
+      //* Bloqueia a entrada se não tiver um turno
+      if ($turno_id == 0) {
+        send([
+          'status' => 400,
+          'message' => 'Não é possível registrar uma entrada sem um turno ativo'
+        ]);
+      }
 
       //? Puxa o pacote
       $sql = "SELECT * FROM pacotes WHERE marca_id = '$marca_id' AND sabor_id = '$sabor_id'";
@@ -230,8 +239,9 @@
       }
 
       //? Cria a entrada
-      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, meta, dia)
-              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', $meta, '$dia')";
+      $dia_real = date('Y-m-d H:i:s');
+      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, meta, horas_de_trabalho, dia, dia_real)
+              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', $meta, $horas_de_trabalho, '$dia', '$dia_real')";
       $res = $conn->query($sql);
 
       if ($res === false) {

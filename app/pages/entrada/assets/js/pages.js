@@ -112,6 +112,7 @@ $(document).ready(function() {
           });
         },
         error: function(err) {
+          console.log(err);
           message = err.responseJSON.message;
           $('#error-message').html('<i class="fas fa-exclamation-triangle me-2"></i> ' + message);
           $('#page-error').show();

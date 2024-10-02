@@ -1,7 +1,3 @@
-// Adiciona o script de adaptador
-script = document.createElement('script');
-script.src = '/libs/chart.js/chartjs-adapter-moment.js';
-document.getElementsByTagName('head')[0].appendChild(script);
 /*!
  * Chart.js v3.9.1
  * https://www.chartjs.org

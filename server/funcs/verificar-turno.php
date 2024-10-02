@@ -79,10 +79,42 @@
       $dia_atual = date('Y-m-d', strtotime('-1 day', strtotime($dia_atual)));
     }
 
+    // Puxa todos os dados do turno
+    $turno_id = $turnos[$turno_atual]['id'] ?? 0;
+    $sql = "SELECT * FROM turnos WHERE id = '$turno_id'";
+    $res = $conn->query($sql);
+
+    if ($res->num_rows === 0 || $turno_id == 0) {
+      $res = [
+        'turno' => $turno_atual,
+        'turno_id' => 0,
+        'dia' => $dia_atual,
+        'horas_de_trabalho' => 0,
+      ];
+      return $res;
+    }
+
+    $db = $res->fetch_assoc();
+
+    $inicio_turno = new DateTime($db['inicio']);
+    $fim_turno = new DateTime($db['fim']);
+
+    $horas_de_trabalho = $fim_turno->diff($inicio_turno)->format('%H:%I:%S');
+    $horas_de_trabalho = explode(':', $horas_de_trabalho);
+    $horas_de_trabalho = $horas_de_trabalho[0] + $horas_de_trabalho[1] / 60;
+
+    //? Se o turno virar no dia seguinte
+    if ($db['inicio'] > $db['fim']) {
+      $horas_de_trabalho = 24 - $horas_de_trabalho;
+    }
+
+    $horas_de_trabalho = number_format($horas_de_trabalho, 2);
+
     $res = [
       'turno' => $turno_atual,
-      'turno_id' => $turnos[$turno_atual]['id'] ?? 0,
+      'turno_id' => $turnos[$turno_atual]['id'],
       'dia' => $dia_atual,
+      'horas_de_trabalho' => $horas_de_trabalho,
     ];
     return $res;
   };
