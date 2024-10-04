@@ -28,12 +28,7 @@
   }
 
   //? Puxa as entradas
-  $limit = $_GET['limit'] ?? 100;
-  if ($limit == 'null') {
-    $sql = "SELECT * FROM entradas WHERE turno_id = $turno_id";
-  }else {
-    $sql = "SELECT * FROM entradas WHERE turno_id = $turno_id LIMIT $limit";
-  }
+  $sql = "SELECT * FROM entradas WHERE turno_id = $turno_id";
   $res = $conn->query($sql);
   
   $producao = [];
