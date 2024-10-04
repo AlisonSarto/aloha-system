@@ -30,7 +30,7 @@
 
   send([
     'status' => 200,
-    'data' => $producao
+    'entradas' => $producao
   ]);
 
 ?>
