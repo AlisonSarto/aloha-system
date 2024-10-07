@@ -87,6 +87,13 @@
         );
       }
 
+      // Setores
+      if (isset($acess['funcionarios']) || $admin) {
+        array_push($collapse['pages'],
+          [ 'type' => 'link', 'title' => 'Setores', 'icon' => 'network-wired', 'path' => 'setores' ],
+        );
+      }
+
       // Funcionários
       if (isset($acess['funcionarios']) || $admin) {
         array_push($collapse['pages'],
