@@ -35,6 +35,28 @@
         ]);
       }
 
+      //? Puxa a meta atual
+      $sql = "SELECT meta as meta FROM metas WHERE ativo = 'true' LIMIT 1";
+      $res = $conn->query($sql);
+
+      if ($res === false) {
+        send([
+          'status' => 500,
+          'message' => 'Erro ao buscar a meta',
+          'error' => $conn->error
+        ]);
+      }
+
+      $db = $res->fetch_assoc();
+      $meta = (int) $db['meta'];
+
+      if ($meta === null || $meta === 0) {
+        send([
+          'status' => 404,
+          'message' => 'Pelo menos uma meta deve estar ativa'
+        ]);
+      }
+
       //? Puxa o pacote
       $sql = "SELECT * FROM pacotes WHERE marca_id = '$marca_id' AND sabor_id = '$sabor_id'";
       $res = $conn->query($sql);
@@ -212,29 +234,6 @@
           'status' => 500,
           'message' => 'Erro ao criar a movimentação',
           'error' => $conn->error
-        ]);
-      }
-
-      //* Cria a entrada
-      //? Puxa a meta atual
-      $sql = "SELECT meta as meta FROM metas WHERE ativo = 'true' LIMIT 1";
-      $res = $conn->query($sql);
-
-      if ($res === false) {
-        send([
-          'status' => 500,
-          'message' => 'Erro ao buscar a meta',
-          'error' => $conn->error
-        ]);
-      }
-
-      $db = $res->fetch_assoc();
-      $meta = (int) $db['meta'];
-
-      if ($meta === null || $meta === 0) {
-        send([
-          'status' => 404,
-          'message' => 'Pelo menos uma meta deve estar ativa'
         ]);
       }
 
