@@ -14,6 +14,7 @@ function newTable() {
       <tr>
         <th>Trabalhando</th>
         <th>Nome</th>
+        <th>Setor</th>
         <th>Turno</th>
         <th>Pontos</th>
         <th>Ações</th>
@@ -43,6 +44,9 @@ function newTable() {
             ''
           ];
         }
+        if (db.setor == null) {
+          db.setor = 'Não definido';
+        }
         tableContent += `
           <tr class="${db.ativo[0]}">
             <td>
@@ -51,6 +55,7 @@ function newTable() {
               </div>
             </td>
             <td>${db.nome}</td>
+            <td>${db.setor}</td>
             <td>${db.turno}</td>
             <td>${db.pontuacao}</td>
             <td>
@@ -66,9 +71,8 @@ function newTable() {
 
       tableContent += `
         <tr>
-          <td colspan="3" class="text-right">Total de funcionarios trabalhando:</td>
+          <td colspan="5" class="text-right">Total de funcionarios trabalhando:</td>
           <td>${total_funcionarios}</td>
-          <td></td>
         </tr>
       `;
 
