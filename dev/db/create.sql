@@ -111,6 +111,7 @@ CREATE TABLE funcionarios (
   `nome` VARCHAR(45) NOT NULL,
   `turno_id` INT NOT NULL,
   `pontuacao` INT NOT NULL DEFAULT '0',
+  `setor_id` INT NOT NULL DEFAULT '0',
   `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`)
 );
@@ -152,6 +153,12 @@ CREATE TABLE metas (
   `meta` INT NOT NULL,
   `cenario` VARCHAR(500) NOT NULL,
   `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE setores (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`)
 );
 

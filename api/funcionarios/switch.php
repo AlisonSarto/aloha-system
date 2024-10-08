@@ -8,6 +8,7 @@
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $id = $_POST['id'] ?? null;
+    $setor_id = $_POST['setor_id'] ?? 0;
 
     if ($id === null) {
       send([
@@ -31,10 +32,17 @@
     $db = $res->fetch_assoc();
     $ativo = $db['ativo'];
 
+    if($ativo == false && $setor_id == 0){
+      send([
+        'status' => 400,
+        'message' => 'Defina um setor para ativar esse funcionário'
+      ]);
+    }
+
     //? Altera o estado
     $ativo = $ativo === 'true' ? 'false' : 'true';
 
-    $sql = "UPDATE funcionarios SET ativo = '$ativo' WHERE id = $id";
+    $sql = "UPDATE funcionarios SET ativo = '$ativo', setor_id = $setor_id WHERE id = $id";
     $res = $conn->query($sql);
 
     if ($res === false) {

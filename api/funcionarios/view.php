@@ -4,7 +4,25 @@
   acessApi('funcionarios', 'visualizar');
   
 	if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    
+
+    //? Puxa os setores
+    $sql = "SELECT * FROM setores";
+    $res = $conn->query($sql);
+
+    $setores = [];
+    while ($db = $res->fetch_assoc()) {
+      $setores[$db['id']] = $db['nome'];
+    }
+    $setores['0'] = 'Sem setor';
+
+    //? Puxa os turnos
+    $sqlTurnos = "SELECT * FROM turnos";
+    $resTurnos = $conn->query($sqlTurnos);
+    $turnos = [];
+    while ($db = $resTurnos->fetch_assoc()) {
+      $turnos[$db['id']] = $db['nome'];
+    }
+
     $data = [];
 
     if (isset($_GET['id'])) {
@@ -36,15 +54,9 @@
       ]);
     }
 
-    $sqlTurnos = "SELECT * FROM turnos";
-    $resTurnos = $conn->query($sqlTurnos);
-    $turnos = [];
-    while ($db = $resTurnos->fetch_assoc()) {
-      $turnos[$db['id']] = $db['nome'];
-    }
-
     while ($db = $res->fetch_assoc()) {
       $db['turno'] = $turnos[$db['turno_id']];
+      $db['setor'] = $setores[$db['setor_id']];
       if (isset($_GET['id'])) {
         $data = $db;
       } else {
