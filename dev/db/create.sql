@@ -93,6 +93,8 @@ CREATE TABLE entradas (
   `turno_dia` VARCHAR(45) NOT NULL,
   `meta` INT NOT NULL DEFAULT 0,
   `horas_de_trabalho` DECIMAL(11, 2) NOT NULL DEFAULT 0,
+  `cenario` VARCHAR(500) NOT NULL,
+  `funcionarios` JSON NOT NULL,
   `dia` VARCHAR(45) NOT NULL,
   `dia_real` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`)

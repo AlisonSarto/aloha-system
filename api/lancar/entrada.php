@@ -36,7 +36,7 @@
       }
 
       //? Puxa a meta atual
-      $sql = "SELECT meta as meta FROM metas WHERE ativo = 'true' LIMIT 1";
+      $sql = "SELECT meta FROM metas WHERE ativo = 'true' LIMIT 1";
       $res = $conn->query($sql);
 
       if ($res === false) {
@@ -237,10 +237,39 @@
         ]);
       }
 
+      //* Puxa o cenário, o setor e os funcionários ativos para registro na entrada
+      $sql = "SELECT * FROM setores";
+      $res = $conn->query($sql);
+
+      $setores = [];
+      while ($db = $res->fetch_assoc()) {
+        $setores[$db['id']] = $db;
+      }
+
+      $sql = "SELECT * FROM funcionarios WHERE ativo = 'true'";
+      $res = $conn->query($sql);
+
+      $num_funcionarios = $res->num_rows;
+
+      $funcionarios = [];
+      while ($db = $res->fetch_assoc()) {
+        $funcionarios[] = [
+          'nome' => $db['nome'],
+          'setor' => $setores[$db['setor_id']]['nome']
+        ];
+      }
+
+      $sql = "SELECT * FROM metas WHERE ativo = 'true'";
+      $res = $conn->query($sql);
+      $db = $res->fetch_assoc();
+
+      $cenario = $db['cenario'];
+      $funcionarios = json_encode($funcionarios);
+
       //? Cria a entrada
       $dia_real = date('Y-m-d H:i:s');
-      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, meta, horas_de_trabalho, dia, dia_real)
-              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', $meta, $horas_de_trabalho, '$dia', '$dia_real')";
+      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, meta, horas_de_trabalho, dia, dia_real, cenario, funcionarios)
+              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', $meta, $horas_de_trabalho, '$dia', '$dia_real', '$cenario', '$funcionarios')";
       $res = $conn->query($sql);
 
       if ($res === false) {
