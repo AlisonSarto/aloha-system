@@ -16,7 +16,7 @@
   $turno_id = $turno['turno_id'];
 
   if ($turno_id == 0) {
-    $data = [
+    $data[] = [
       'hora' => date('H').':00',
       'producao' => 0,
       'atual' => 0,
