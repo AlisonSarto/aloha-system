@@ -15,11 +15,22 @@
   $turno = verificarTurno();
   $turno_id = $turno['turno_id'];
 
+  if ($turno_id == 0) {
+    send([
+      'status' => 200,
+      'meta_hora' => 0,
+      'meta_dia' => 0,
+      'meta_falta' => 0,
+      'producao_total' => 0,
+      'data' => []
+    ]);
+  }
+
   //? Puxa o turno atual
   $sql = "SELECT * FROM turnos WHERE id = $turno_id";
   $res = $conn->query($sql);
   $db = $res->fetch_assoc();
-  
+
   $inicio = $db['inicio'];
   $fim = $db['fim'];
 
