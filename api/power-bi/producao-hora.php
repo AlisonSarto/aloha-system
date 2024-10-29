@@ -18,7 +18,7 @@
   if ($turno_id == 0) {
     $data = [
       'hora' => date('H').':00',
-      'producao' => 0
+      'producao' => 0,
       'atual' => 0,
       'estimativa' => 0
     ];
