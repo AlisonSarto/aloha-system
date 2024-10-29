@@ -16,9 +16,14 @@
   $turno_id = $turno['turno_id'];
 
   if ($turno_id == 0) {
+    $data = [
+      'dia' => date('Y-m-d'),
+      'producao' => 0
+    ];
+    
     send([
       'status' => 200,
-      'producao' => []
+      'producao' => $data
     ]);
   }
 

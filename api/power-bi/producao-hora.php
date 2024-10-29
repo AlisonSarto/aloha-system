@@ -16,13 +16,20 @@
   $turno_id = $turno['turno_id'];
 
   if ($turno_id == 0) {
+    $data = [
+      'hora' => date('H').':00',
+      'producao' => 0
+      'atual' => 0,
+      'estimativa' => 0
+    ];
+
     send([
       'status' => 200,
       'meta_hora' => 0,
       'meta_dia' => 0,
       'meta_falta' => 0,
       'producao_total' => 0,
-      'data' => []
+      'data' => $data
     ]);
   }
 
