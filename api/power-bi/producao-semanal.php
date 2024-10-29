@@ -15,6 +15,13 @@
   $turno = verificarTurno();
   $turno_id = $turno['turno_id'];
 
+  if ($turno_id == 0) {
+    send([
+      'status' => 200,
+      'producao' => []
+    ]);
+  }
+
   $sql = "SELECT * FROM turnos WHERE id = $turno_id";
   $res = $conn->query($sql);
   $db = $res->fetch_assoc();
