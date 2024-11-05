@@ -86,7 +86,7 @@
     }else {
       //? Repete para ter os dados mais recentes
       $res[$dia][$turno]['meta'] = (int)$entrada['meta'];
-      $res[$dia][$turno]['meta_dia'] = (int)((int)$entrada['meta'] * $entrada['horas_de_trabalho']);
+      $res[$dia][$turno]['meta_dia'] = (int)((int)$entrada['meta'] * ($entrada['horas_de_trabalho'] - 1));
       $res[$dia][$turno]['cenario'] = $entrada['cenario'];
       $res[$dia][$turno]['funcionarios'] = json_decode($entrada['funcionarios']);
 
