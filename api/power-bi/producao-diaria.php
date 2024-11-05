@@ -58,11 +58,6 @@
     if (!isset($res[$dia][$turno])) {
       $res[$dia][$turno]['qtd'] = (int)$entrada['qtd'];
 
-      $res[$dia][$turno]['meta'] = (int)$entrada['meta'];
-      $res[$dia][$turno]['meta_dia'] = (int)((int)$entrada['meta'] * $entrada['horas_de_trabalho']);
-      $res[$dia][$turno]['cenario'] = $entrada['cenario'];
-      $res[$dia][$turno]['funcionarios'] = json_decode($entrada['funcionarios']);
-
       // cria tbm o horas, onde ela vai criar um array com cada hora com base no $entrada['inicio'] e $entrada['fim'] sendo eles em hh:mm
       $inicio = strtotime($entrada['inicio_turno']) ?? null;
       $fim = strtotime($entrada['fim_turno']) ?? null;
@@ -83,7 +78,18 @@
         $res[$dia][$turno]['entradas_hora'] = new stdClass();
       }
 
+      $res[$dia][$turno]['meta'] = (int)$entrada['meta'];
+      $res[$dia][$turno]['meta_dia'] = (int)((int)$entrada['meta'] * $entrada['horas_de_trabalho']);
+      $res[$dia][$turno]['cenario'] = $entrada['cenario'];
+      $res[$dia][$turno]['funcionarios'] = json_decode($entrada['funcionarios']);
+
     }else {
+      //? Repete para ter os dados mais recentes
+      $res[$dia][$turno]['meta'] = (int)$entrada['meta'];
+      $res[$dia][$turno]['meta_dia'] = (int)((int)$entrada['meta'] * $entrada['horas_de_trabalho']);
+      $res[$dia][$turno]['cenario'] = $entrada['cenario'];
+      $res[$dia][$turno]['funcionarios'] = json_decode($entrada['funcionarios']);
+
       $res[$dia][$turno]['qtd'] += $entrada['qtd'];
       if (!empty((array)$res[$dia][$turno]['entradas_hora'])) {
         $hora_atual = date('H', strtotime($entrada['dia'])) . ':00';
