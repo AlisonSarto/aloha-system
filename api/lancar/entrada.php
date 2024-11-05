@@ -26,6 +26,8 @@
       $turno_nome = $turno['turno'];
       $turno_dia = $turno['dia'];
       $horas_de_trabalho = $turno['horas_de_trabalho'];
+      $inicio_turno = $turno['inicio'];
+      $fim_turno = $turno['fim'];
 
       //* Bloqueia a entrada se não tiver um turno
       if ($turno_id == 0) {
@@ -268,8 +270,8 @@
 
       //? Cria a entrada
       $dia_real = date('Y-m-d H:i:s');
-      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, meta, horas_de_trabalho, dia, dia_real, cenario, funcionarios)
-              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', $meta, $horas_de_trabalho, '$dia', '$dia_real', '$cenario', '$funcionarios')";
+      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, meta, horas_de_trabalho, dia, dia_real, cenario, funcionarios, inicio_turno, fim_turno)
+              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', $meta, $horas_de_trabalho, '$dia', '$dia_real', '$cenario', '$funcionarios', '$inicio_turno', '$fim_turno')";
       $res = $conn->query($sql);
 
       if ($res === false) {

@@ -91,6 +91,8 @@ CREATE TABLE entradas (
   `turno_id` VARCHAR(45) NOT NULL,
   `turno` VARCHAR(45) NOT NULL,
   `turno_dia` VARCHAR(45) NOT NULL,
+  `inicio_turno` VARCHAR(45) NOT NULL,
+  `fim_turno` VARCHAR(45) NOT NULL,
   `meta` INT NOT NULL DEFAULT 0,
   `horas_de_trabalho` DECIMAL(11, 2) NOT NULL DEFAULT 0,
   `cenario` VARCHAR(500) NOT NULL,

@@ -114,6 +114,8 @@
       'turno' => $turno_atual,
       'turno_id' => $turnos[$turno_atual]['id'],
       'dia' => $dia_atual,
+      'inicio' => $db['inicio'],
+      'fim' => $db['fim'],
       'horas_de_trabalho' => $horas_de_trabalho,
     ];
     return $res;
