@@ -39,7 +39,7 @@
   $semana_dias = [];
   foreach ($dias as $dia) {
     $data = new DateTime($dia);
-    $semana = $data->format('W-Y');
+    $semana = $data->format('W/Y');
     $semana_dias[$semana][] = $data->format('Y-m-d');
   }
 
