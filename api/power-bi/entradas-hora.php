@@ -89,11 +89,6 @@
     }
   }
 
-  send([
-    'status' => 200,
-    'data' => $res
-  ]);
-
   //* Formata a resposta para que fique varios objetos dentro de um array
   $data_final = [];
   foreach ($res as $data => $turnos) {
