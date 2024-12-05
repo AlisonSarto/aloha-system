@@ -112,7 +112,15 @@
   //? Preenche o objeto com os dados
   while ($n < $y) {
 
+    //? Adiciona o 0 ao inicio se tiver apenas uma casa decimal
+    if ($n < 10) {
+      $n = '0'.$n;
+    }
+
+    $n = str_replace('00', '0', $n);
+
     if ($n == date('H')){
+      //* Se a hora for a atual
       $data[] = [
         'hora' => $n.':00',
         'producao' => 0,
@@ -120,6 +128,7 @@
         'estimativa' => 0
       ];
     }elseif ($n <= date('H')) {
+      //* Se a hora já passou
       $data[] = [
         'hora' => $n.':00',
         'producao' => $producao[$n] ?? 0,
@@ -127,6 +136,7 @@
         'estimativa' => 0
       ];
     } else {
+      //* Se a hora ainda não chegou
       $data[] = [
         'hora' => $n.':00',
         'producao' => 0,
