@@ -63,6 +63,7 @@ function newTable() {
                 <button class="btn btn-sm btn-success mov-funcionario"><i class="fas fa-arrow-right-arrow-left"></i></button>
                 <button class="btn btn-sm btn-warning mx-2 edit-funcionario"><i class="fas fa-pen-to-square"></i></button>
                 <button class="btn btn-sm btn-danger delete-funcionario"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-sm btn-success ms-2 view-foto-funcionario"><i class="far fa-face-smile"></i></button>
               </div>
             </td>
           </tr>

@@ -119,6 +119,10 @@ $(document).on('click', '#add-marca', function() {
 
       base64 = base64.split(',')[1];
 
+      console.log(base64);
+
+      return;
+
       $.ajax({
         url: '/api/marcas/add',
         type: 'POST',

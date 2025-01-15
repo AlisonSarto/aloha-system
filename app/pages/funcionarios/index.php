@@ -77,6 +77,7 @@
   <script src="./assets/js/edit.js"></script>
   <script src="./assets/js/delete.js"></script>
   <script src="./assets/js/mov.js"></script>
+  <script src="./assets/js/view-foto.js"></script>
   <script src="./assets/js/switch.js"></script>
 </body>
 </html>

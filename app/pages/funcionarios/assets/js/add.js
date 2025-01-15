@@ -25,6 +25,15 @@ $(document).on('click', '#add-funcionario', function() {
           <option selected disabled>Selecione...</option>
         </select>
       </div>
+      
+      <div class="col-12">
+        <label class="form-label">Foto</label>
+        <input type="file" class="form-control" id="foto">
+      </div>
+
+      <div class="col-12">
+        <img src="" id="preview" class="img-fluid mt-2" style="display:none;">
+      </div>
 
     </div>
 
@@ -46,12 +55,31 @@ $(document).on('click', '#add-funcionario', function() {
 
   });
 
+  //? Preview da imagem
+  $('#foto').change(function() {
+    var file = $(this)[0].files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $('#preview').attr('src', e.target.result);
+      $('#preview').css('display', 'block');
+    }
+    reader.readAsDataURL(file);
+  });
+
   //* Salvar
   $('#salvar').click(function() {
 
     var nome = $('#nome').val();
     var turno = $('#turno').val();
+    var img64 = $('#preview').attr('src');
 
+    if (img64 == null || img64 == undefined) {
+      toast('Selecione uma imagem', 'danger');
+      return;
+    }
+
+    img64 = img64.split(',')[1];
+    
     if (turno == null || turno == undefined) {
       toast('Preencha todos os campos', 'danger');
       return;
@@ -65,6 +93,7 @@ $(document).on('click', '#add-funcionario', function() {
     dados = {
       nome: nome,
       turno: turno,
+      foto: img64
     };
 
     btn = $(this);

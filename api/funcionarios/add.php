@@ -9,8 +9,9 @@
 
     $nome = $_POST['nome'] ?? null;
     $turno_id = $_POST['turno'] ?? null;
+    $foto = $_POST['foto'] ?? null;
 
-    if ($nome && $turno_id) {
+    if ($nome && $turno_id && $foto) {
 
       //* Previne o SQL Injection
       $nome = $conn->real_escape_string($nome);
@@ -34,7 +35,7 @@
       }
 
       //? Cria o funcionário
-      $sql = "INSERT INTO funcionarios (nome, turno_id) VALUES ('$nome', $turno_id)";
+      $sql = "INSERT INTO funcionarios (nome, turno_id, foto) VALUES ('$nome', $turno_id, '$foto')";
       $res = $conn->query($sql);
 
       if ($res === false) {

@@ -32,6 +32,15 @@ $(document).on('click', '.edit-funcionario', function () {
         <input type="number" id="pontuacao" class="form-control">
       </div>
 
+      <div class="col-12">
+        <label class="form-label">Foto</label>
+        <input type="file" class="form-control" id="foto">
+      </div>
+
+      <div class="col-12">
+        <img src="/api/funcionarios/view-foto?id=${id}" id="preview" class="img-fluid mt-2">
+      </div>
+
     </div>
 
   `);
@@ -80,27 +89,40 @@ $(document).on('click', '.edit-funcionario', function () {
     }
   });
 
+  //? Preview da imagem
+  $('#foto').change(function() {
+    var file = $(this)[0].files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $('#preview').attr('src', e.target.result);
+    }
+    reader.readAsDataURL(file);
+  });
+
   //* Salvar
   $('#salvar').click(function () {
 
     var turno = $('#turno').val();
     var pontuacao = $('#pontuacao').val();
-
-    //? Verifica se mudou alguma coisa em comparação com o banco de dados
-    if (turno == funcionario.turno_id && pontuacao == funcionario.pontuacao) {
-      toast('Nada foi alterado', 'danger');
-      return;
-    }
+    var img64 = $('#foto').prop('files')[0];
 
     if (turno == null || turno == undefined) {
       toast('Preencha todos os campos', 'danger');
       return;
     }
 
+    if (img64 == null || img64 == undefined) {
+      img64 = null;
+    }else {
+      img64 = $('#preview').attr('src');
+      img64 = img64.split(',')[1];
+    }
+
     dados = {
       id: id,
       turno: turno,
-      pontuacao: pontuacao
+      pontuacao: pontuacao,
+      foto: img64
     };
 
     btn = $(this);

@@ -4,7 +4,7 @@ $(document).on('click', '.delete-funcionario', function() {
   funcionario = $this.parent().data('name');
 
   //? Tempo de espera em s
-  contador = 3;
+  contador = 1;
 
   //* Mostra modal de confirmação
   $('#modal .modal-title').html('Deletar Funcionario');

@@ -117,6 +117,7 @@ CREATE TABLE funcionarios (
   `pontuacao` INT NOT NULL DEFAULT '0',
   `setor_id` INT NOT NULL DEFAULT '0',
   `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
+  `foto` LONGBLOB NOT NULL,
   PRIMARY KEY (`id`)
 );
 
