@@ -10,6 +10,7 @@
     $id = (int) $_POST['id'] ?? null;
     $turno_id = (int) $_POST['turno'] ?? null;
     $pontuacao = (int) $_POST['pontuacao'] ?? null;
+    $foto = $_POST['foto'];
 
     if ($id === null || $turno_id === null || $pontuacao === null) {
       send([
@@ -66,7 +67,11 @@
     }
 
     //? Edita o funcionário
-    $sql = "UPDATE funcionarios SET turno_id = '$turno_id', pontuacao = '$pontuacao' WHERE id = '$id'";
+    if (empty($foto)) {
+      $sql = "UPDATE funcionarios SET turno_id = '$turno_id', pontuacao = '$pontuacao' WHERE id = '$id'";
+    }else {
+      $sql = "UPDATE funcionarios SET turno_id = '$turno_id', pontuacao = '$pontuacao', foto = '$foto' WHERE id = '$id'";
+    }
     $res = $conn->query($sql);
 
     if ($res === false) {
