@@ -12,11 +12,13 @@
     ]);
   }
 
-  $cenario = $_POST['cenario'] ?? null;
   $qtd_funcionarios = $_POST['funcionarios'] ?? null;
   $meta = $_POST['meta'] ?? null;
+  $maquinas = $_POST['maquinas'] ?? [];
+  $maquinas = json_encode($maquinas);
+  $cenario = $_POST['cenario'] ?? null;
 
-  if (!$cenario || !$qtd_funcionarios || !$meta) {
+  if (!$qtd_funcionarios || !$meta || $maquinas == [] || !$cenario) {
     send([
       'status' => 400,
       'message' => 'Parâmetros inválidos'
@@ -35,7 +37,7 @@
   }
 
   //? Cria a meta
-  $sql = "INSERT INTO metas (cenario, qtd_funcionarios, meta) VALUES ('$cenario', '$qtd_funcionarios', '$meta')";
+  $sql = "INSERT INTO metas (qtd_funcionarios, meta, maquinas, cenario) VALUES ('$qtd_funcionarios', '$meta', '$maquinas', '$cenario')";
   $res = $conn->query($sql);
 
   if ($res === false) {

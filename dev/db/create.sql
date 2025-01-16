@@ -95,7 +95,6 @@ CREATE TABLE entradas (
   `fim_turno` VARCHAR(45) NOT NULL,
   `meta` INT NOT NULL DEFAULT 0,
   `horas_de_trabalho` DECIMAL(11, 2) NOT NULL DEFAULT 0,
-  `cenario` VARCHAR(500) NOT NULL,
   `funcionarios` JSON NOT NULL,
   `dia` VARCHAR(45) NOT NULL,
   `dia_real` VARCHAR(45) NOT NULL,
@@ -156,7 +155,8 @@ CREATE TABLE metas (
   `id` INT NOT NULL AUTO_INCREMENT,
   `qtd_funcionarios` INT NOT NULL,
   `meta` INT NOT NULL,
-  `cenario` VARCHAR(500) NOT NULL,
+  `maquinas` JSON NOT NULL,
+  `cenario` LONGBLOB NOT NULL,
   `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`)
 );

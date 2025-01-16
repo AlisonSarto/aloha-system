@@ -42,13 +42,14 @@ function newTable() {
             <td>
               <div class="d-flex flex-nowrap" data-id="${db.id}" data-name="${db.nome}">
                 <button class="btn btn-sm btn-primary view-meta"><i class="fas fa-magnifying-glass"></i></button>
-                <button class="btn btn-sm btn-warning mx-2 edit-meta"><i class="fas fa-pen-to-square"></i></button>
+                <button class="btn btn-sm btn-warning mx-2 edit-meta" disabled><i class="fas fa-pen-to-square"></i></button>
                 <button class="btn btn-sm btn-danger delete-meta"><i class="fas fa-trash"></i></button>
               </div>
             </td>
           </tr>
         `;
       });
+      //TODO Ajustar a função de edição acima
       dataTable(tableContent);
 
     },

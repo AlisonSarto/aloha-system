@@ -17,31 +17,114 @@ $(document).on('click', '#add-meta', function() {
       <label class="form-label">Meta por hora</label>
       <input type="number" class="form-control" id="meta">
     </div>
+    
+    <div class="col-12">
+      <label class="form-label">Cenário</label>
+      <input type="file" class="form-control" id="cenario">
+    </div>
 
     <div class="col-12">
-      <label class="form-label">Cenário da meta</label>
-      <textarea class="form-control" id="cenario" rows="6"></textarea>
+      <img src="" id="preview" class="img-fluid mt-2" style="display:none;">
+    </div>
+
+    <div class="col-12" id="maquinasHtml">
+      <br>
     </div>
 
   `);
-  modal.modal('show');
+
+  var maquinas = [];
+  $.ajax({
+    url: '/api/maquinas/view',
+    type: 'GET',
+    success: function(data) {
+      maquinas = data.maquinas;
+
+      let maquinasHtml = `
+        <table class="table table-bordered" id="maquinas">
+          <tr>
+            <th>Ativo</th>
+            <th>Máquina</th>
+            <th>Velocidade</th>
+          </tr>
+      `;
+
+      maquinas.forEach(function(maquina) {
+        maquinasHtml += `
+          <tr data-id="${maquina.id}">
+            <td>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="maquina-${maquina.id}">
+              </div>
+            </td>
+            <td>${maquina.nome}</td>
+            <td>
+              <input class="form-control form-control-sm" type="number" value="0" id="velocidade-${maquina.id}">
+            </td>
+          </tr>
+        `;
+      });
+
+      maquinasHtml += '</table>';
+
+      $('#maquinasHtml').append(maquinasHtml);
+      modal.modal('show');
+    },
+  });
+
+  //? Preview da imagem
+  $('#cenario').change(function() {
+    var file = $(this)[0].files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $('#preview').attr('src', e.target.result);
+      $('#preview').css('display', 'block');
+    }
+    reader.readAsDataURL(file);
+  });
 
   //* Salvar
   $('#salvar').click(function() {
 
-    var cenario = $('#cenario').val();
     var funcionarios = $('#funcionarios').val();
     var meta = $('#meta').val();
+    var maquinasAtivas = [];
+    var cenario = $('#preview').attr('src');
 
-    if (cenario == '' || funcionarios == '' || meta == '') {
+    if (cenario == null || cenario == undefined) {
+      toast('Selecione uma imagem', 'danger');
+      return;
+    }
+
+    cenario = cenario.split(',')[1];
+    
+    maquinas.forEach(function(maquina) {
+      var id = maquina.id;
+      var ativo = $('#maquina-'+id).prop('checked');
+      var velocidade = $('#velocidade-'+id).val();
+      if (ativo) {
+        maquinasAtivas.push({
+          id: id,
+          velocidade: velocidade
+        });
+      }
+    });
+
+    if (funcionarios == '' || meta == '') {
       toast('Preencha todos os campos!', 'danger');
       return;
     }
 
+    if (maquinasAtivas.length == 0) {
+      toast('Selecione pelo menos uma máquina!', 'danger');
+      return;
+    }
+
     dados = {
-      cenario: cenario,
       funcionarios: funcionarios,
-      meta: meta
+      meta: meta,
+      maquinas: maquinasAtivas,
+      cenario: cenario
     };
 
     btn = $(this);
@@ -61,6 +144,7 @@ $(document).on('click', '#add-meta', function() {
         modal.modal('hide');
         toast(message, 'success');
         newTable();
+        console.log(data);
       },
       error: function(error) {
         console.log(error);

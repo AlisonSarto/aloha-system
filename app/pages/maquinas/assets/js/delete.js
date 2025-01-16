@@ -13,9 +13,9 @@ $(document).on('click', '.delete-maquina', function() {
     <button type="button" class="btn btn-danger" id="delete" disabled>Deletar ${contador}s</button>
   `);
   $('#modal .modal-body').html(`
-    <p>
-      Deseja realmente deletar a maquina <b>${maquina}</b>? <br>
-    </p>
+    <b>
+      NÃO DELETE SEM A PERMISSÃO DO ALISON! <br>
+    </b>
   `);
   $('#modal').modal('show');
   

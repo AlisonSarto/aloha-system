@@ -239,7 +239,7 @@
         ]);
       }
 
-      //* Puxa o cenário, a maquina e os funcionários ativos para registro na entrada
+      //* Puxa a maquina e os funcionários ativos para registro na entrada
       $sql = "SELECT * FROM maquinas";
       $res = $conn->query($sql);
 
@@ -261,17 +261,12 @@
         ];
       }
 
-      $sql = "SELECT * FROM metas WHERE ativo = 'true'";
-      $res = $conn->query($sql);
-      $db = $res->fetch_assoc();
-
-      $cenario = $db['cenario'];
       $funcionarios = json_encode($funcionarios);
 
       //? Cria a entrada
       $dia_real = date('Y-m-d H:i:s');
-      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, meta, horas_de_trabalho, dia, dia_real, cenario, funcionarios, inicio_turno, fim_turno)
-              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', $meta, $horas_de_trabalho, '$dia', '$dia_real', '$cenario', '$funcionarios', '$inicio_turno', '$fim_turno')";
+      $sql = "INSERT INTO entradas(turno_id, turno, turno_dia, pacote_id, qtd, meta, horas_de_trabalho, dia, dia_real, funcionarios, inicio_turno, fim_turno)
+              VALUES ('$turno_id', '$turno_nome', '$turno_dia', '$pacote_id', '$qtd', $meta, $horas_de_trabalho, '$dia', '$dia_real', '$funcionarios', '$inicio_turno', '$fim_turno')";
       $res = $conn->query($sql);
 
       if ($res === false) {
