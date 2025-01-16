@@ -16,7 +16,7 @@
   $meta = $_POST['meta'] ?? null;
   $cenario = $_POST['cenario'] ?? null;
 
-  if (!$qtd_funcionarios || !$meta || $maquinas == [] || !$cenario) {
+  if (!$qtd_funcionarios || !$meta || !$cenario) {
     send([
       'status' => 400,
       'message' => 'Parâmetros inválidos'
