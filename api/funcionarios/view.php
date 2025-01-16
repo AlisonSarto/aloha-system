@@ -57,6 +57,7 @@
     while ($db = $res->fetch_assoc()) {
       $db['turno'] = $turnos[$db['turno_id']];
       $db['maquina'] = $maquinas[$db['maquina_id']];
+      $db['foto'] = '/api/funcionarios/view-foto?id='.$db['id'];
       if (isset($_GET['id'])) {
         $data = $db;
       } else {

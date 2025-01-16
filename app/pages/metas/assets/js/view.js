@@ -23,8 +23,7 @@ $(document).on('click', '.view-meta', function () {
     </div>
 
     <div class="col-12">
-      <label class="form-label">Cenário da meta</label>
-      <textarea class="form-control" id="cenario" rows="6" disabled></textarea>
+      <img src="/api/metas/view-cenario?id=${id}" class="img-fluid">
     </div>
 
   `);
@@ -35,9 +34,8 @@ $(document).on('click', '.view-meta', function () {
     data: { id: id },
     method: 'GET',
     success: function (data) {
-      const meta = data.metas;
+      const meta = data.metas[0];
 
-      $('#cenario').val(meta.cenario);
       $('#funcionarios').val(meta.qtd_funcionarios);
       $('#meta').val(meta.meta);
 

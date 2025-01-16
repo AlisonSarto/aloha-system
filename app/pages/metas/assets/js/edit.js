@@ -1,5 +1,7 @@
 $(document).on('click', '.edit-meta', function () {
 
+  //! Arquivo obsoleto
+
   btn = $(this);
   btn.html('<i class="fas fa-spinner fa-spin"></i>');
   btn.attr('disabled', true);
@@ -21,11 +23,6 @@ $(document).on('click', '.edit-meta', function () {
     <div class="col-12">
       <label class="form-label">Meta por hora</label>
       <input type="number" class="form-control" id="meta">
-    </div>
-
-    <div class="col-12">
-      <label class="form-label">Cenário da meta</label>
-      <textarea class="form-control" id="cenario" rows="6"></textarea>
     </div>
 
   `);

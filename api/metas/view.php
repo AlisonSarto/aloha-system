@@ -11,7 +11,6 @@
 
       //? Puxa um meta específico
       $id = $_GET['id'];
-      $id = mysqli_real_escape_string($conn, $id);
       $sql = "SELECT * FROM metas WHERE id = $id";
     } else {
       
@@ -29,27 +28,23 @@
       ]);
     }
 
-    if ($res->num_rows > 0) {
-
-      while ($db = $res->fetch_assoc()) {
-        if (isset($_GET['id'])) {
-          $data = $db;
-        } else {
-          $data[] = $db;
-        }
-      }
-
-      send([
-        'status' => 200,
-        'metas' => $data
-      ]);
-
-    } else {
+    if ($res->num_rows == 0) {
       send([
         'status' => 404,
         'message' => 'meta(s) não encontrado(s)'
       ]);
     }
+
+    $data = [];
+    while ($db = $res->fetch_assoc()) {
+      $db['cenario'] = '/api/metas/view-cenario?id='.$db['id'];
+      $data[] = $db;
+    }
+
+    send([
+      'status' => 200,
+      'metas' => $data,
+    ]);
 
 	} else {
 		send([

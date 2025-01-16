@@ -13,7 +13,6 @@
   }
 
   $id = $_POST['id'] ?? null;
-  $cenario = $_POST['cenario'] ?? null;
   $qtd_funcionarios = $_POST['funcionarios'] ?? null;
   $meta = $_POST['meta'] ?? null;
 
@@ -25,7 +24,7 @@
   }
 
   //? Verifica se não tem uma meta com o mesmo n de funcionarios
-  $sql = "SELECT * FROM metas WHERE cenario = '$cenario' AND id != '$id'";
+  $sql = "SELECT * FROM metas WHERE qtd_funcionarios = '$qtd_funcionarios' AND id != '$id'";
   $res = $conn->query($sql);
 
   if ($res->num_rows > 0) {
@@ -36,7 +35,7 @@
   }
 
   //? Edita a meta
-  $sql = "UPDATE metas SET cenario = '$cenario', qtd_funcionarios = '$qtd_funcionarios', meta = '$meta' WHERE id = '$id'";
+  $sql = "UPDATE metas SET qtd_funcionarios = '$qtd_funcionarios', meta = '$meta' WHERE id = '$id'";
   $res = $conn->query($sql);
 
   if ($res === false) {
