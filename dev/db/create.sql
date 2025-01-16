@@ -164,6 +164,7 @@ CREATE TABLE metas (
 CREATE TABLE maquinas (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
+  `limite` INT NOT NULL,
   PRIMARY KEY (`id`)
 );
 
