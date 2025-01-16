@@ -42,7 +42,7 @@
           $funcionarios_form = [];
           if ($funcionarios !== null) {
             foreach ($funcionarios as $funcionario) {
-              $funcionarios_form[] = $funcionario['nome'] . ' -> ' . $funcionario['setor'];
+              $funcionarios_form[] = $funcionario['nome'] . ' -> ' . $funcionario['maquina'];
             }
           }
 

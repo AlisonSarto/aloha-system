@@ -8,7 +8,7 @@
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $id = $_POST['id'] ?? null;
-    $setor_id = $_POST['setor_id'] ?? 0;
+    $maquina_id = $_POST['maquina_id'] ?? 0;
 
     if ($id === null) {
       send([
@@ -32,17 +32,57 @@
     $db = $res->fetch_assoc();
     $ativo = $db['ativo'];
 
-    if($ativo == false && $setor_id == 0){
+    //?? Puxa o limite de funcionários nessa maquina
+    $sql = "SELECT * FROM maquinas WHERE id = $maquina_id";
+    $res = $conn->query($sql);
+
+    if ($res === false) {
+      send([
+        'status' => 500,
+        'message' => 'Erro ao puxar a maquina',
+        'error' => $conn->error
+      ]);
+    }
+
+    if ($maquina_id != 0) {
+      $db = $res->fetch_assoc();
+      $limite = $db['limite'];
+    }else {
+      $limite = 0;
+    }
+
+    //? Puxa quantos funcionários ativos tem nessa maquina
+    $sql = "SELECT * FROM funcionarios WHERE maquina_id = $maquina_id AND ativo = 'true'";
+    $res = $conn->query($sql);
+
+    if ($res === false) {
+      send([
+        'status' => 500,
+        'message' => 'Erro ao puxar os funcionários',
+        'error' => $conn->error
+      ]);
+    }
+
+    $qtd_funcionarios = $res->num_rows;
+
+    if ($qtd_funcionarios == $limite && $limite != 0 && $ativo == 'false') {
       send([
         'status' => 400,
-        'message' => 'Defina um setor para ativar esse funcionário'
+        'message' => 'Limite de funcionários atingido para essa máquina'
+      ]);
+    }
+
+    if($ativo == false && $maquina_id == 0){
+      send([
+        'status' => 400,
+        'message' => 'Defina um maquina para ativar esse funcionário'
       ]);
     }
 
     //? Altera o estado
     $ativo = $ativo === 'true' ? 'false' : 'true';
 
-    $sql = "UPDATE funcionarios SET ativo = '$ativo', setor_id = $setor_id WHERE id = $id";
+    $sql = "UPDATE funcionarios SET ativo = '$ativo', maquina_id = $maquina_id WHERE id = $id";
     $res = $conn->query($sql);
 
     if ($res === false) {
@@ -55,7 +95,7 @@
 
     //* Altera as situações das metas
     //? Verifica quantos funcionários ativos tem
-    $sql = "SELECT * FROM funcionarios WHERE ativo = 'true' AND setor_id != 3";
+    $sql = "SELECT * FROM funcionarios WHERE ativo = 'true' AND maquina_id != 3";
     $res = $conn->query($sql);
     
     $qtd_funcionarios = $res->num_rows;

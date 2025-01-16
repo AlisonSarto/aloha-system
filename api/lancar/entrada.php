@@ -239,13 +239,13 @@
         ]);
       }
 
-      //* Puxa o cenário, o setor e os funcionários ativos para registro na entrada
-      $sql = "SELECT * FROM setores";
+      //* Puxa o cenário, a maquina e os funcionários ativos para registro na entrada
+      $sql = "SELECT * FROM maquinas";
       $res = $conn->query($sql);
 
-      $setores = [];
+      $maquinas = [];
       while ($db = $res->fetch_assoc()) {
-        $setores[$db['id']] = $db;
+        $maquinas[$db['id']] = $db;
       }
 
       $sql = "SELECT * FROM funcionarios WHERE ativo = 'true'";
@@ -257,7 +257,7 @@
       while ($db = $res->fetch_assoc()) {
         $funcionarios[] = [
           'nome' => $db['nome'],
-          'setor' => $setores[$db['setor_id']]['nome']
+          'maquina' => $maquinas[$db['maquina_id']]['nome']
         ];
       }
 

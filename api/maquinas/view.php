@@ -1,7 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('setores', 'visualizar');
+  acessApi('maquinas', 'visualizar');
   
 	if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
@@ -9,14 +9,14 @@
 
     if (isset($_GET['id'])) {
 
-      //? Puxa um setor específico
+      //? Puxa um maquina específico
       $id = $_GET['id'];
       $id = mysqli_real_escape_string($conn, $id);
-      $sql = "SELECT * FROM setores WHERE id = $id";
+      $sql = "SELECT * FROM maquinas WHERE id = $id";
     } else {
       
-      //? Puxa todos os setor
-      $sql = "SELECT * FROM setores ORDER BY nome";
+      //? Puxa todos os maquina
+      $sql = "SELECT * FROM maquinas ORDER BY nome";
     }
 
     $res = $conn->query($sql);
@@ -24,7 +24,7 @@
     if ($res === false) {
       send([
         'status' => 500,
-        'message' => 'Erro ao consultar setor',
+        'message' => 'Erro ao consultar maquina',
         'error' => $conn->error
       ]);
     }
@@ -41,13 +41,13 @@
 
       send([
         'status' => 200,
-        'setores' => $data
+        'maquinas' => $data
       ]);
 
     } else {
       send([
         'status' => 404,
-        'message' => 'Setor(es) não encontrado(s)'
+        'message' => 'Máquina(es) não encontrado(s)'
       ]);
     }
 

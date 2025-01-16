@@ -115,7 +115,7 @@ CREATE TABLE funcionarios (
   `nome` VARCHAR(45) NOT NULL,
   `turno_id` INT NOT NULL,
   `pontuacao` INT NOT NULL DEFAULT '0',
-  `setor_id` INT NOT NULL DEFAULT '0',
+  `maquina_id` INT NOT NULL DEFAULT '0',
   `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
   `foto` LONGBLOB NOT NULL,
   PRIMARY KEY (`id`)
@@ -161,7 +161,7 @@ CREATE TABLE metas (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE setores (
+CREATE TABLE maquinas (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`)

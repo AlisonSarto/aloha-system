@@ -1,20 +1,20 @@
-$(document).on('click', '.delete-setor', function() {
+$(document).on('click', '.delete-maquina', function() {
   var id = $(this).parent().data('id');
   $this = $(this);
-  setor = $this.parent().data('name');
+  maquina = $this.parent().data('name');
 
   //? Tempo de espera em s
   contador = 1;
 
   //* Mostra modal de confirmação
-  $('#modal .modal-title').html('Deletar Setor');
+  $('#modal .modal-title').html('Deletar Máquina');
   $('#modal .modal-footer').html(`
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
     <button type="button" class="btn btn-danger" id="delete" disabled>Deletar ${contador}s</button>
   `);
   $('#modal .modal-body').html(`
     <p>
-      Deseja realmente deletar o setor <b>${setor}</b>? <br>
+      Deseja realmente deletar a maquina <b>${maquina}</b>? <br>
     </p>
   `);
   $('#modal').modal('show');
@@ -37,11 +37,11 @@ $(document).on('click', '.delete-setor', function() {
 
   }, 1000);
 
-  //? Deleta o setor
+  //? Deleta a maquina
   $('#delete').click(function() {
 
     $.ajax({
-      url: `/api/setores/delete?id=${id}`,
+      url: `/api/maquinas/delete?id=${id}`,
       type: 'DELETE',
       beforeSend: function() {
         $('#delete').html('<i class="fas fa-spinner fa-spin"></i> Deletando...');

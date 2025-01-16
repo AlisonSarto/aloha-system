@@ -1,6 +1,6 @@
 <?php
 
-  //? Delete um setor
+  //? Delete um maquina
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
   acessApi('usuarios', 'deletar');
@@ -12,23 +12,23 @@
       $id = $_GET['id'];
       $id = mysqli_real_escape_string($conn, $id);
 
-      //! Verifica se tem um funcionario trabalhando no setor
+      //! Verifica se tem um funcionario trabalhando na maquina
 
-      //? Deleta o setor
-      $sql = "DELETE FROM setores WHERE id = '$id'";
+      //? Deleta a maquina
+      $sql = "DELETE FROM maquinas WHERE id = '$id'";
       $res = $conn->query($sql);
 
       if ($res === false) {
         send([
           'status' => 500,
-          'message' => 'Erro ao apagar o setor',
+          'message' => 'Erro ao apagar a maquina',
           'error' => $conn->error
         ]);  
       }
 
       send([
         'status' => 200,
-        'message' => 'Setor deletado com sucesso'
+        'message' => 'Máquina deletado com sucesso'
       ]);
 
     }else {

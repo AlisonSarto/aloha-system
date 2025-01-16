@@ -1,7 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acess('setores', 'visualizar');
+  acess('maquinas', 'visualizar');
 
 ?>
 <!DOCTYPE html>
@@ -10,7 +10,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="/assets/imgs/favicon.ico" type="image/x-icon">
-  <title>Setores - Gelo System</title>
+  <title>Máquinas - Gelo System</title>
   <link rel="stylesheet" href="/libs/bootstrap/bootstrap.css">
 </head>
 <body>
@@ -44,23 +44,23 @@
     </div>
 
     <h1 class="py-4 d-flex align-items-center">
-      <i class="fas fa-network-wired me-2"></i>
-      Setores
+      <i class="fa-solid fa-gears"></i>
+      Máquinas
     </h1>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-      <button class="btn btn-primary mb-3" id="add-setor"><i class="fas fa-plus"></i> Adicionar</button>
+      <button class="btn btn-primary mb-3" id="add-maquina"><i class="fas fa-plus"></i> Adicionar</button>
     </div>
 
     <div class="card mb-4">
 
       <div class="card-header">
         <i class="fas fa-table me-1"></i>
-        Setores
+        Máquinas
       </div>
 
       <div class="card-body">
-        <table id="data-table" data-table="setores"></table>
+        <table id="data-table" data-table="maquinas"></table>
       </div>
 
     </div>

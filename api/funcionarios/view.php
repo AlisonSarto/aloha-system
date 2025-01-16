@@ -5,15 +5,15 @@
   
 	if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    //? Puxa os setores
-    $sql = "SELECT * FROM setores";
+    //? Puxa as maquinas
+    $sql = "SELECT * FROM maquinas";
     $res = $conn->query($sql);
 
-    $setores = [];
+    $maquinas = [];
     while ($db = $res->fetch_assoc()) {
-      $setores[$db['id']] = $db['nome'];
+      $maquinas[$db['id']] = $db['nome'];
     }
-    $setores['0'] = 'Sem setor';
+    $maquinas['0'] = 'Sem maquina';
 
     //? Puxa os turnos
     $sqlTurnos = "SELECT * FROM turnos";
@@ -56,7 +56,7 @@
 
     while ($db = $res->fetch_assoc()) {
       $db['turno'] = $turnos[$db['turno_id']];
-      $db['setor'] = $setores[$db['setor_id']];
+      $db['maquina'] = $maquinas[$db['maquina_id']];
       if (isset($_GET['id'])) {
         $data = $db;
       } else {

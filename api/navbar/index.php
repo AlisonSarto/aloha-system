@@ -87,17 +87,10 @@
         );
       }
 
-      // Setores
+      // Máquinas
       if (isset($acess['funcionarios']) || $admin) {
         array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Setores', 'icon' => 'network-wired', 'path' => 'setores' ],
-        );
-      }
-
-      // Funcionários
-      if (isset($acess['funcionarios']) || $admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Funcionários', 'icon' => 'users', 'path' => 'funcionarios' ],
+          [ 'type' => 'link', 'title' => 'Máquinas', 'icon' => 'gears', 'path' => 'maquinas' ],
         );
       }
       
@@ -112,6 +105,21 @@
       array_push($collapse['pages'],
         [ 'type' => 'link', 'title' => 'Entradas', 'icon' => 'arrow-right-long', 'path' => 'mov-entradas' ],
       );
+
+      array_push($navbar, $collapse);
+    }
+
+    //? RH	
+    if (isset($acess['pacotes']) || $admin) {
+        
+      $collapse = [ 'type' => 'collapse', 'title' => 'RH', 'icon' => 'users', 'pages' => []];
+
+      // Funcionários
+      if (isset($acess['funcionarios']) || $admin) {
+        array_push($collapse['pages'],
+          [ 'type' => 'link', 'title' => 'Funcionários', 'icon' => 'users', 'path' => 'funcionarios' ],
+        );
+      };
 
       array_push($navbar, $collapse);
     }
@@ -144,7 +152,7 @@
     if ($admin === true) {
       
       array_push($navbar,
-        [ 'type' => 'collapse', 'title' => 'Users', 'icon' => 'users', 'pages' => [
+        [ 'type' => 'collapse', 'title' => 'Users', 'icon' => 'user', 'pages' => [
           [ 'type' => 'link', 'title' => 'Usuários', 'icon' => 'user', 'path' => 'usuarios' ],
           [ 'type' => 'link', 'title' => 'Cargos', 'icon' => 'user-tie', 'path' => 'cargos' ],
         ]]
