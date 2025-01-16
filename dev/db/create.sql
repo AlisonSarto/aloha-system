@@ -155,7 +155,6 @@ CREATE TABLE metas (
   `id` INT NOT NULL AUTO_INCREMENT,
   `qtd_funcionarios` INT NOT NULL,
   `meta` INT NOT NULL,
-  `maquinas` JSON NOT NULL,
   `cenario` LONGBLOB NOT NULL,
   `ativo` VARCHAR(45) NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`)

@@ -41,29 +41,6 @@
       $data[] = $db;
     }
 
-    $sql = "SELECT * FROM maquinas";
-    $res = $conn->query($sql);
-    $maquinas_data = [];
-    while ($db = $res->fetch_assoc()) {
-      $maquinas_data[] = $db;
-    }
-
-    //? Passa por todas as metas e adiciona as máquinas
-    foreach ($data as $key => $meta) {
-
-      $maquinas = json_decode($meta['maquinas'], true); //ex: [{"id": "8", "velocidade": "12"}, ...]
-      $data[$key]['maquinas'] = json_decode($meta['maquinas'], true);
-      
-      foreach ($maquinas as $key2 => $maquina) {
-        $maquina_id = $maquina['id'];
-        $maquina = $maquinas_data[array_search($maquina_id, array_column($maquinas_data, 'id'))];
-        $maquinas[$key2] = $maquina;
-        $data[$key]['maquinas'][$key2]['nome'] = $maquina['nome'];
-      }
-
-      // $data[$key]['maquinas'] = $maquinas;
-    }
-
     send([
       'status' => 200,
       'metas' => $data,

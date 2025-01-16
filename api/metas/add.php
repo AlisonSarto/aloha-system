@@ -14,8 +14,6 @@
 
   $qtd_funcionarios = $_POST['funcionarios'] ?? null;
   $meta = $_POST['meta'] ?? null;
-  $maquinas = $_POST['maquinas'] ?? [];
-  $maquinas = json_encode($maquinas);
   $cenario = $_POST['cenario'] ?? null;
 
   if (!$qtd_funcionarios || !$meta || $maquinas == [] || !$cenario) {
@@ -37,7 +35,7 @@
   }
 
   //? Cria a meta
-  $sql = "INSERT INTO metas (qtd_funcionarios, meta, maquinas, cenario) VALUES ('$qtd_funcionarios', '$meta', '$maquinas', '$cenario')";
+  $sql = "INSERT INTO metas (qtd_funcionarios, meta, cenario) VALUES ('$qtd_funcionarios', '$meta', '$cenario')";
   $res = $conn->query($sql);
 
   if ($res === false) {

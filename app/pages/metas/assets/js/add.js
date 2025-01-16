@@ -27,50 +27,8 @@ $(document).on('click', '#add-meta', function() {
       <img src="" id="preview" class="img-fluid mt-2" style="display:none;">
     </div>
 
-    <div class="col-12" id="maquinasHtml">
-      <br>
-    </div>
-
   `);
-
-  var maquinas = [];
-  $.ajax({
-    url: '/api/maquinas/view',
-    type: 'GET',
-    success: function(data) {
-      maquinas = data.maquinas;
-
-      let maquinasHtml = `
-        <table class="table table-bordered" id="maquinas">
-          <tr>
-            <th>Ativo</th>
-            <th>Máquina</th>
-            <th>Velocidade</th>
-          </tr>
-      `;
-
-      maquinas.forEach(function(maquina) {
-        maquinasHtml += `
-          <tr data-id="${maquina.id}">
-            <td>
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="maquina-${maquina.id}">
-              </div>
-            </td>
-            <td>${maquina.nome}</td>
-            <td>
-              <input class="form-control form-control-sm" type="number" value="0" id="velocidade-${maquina.id}">
-            </td>
-          </tr>
-        `;
-      });
-
-      maquinasHtml += '</table>';
-
-      $('#maquinasHtml').append(maquinasHtml);
-      modal.modal('show');
-    },
-  });
+  modal.modal('show');
 
   //? Preview da imagem
   $('#cenario').change(function() {
@@ -88,7 +46,6 @@ $(document).on('click', '#add-meta', function() {
 
     var funcionarios = $('#funcionarios').val();
     var meta = $('#meta').val();
-    var maquinasAtivas = [];
     var cenario = $('#preview').attr('src');
 
     if (cenario == null || cenario == undefined) {
@@ -97,33 +54,15 @@ $(document).on('click', '#add-meta', function() {
     }
 
     cenario = cenario.split(',')[1];
-    
-    maquinas.forEach(function(maquina) {
-      var id = maquina.id;
-      var ativo = $('#maquina-'+id).prop('checked');
-      var velocidade = $('#velocidade-'+id).val();
-      if (ativo) {
-        maquinasAtivas.push({
-          id: id,
-          velocidade: velocidade
-        });
-      }
-    });
 
     if (funcionarios == '' || meta == '') {
       toast('Preencha todos os campos!', 'danger');
       return;
     }
 
-    if (maquinasAtivas.length == 0) {
-      toast('Selecione pelo menos uma máquina!', 'danger');
-      return;
-    }
-
     dados = {
       funcionarios: funcionarios,
       meta: meta,
-      maquinas: maquinasAtivas,
       cenario: cenario
     };
 

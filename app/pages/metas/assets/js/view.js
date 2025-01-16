@@ -26,18 +26,6 @@ $(document).on('click', '.view-meta', function () {
       <img src="/api/metas/view-cenario?id=${id}" class="img-fluid">
     </div>
 
-    <div class="col-12">
-      <br>
-      <table class="table table-bordered" id="maquinas">
-        <thead>
-          <tr>
-            <th>Máquina</th>
-            <th>Velocidade</th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-
   `);
 
   //? Carregar os dados do meta
@@ -50,16 +38,6 @@ $(document).on('click', '.view-meta', function () {
 
       $('#funcionarios').val(meta.qtd_funcionarios);
       $('#meta').val(meta.meta);
-
-      const maquinas = meta.maquinas;
-      maquinas.forEach(maquina => {
-        $('#maquinas').append(`
-          <tr>
-            <td>${maquina.nome}</td>
-            <td>${maquina.velocidade}</td>
-          </tr>
-        `);
-      });
 
       btn.html('<i class="fas fa-magnifying-glass"></i>');
       btn.attr('disabled', false);
