@@ -46,7 +46,7 @@
   }
 
   //? Verifica se já possivel ativar a meta
-  $sql = "SELECT * FROM funcionarios WHERE ativo = 'true' AND maquina_id != 3";
+  $sql = "SELECT * FROM funcionarios WHERE ativo = 'true' AND maquina_id != 0";
   $res = $conn->query($sql);
 
   if ($res->num_rows == $qtd_funcionarios) {

@@ -95,7 +95,7 @@
 
     //* Altera as situações das metas
     //? Verifica quantos funcionários ativos tem
-    $sql = "SELECT * FROM funcionarios WHERE ativo = 'true' AND maquina_id != 3";
+    $sql = "SELECT * FROM funcionarios WHERE ativo = 'true' AND maquina_id != 0";
     $res = $conn->query($sql);
     
     $qtd_funcionarios = $res->num_rows;
