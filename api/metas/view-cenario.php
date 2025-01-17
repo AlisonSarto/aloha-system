@@ -3,7 +3,6 @@
   //? Visualizar uma foto do cenario
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('funcionario', 'view');
   
 	if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
