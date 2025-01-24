@@ -44,7 +44,7 @@
       ]);
     }
 
-    if ($maquina_id != 0) {
+    if ($maquina_id != 99) {
       $db = $res->fetch_assoc();
       $limite = $db['limite'];
     }else {
@@ -95,7 +95,7 @@
 
     //* Altera as situações das metas
     //? Verifica quantos funcionários ativos tem
-    $sql = "SELECT * FROM funcionarios WHERE ativo = 'true' AND maquina_id != 0";
+    $sql = "SELECT * FROM funcionarios WHERE ativo = 'true' AND maquina_id != 99";
     $res = $conn->query($sql);
     
     $qtd_funcionarios = $res->num_rows;
