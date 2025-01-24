@@ -108,6 +108,51 @@
 
     <br>
 
+    <!-- Última entrada -->
+    <span>Produzindo:</span>
+    <?php
+      $sql = "SELECT * FROM entradas ORDER BY id DESC LIMIT 1";
+      $res = $conn->query($sql);
+      $db = $res->fetch_assoc();
+      $pacote_id = $db['pacote_id'];
+
+      $sql = "SELECT * FROM pacotes WHERE id = $pacote_id";
+      $res = $conn->query($sql);
+      $db = $res->fetch_assoc();
+      $pacote = $db['sabor'] . ' - ' . $db['marca'];
+      $sabor_id = $db['sabor_id'];
+      
+      $sql = "SELECT * FROM sabores WHERE id = $sabor_id";
+      $res = $conn->query($sql);
+      $db = $res->fetch_assoc();
+
+      $hex = $db['cor'];
+
+      // converte o hex em rgb
+      $hex = ltrim($hex, '#');
+
+      // Verifica se o formato é válido (3 ou 6 caracteres)
+      if (strlen($hex) == 3) {
+        // Expande o formato curto (#FFF para #FFFFFF)
+        $hex = str_repeat($hex[0], 2) . str_repeat($hex[1], 2) . str_repeat($hex[2], 2);
+      }
+
+      if (strlen($hex) != 6) {
+        die("Formato hexadecimal inválido");
+      }
+
+      // Divide a string em componentes RGB
+      $r = hexdec(substr($hex, 0, 2));
+      $g = hexdec(substr($hex, 2, 2));
+      $b = hexdec(substr($hex, 4, 2));
+
+      $cor = "$r, $g, $b, 0.3";
+
+    ?>
+    <div class="alert alert-dark" style="background-color: rgba(<?= $cor ?>)" role="alert">
+      <?= $pacote ?>
+    </div>
+
     <div class="row">
 
       <!-- Fabricação Semanal -->

@@ -87,6 +87,13 @@
         );
       }
 
+      // Funcionários
+      if (isset($acess['funcionarios']) || $admin) {
+        array_push($collapse['pages'],
+          [ 'type' => 'link', 'title' => 'Funcionários', 'icon' => 'users', 'path' => 'funcionarios' ],
+        );
+      };
+
       // Máquinas
       if (isset($acess['funcionarios']) || $admin) {
         array_push($collapse['pages'],
@@ -105,21 +112,6 @@
       array_push($collapse['pages'],
         [ 'type' => 'link', 'title' => 'Entradas', 'icon' => 'arrow-right-long', 'path' => 'mov-entradas' ],
       );
-
-      array_push($navbar, $collapse);
-    }
-
-    //? RH	
-    if (isset($acess['pacotes']) || $admin) {
-        
-      $collapse = [ 'type' => 'collapse', 'title' => 'RH', 'icon' => 'users', 'pages' => []];
-
-      // Funcionários
-      if (isset($acess['funcionarios']) || $admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Funcionários', 'icon' => 'users', 'path' => 'funcionarios' ],
-        );
-      };
 
       array_push($navbar, $collapse);
     }
