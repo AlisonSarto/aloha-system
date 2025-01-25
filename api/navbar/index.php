@@ -41,6 +41,13 @@
         );
       }
 
+      // Funcionários
+      if ($admin) {
+        array_push($collapse['pages'],
+          [ 'type' => 'link', 'title' => 'Alerta', 'icon' => 'bell', 'path' => 'alerta' ],
+        );
+      };
+
       array_push($navbar, $collapse);
 
     }
