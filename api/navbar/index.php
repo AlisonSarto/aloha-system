@@ -41,10 +41,17 @@
         );
       }
 
-      // Funcionários
+      // Alerta
       if ($admin) {
         array_push($collapse['pages'],
           [ 'type' => 'link', 'title' => 'Alerta', 'icon' => 'bell', 'path' => 'alerta' ],
+        );
+      };
+      
+      // Contagem
+      if ($admin) {
+        array_push($collapse['pages'],
+          [ 'type' => 'link', 'title' => 'Contagem', 'icon' => 'calculator', 'path' => 'contagem' ],
         );
       };
 

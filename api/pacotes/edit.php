@@ -50,8 +50,8 @@
       }else
       {
         send([
-          'status' => 400,
-          'message' => 'A nova quantidade é igual a antiga'
+          'status' => 200,
+          'message' => 'Pacote editado com sucesso'
         ]);
       }
 
