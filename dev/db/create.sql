@@ -167,6 +167,11 @@ CREATE TABLE maquinas (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE consumo_diario (
+  `sabor` VARCHAR(45) NOT NULL,
+  `qtd` DECIMAL(11,2) NOT NULL
+);
+
 -- ? Inserção de dados
 INSERT INTO cargos (id, cargo, acess) VALUES (1, 'Admin', '{"nome":"Admin"}');
 INSERT INTO usuarios (nome, email, senha, cargo_id, cargo) VALUES ('Admin', 'admin@aloha.com', '123', 1, '{"nome":"Admin"}');

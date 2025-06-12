@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+    }
+
+    .dashboard-card {
+      transition: all 0.3s ease;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon-container {
+      font-size: 2.5rem;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container mx-auto px-4 py-8 max-w-6xl">
+    <header class="mb-10 text-center">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">Dashboards</h1>
+      <p class="text-xl text-gray-600">Selecione o tipo de relatório que deseja visualizar</p>
+    </header>
+    
+    <div id="dashboardCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    </div>
+  </div>
+
+  <!-- Modal de redirecionamento -->
+  <div id="redirectModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-8 rounded-lg max-w-md w-full">
+      <h2 class="text-2xl font-bold mb-4">Redirecionando...</h2>
+      <p class="mb-6">Você será redirecionado para o dashboard de <span id="dashboardType" class="font-bold"></span>.
+      </p>
+      <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+        <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+      </div>
+      <button onclick="closeModal()"
+        class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition">Cancelar</button>
+    </div>
+  </div>
+
+  <script>
+    const dashboards = [
+      {
+        type: 'estoque',
+        color: 'bg-indigo-600',
+        icon: '📦',
+        title: 'Estoque',
+        desc: 'Gerencie níveis de estoque, inventário e reposição de produtos.'
+      }
+    ];
+  
+    let progressInterval = null; // Variável global para o intervalo
+  
+    function renderDashboardCards() {
+      const container = document.getElementById('dashboardCards');
+      container.innerHTML = dashboards.map(d => `
+        <div class="dashboard-card cursor-pointer" onclick="redirectToDashboard('${d.type}')">
+          <div class="${d.color} icon-container">
+            <span class="text-white">${d.icon}</span>
+          </div>
+          <div class="p-6 bg-white">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">${d.title}</h2>
+            <p class="text-gray-600">${d.desc}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+  
+    renderDashboardCards();
+  
+    function redirectToDashboard(type) {
+      const modal = document.getElementById('redirectModal');
+      const dashboardType = document.getElementById('dashboardType');
+      const progressBar = document.getElementById('progressBar');
+  
+      dashboardType.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+      modal.classList.remove('hidden');
+      progressBar.style.width = '0%';
+  
+      let width = 0;
+      if (progressInterval) clearInterval(progressInterval); // Limpa intervalo anterior
+  
+      progressInterval = setInterval(() => {
+        if (width >= 100) {
+          clearInterval(progressInterval);
+          progressInterval = null;
+          window.location.href = `./${type}`;
+          setTimeout(() => {
+            closeModal();
+          }, 500);
+        } else {
+          width += 4;
+          progressBar.style.width = width + '%';
+        }
+      }, 15);
+    }
+  
+    function closeModal() {
+      const modal = document.getElementById('redirectModal');
+      modal.classList.add('hidden');
+      const progressBar = document.getElementById('progressBar');
+      progressBar.style.width = '0%';
+      if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+      }
+    }
+  </script>
+
+</html>

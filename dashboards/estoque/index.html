@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de Estoque - Aloha Gelos</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3.0.1/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f9ff;
+    }
+
+    .dashboard-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .kpi-card {
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .status-ok {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+
+    .status-warning {
+      background-color: #fef9c3;
+      color: #854d0e;
+    }
+
+    .status-critical {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-blue-800">Dashboard de Estoque</h1>
+        <p class="text-gray-600">Aloha Gelos - Visão Geral</p>
+      </div>
+      <div class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md">
+        <span id="current-date" class="font-medium"></span>
+      </div>
+    </div>
+
+    <!-- Overlay de loading -->
+    <div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.8);display:flex;align-items:center;justify-content:center;">
+      <div class="flex flex-col items-center">
+        <svg class="animate-spin h-12 w-12 text-blue-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+        </svg>
+        <span class="text-blue-700 font-medium text-lg">Carregando gráficos...</span>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 1 - KPIs PRINCIPAIS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+
+      <div class="dashboard-card kpi-card p-5">
+        <div class="text-gray-500 text-sm font-medium">Estoque Total</div>
+        <div class="flex items-end justify-between">
+          <div class="text-3xl font-bold text-blue-800" id="estoque-total">0</div>
+          <div class="text-blue-600 text-xl">📦</div>
+        </div>
+        <div class="text-sm text-gray-500">pacotes</div>
+      </div>
+    
+      <div class="dashboard-card kpi-card p-5">
+        <div class="text-gray-500 text-sm font-medium">Estoque em Unidades</div>
+        <div class="flex items-end justify-between">
+          <div class="text-3xl font-bold text-blue-800" id="estoque-pacotes">0</div>
+          <div class="text-blue-600 text-xl">🧃</div>
+        </div>
+        <div class="text-sm text-gray-500">Unidades</div>
+      </div>
+    
+      <div class="dashboard-card kpi-card p-5">
+        <div class="text-gray-500 text-sm font-medium">Reposição Necessária</div>
+        <div class="flex items-end justify-between">
+          <div class="text-3xl font-bold text-blue-800" id="reposicao-necessaria">0</div>
+          <div class="text-blue-600 text-xl">🔄</div>
+        </div>
+        <div class="text-sm text-gray-500">pacotes</div>
+      </div>
+    
+      <div class="dashboard-card kpi-card p-5">
+        <div class="text-gray-500 text-sm font-medium">Sabor com Maior Estoque</div>
+        <div class="flex items-end justify-between">
+          <div class="text-3xl font-bold text-blue-800" id="maior-estoque-sabor">-</div>
+          <div class="text-blue-600 text-xl">📊</div>
+        </div>
+        <div class="text-sm text-gray-500" id="maior-estoque-qtd">0 pacotes</div>
+      </div>
+    
+      <div class="dashboard-card kpi-card p-5">
+        <div class="text-gray-500 text-sm font-medium">Sabor com Menor Estoque</div>
+        <div class="flex items-end justify-between">
+          <div class="text-3xl font-bold text-blue-800" id="menor-estoque-sabor">-</div>
+          <div class="text-yellow-600 text-xl">⚠️</div>
+        </div>
+        <div class="text-sm text-gray-500" id="menor-estoque-qtd">0 pacotes</div>
+      </div>
+    
+      <div class="dashboard-card kpi-card p-5 flex flex-col justify-center items-center">
+        <button id="refresh-btn"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-all">
+          Atualizar Dados
+        </button>
+        <p class="text-xs text-gray-500 mt-2">Última atualização: <span id="last-update">Agora</span></p>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 2 - GRÁFICOS DE VISÃO GERAL -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div class="dashboard-card p-5">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Estoque Atual por Sabor</h2>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="estoque-por-sabor"></canvas>
+        </div>
+      </div>
+
+      <div class="dashboard-card p-5">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold text-gray-700">Consumo Diário por Sabor</h2>
+          <div class="flex space-x-2">
+            <button class="periodo-btn bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-md text-sm"
+              data-days="7">7 dias</button>
+            <button class="periodo-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm"
+              data-days="30">30 dias</button>
+          </div>
+        </div>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="consumo-diario"></canvas>
+        </div>
+      </div>
+
+      <div class="dashboard-card p-5">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Projeção de Ruptura de Estoque</h2>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="projecao-ruptura"></canvas>
+        </div>
+      </div>
+
+      <div class="dashboard-card p-5">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Entrada e Saída por Dia</h2>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="entrada-saida"></canvas>
+        </div>
+      </div>
+
+      <div class="dashboard-card p-5">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Distribuição Percentual do Estoque</h2>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="distribuicao-estoque"></canvas>
+        </div>
+      </div>
+
+      <div class="dashboard-card p-5">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Sazonalidade de Consumo</h2>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="sazonalidade"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 3 - INDICADORES OPERACIONAIS -->
+    <div class="dashboard-card p-5 mb-8">
+      <h2 class="text-lg font-semibold text-gray-700 mb-4">Análise Detalhada por Sabor</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white">
+          <thead>
+            <tr class="bg-blue-50 text-blue-800">
+              <th class="py-3 px-4 text-left">Sabor</th>
+              <th class="py-3 px-4 text-right">Estoque Atual</th>
+              <th class="py-3 px-4 text-right">Média de Saída Diária</th>
+              <th class="py-3 px-4 text-right">Dias de Cobertura</th>
+              <th class="py-3 px-4 text-right">Estoque Ideal</th>
+              <th class="py-3 px-4 text-right">Falta para o Ideal</th>
+              <th class="py-3 px-4 text-center">Situação</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-indicadores">
+            <!-- Dados serão inseridos via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 4 - ALERTAS E RECOMENDAÇÕES -->
+    <div class="dashboard-card p-5">
+      <h2 class="text-lg font-semibold text-gray-700 mb-4">Alertas e Recomendações</h2>
+      <div id="alertas-container" class="space-y-4">
+        <!-- Alertas serão inseridos via JavaScript -->
+      </div>
+
+      <div class="mt-6">
+        <h3 class="font-medium text-gray-700 mb-2">Sugestão de Produção para Hoje</h3>
+        <div id="sugestao-producao" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Sugestões serão inseridas via JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/script.js"></script>
+</body>
+
+</html>
