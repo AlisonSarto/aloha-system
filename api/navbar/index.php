@@ -40,13 +40,6 @@
           [ 'type' => 'link', 'title' => 'Entrada', 'icon' => 'arrow-right-long', 'path' => 'entrada' ],
         );
       }
-
-      // Alerta
-      if ($admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Alerta', 'icon' => 'bell', 'path' => 'alerta' ],
-        );
-      };
       
       // Contagem
       if ($admin) {
@@ -54,36 +47,6 @@
           [ 'type' => 'link', 'title' => 'Contagem', 'icon' => 'calculator', 'path' => 'contagem' ],
         );
       };
-
-      array_push($navbar, $collapse);
-
-    }
-    
-    //? Pontuações
-    if (isset($acess['pontuacoes']) || $admin) {
-
-      $collapse = [ 'type' => 'collapse', 'title' => 'Pontuações', 'icon' => 'gift', 'pages' => []];
-
-      //* Pontuação
-      if (isset($acess['pontuacao']) || $admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Pontuação', 'icon' => 'star', 'path' => 'pontuacao' ],
-        );
-      }
-      
-      //* Situações
-      if (isset($acess['situacoes']) || $admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Situações', 'icon' => 'clipboard', 'path' => 'situacoes' ],
-        );
-      }
-      
-      //* Situações
-      if (isset($acess['grupo-situacoes']) || $admin) {
-        array_push($collapse['pages'],
-          [ 'type' => 'link', 'title' => 'Grupos Situações', 'icon' => 'notes-medical', 'path' => 'grupos-situacoes' ],
-        );
-      }
 
       array_push($navbar, $collapse);
 
