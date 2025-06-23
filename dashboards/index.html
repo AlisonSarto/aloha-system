@@ -74,27 +74,36 @@
         color: 'bg-indigo-600',
         icon: '📦',
         title: 'Estoque',
-        desc: 'Gerencie níveis de estoque, inventário e reposição de produtos.'
+        desc: 'Gerencie níveis de estoque, inventário e reposição de produtos.',
+        subcards: [
+          {
+            type: 'pacotes',
+            title: 'Estoque de Pacotes',
+            desc: 'Controle de estoque de pacotes prontos.'
+          },
+        ]
       },
-      // {
-      //   type: 'estoque',
-      //   color: 'bg-indigo-600',
-      //   icon: '📦',
-      //   title: 'Estoque',
-      //   desc: 'Gerencie níveis de estoque, inventário e reposição de produtos.',
-      //   subcards: [
-      //     {
-      //       type: 'pacotes',
-      //       title: 'Estoque de Pacotes',
-      //       desc: 'Controle de estoque de pacotes prontos.'
-      //     },
-      //     {
-      //       type: 'materia-prima',
-      //       title: 'Estoque de Matéria Prima',
-      //       desc: 'Gerenciamento de matéria prima para produção.'
-      //     },
-      //   ]
-      // },
+      {
+        type: 'marketing',
+        color: 'bg-cyan-500',
+        icon: '🌐',
+        title: 'Marketing',
+        desc: 'Relatórios de campanhas de tráfego pago',
+        subcards: [
+          {
+            type: 'meta-ads',
+            title: 'Meta Ads',
+            desc: 'Relatórios de campanhas no Meta Ads (Facebook e Instagram).'
+          }
+        ]
+      },
+      {
+        type: 'leads',
+        color: 'bg-green-500',
+        icon: '👥',
+        title: 'Leads',
+        desc: 'Gerencie e analise seus leads e oportunidades de vendas.',
+      }
     ];
 
     let progressInterval = null;

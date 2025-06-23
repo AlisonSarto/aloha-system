@@ -36,7 +36,7 @@ function processarDadosAPI(apiData) {
 // Função para buscar os dados do endpoint
 function carregarDados(callback) {
   $.ajax({
-    url: '/dashboards/estoque/data/view',
+    url: '/dashboards/estoque/pacotes/data/view',
     method: 'GET',
     success: function(apiData) {
       processarDadosAPI(apiData);
