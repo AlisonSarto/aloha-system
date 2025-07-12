@@ -63,8 +63,7 @@
         }
       }
       if ($ok == false) {
-        echo '!ok';
-        exit;
+        err401();
       }
     } else {
       if (in_array($func, $acess[$page]) == false) {
