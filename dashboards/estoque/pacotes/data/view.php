@@ -53,15 +53,15 @@
 
   //? Estoque Ideal
   $estoque_ideal_map = [
-    'Coco' => 3000,
-    'Morango' => 275,
-    'Maracujá' => 825,
-    'Melancia' => 1100,
+    'Coco' => 2475,
+    'Morango' => 550,
+    'Maracujá' => 1100,
+    'Melancia' => 1375,
     'Maçã Verde' => 275,
-    'Pessego' => 275,
+    'Pessego' => 550,
     'Limão' => 275,
-    'Laranja' => 275,
-    'Pitaya' => 275
+    'Laranja' => 19,
+    'Pitaya' => 19
   ];
   
   $estoque_ideal = [];
