@@ -47,6 +47,9 @@
   function verificar_vendas_gc($pagina = 1) {
     global $token, $secret, $loja_id, $situacoes, $vendas_analisadas, $vendas;
 
+    $data_inicio = date('Y-m-d', strtotime('-60 days'));
+    $data_fim = date('Y-m-d');
+
     $url = "https://api.gestaoclick.com/vendas";
     $method = 'GET';
     $headers = [
@@ -55,7 +58,9 @@
     ];
     $data = [
       'loja_id' => $loja_id,
-      'pagina' => $pagina
+      'pagina' => $pagina,
+      'data_inicio' => $data_inicio,
+      'data_fim' => $data_fim
     ];
 
     $response = curl($url, $headers, $method, $data);
