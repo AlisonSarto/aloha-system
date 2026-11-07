@@ -12,11 +12,11 @@
       //? Puxa um usuário específico
       $id = $_GET['id'];
       $id = mysqli_real_escape_string($conn, $id);
-      $sql = "SELECT * FROM usuarios WHERE id = $id";
+      $sql = "SELECT usuarios.*, cargos.cargo AS cargo_nome FROM usuarios INNER JOIN cargos ON cargos.id = usuarios.cargo_id WHERE usuarios.id = $id";
     } else {
 
       //? Puxa todos os usuários
-      $sql = "SELECT * FROM usuarios ORDER BY nome";
+      $sql = "SELECT usuarios.*, cargos.cargo AS cargo_nome FROM usuarios INNER JOIN cargos ON cargos.id = usuarios.cargo_id ORDER BY nome";
     }
 
     $res = $conn->query($sql);
@@ -32,7 +32,8 @@
     if ($res->num_rows > 0) {
 
       while ($db = $res->fetch_assoc()) {
-        $db['cargo'] = json_decode($db['cargo']);
+        $db['cargo'] = ['nome' => $db['cargo_nome']];
+        unset($db['cargo_nome']);
         if (isset($_GET['id'])) {
           $data = $db;
         } else {

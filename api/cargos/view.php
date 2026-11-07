@@ -38,7 +38,11 @@
     $data = [];
 
     while ($db = $res->fetch_assoc()) {
-      $db['access'] = json_decode($db['access']);
+      $db['access'] = [];
+      $permissions = $conn->query("SELECT pagina, funcao FROM permissoes INNER JOIN cargo_permissoes ON cargo_permissoes.permissao_id = permissoes.id WHERE cargo_permissoes.cargo_id = {$db['id']}");
+      while ($permission = $permissions->fetch_assoc()) {
+        $db['access'][$permission['pagina']][] = $permission['funcao'];
+      }
       if (isset($_GET['id'])) {
         $data = $db;
       } else {

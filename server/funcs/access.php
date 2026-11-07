@@ -20,7 +20,7 @@
   //*---------- Access ----------*//
 
   function accessApi($page, $func) {
-    global $_SESSION;
+    global $_SESSION, $conn;
 
     if (env('ALOHA_ACCESS') == 'false') {
       return;
@@ -46,35 +46,14 @@
       return;
     }
 
-    $access = $_SESSION['cargo']['access'];
-
-    //? Verifica se o user tem accesso a pelo menos uma função da página
-    $access_page = $access[$page] ?? null;
-    if ($access_page === null) {
+    if (!hasAccess($conn, $_SESSION['cargo']['id'], $page, $func)) {
       err401();
-    }
-
-    //? Verifica se o user tem accesso a função da página
-    if (is_array($func)) {
-      $ok = false;
-      foreach ($func as $f) {
-        if (in_array($f, $access[$page]) == true) {
-          $ok = true;
-        }
-      }
-      if ($ok == false) {
-        err401();
-      }
-    } else {
-      if (in_array($func, $access[$page]) == false) {
-        err401();
-      }
     }
 
   }
 
   function access($page, $func) {
-    global $_SESSION;
+    global $_SESSION, $conn;
 
     if (env('ALOHA_ACCESS') == 'false') {
       return;
@@ -92,20 +71,33 @@
       return;
     }
 
-    $access = $_SESSION['cargo']['access'];
-
-    //? Verifica se o user tem accesso a pelo menos uma função da página
-    if (!$access[$page]) {
+    if (!hasAccess($conn, $_SESSION['cargo']['id'], $page, $func)) {
       header('Location: /err/401');
       exit;
     }
 
-    //? Verifica se o user tem accesso a função da página
-    if (in_array($func, $access[$page]) == false) {
-      header('Location: /err/401');
-      exit;
+  }
+
+  //? Consulta a permissão atual do cargo diretamente no banco
+  function hasAccess($conn, $cargoId, $page, $func): bool {
+    $functions = is_array($func) ? $func : [$func];
+    $page = mysqli_real_escape_string($conn, $page);
+    $cargoId = (int) $cargoId;
+
+    foreach ($functions as $function) {
+      $function = mysqli_real_escape_string($conn, strtolower($function));
+      $sql = "SELECT 1 FROM permissoes
+              INNER JOIN cargo_permissoes ON cargo_permissoes.permissao_id = permissoes.id
+              WHERE cargo_permissoes.cargo_id = $cargoId
+                AND permissoes.pagina = '$page'
+                AND permissoes.funcao = '$function'
+              LIMIT 1";
+      if ($conn->query($sql)?->num_rows > 0) {
+        return true;
+      }
     }
 
+    return false;
   }
 
 ?>

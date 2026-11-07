@@ -54,10 +54,8 @@
       }
 
       $db = $res->fetch_assoc();
-      $cargo = $db['access'];
-
       //? Cria o usuário
-      $sql = "INSERT INTO usuarios (nome, email, senha, cargo_id, cargo) VALUES ('$nome', '$email', '$senha', $cargo_id, '$cargo')";
+      $sql = "INSERT INTO usuarios (nome, email, senha, cargo_id) VALUES ('$nome', '$email', '$senha', $cargo_id)";
       $res = $conn->query($sql);
 
       if ($res === false) {

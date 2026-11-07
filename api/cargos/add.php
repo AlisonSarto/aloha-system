@@ -7,8 +7,8 @@
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $cargo = mysqli_real_escape_string($conn, $_POST['cargo']) ?? null;
-    $access = json_encode($_POST['access']) ?? null;
+    $cargo = mysqli_real_escape_string($conn, $_POST['cargo'] ?? '');
+    $access = $_POST['access']['access'] ?? [];
 
     if ($cargo && $access) {
 
@@ -30,7 +30,7 @@
       }
 
       //? Cria o cargo
-      $sql = "INSERT INTO cargos(cargo, access) VALUES('$cargo', '$access')";
+      $sql = "INSERT INTO cargos(cargo) VALUES('$cargo')";
       $res = $conn->query($sql);
 
       if ($res == false) {
@@ -42,6 +42,15 @@
       }
 
       $id = $conn->insert_id;
+
+      //? Vincula as permissões selecionadas ao cargo
+      foreach ($access as $pagina => $funcoes) {
+        foreach ((array) $funcoes as $funcao) {
+          $pagina = mysqli_real_escape_string($conn, $pagina);
+          $funcao = mysqli_real_escape_string($conn, strtolower($funcao));
+          $conn->query("INSERT INTO cargo_permissoes (cargo_id, permissao_id) SELECT $id, id FROM permissoes WHERE pagina = '$pagina' AND funcao = '$funcao'");
+        }
+      }
 
       send([
         'status' => 200,

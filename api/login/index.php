@@ -13,7 +13,7 @@
 			}
 			$senha = $_POST['senha'];
 
-			$sql = "SELECT * FROM usuarios";
+			$sql = "SELECT usuarios.*, cargos.cargo AS cargo_nome FROM usuarios INNER JOIN cargos ON cargos.id = usuarios.cargo_id";
 			$res = $conn->query($sql);
 
 			while ($db = $res->fetch_assoc()) {
@@ -30,7 +30,7 @@
 				$_SESSION['id'] = $db['id'];
 				$_SESSION['email'] = $db['email'];
 				$_SESSION['nome'] = $db['nome'];
-				$_SESSION['cargo'] = json_decode($db['cargo'], true);
+				$_SESSION['cargo'] = ['id' => $db['cargo_id'], 'nome' => $db['cargo_nome']];
 
 				break;
 			}

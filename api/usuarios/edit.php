@@ -72,7 +72,7 @@
         ]);
       }
 
-      //? Puxa o access do cargo
+      //? Confirma que o cargo existe
       $sql = "SELECT * FROM cargos WHERE id = '$cargo_id'";
       $res = $conn->query($sql);
 
@@ -84,10 +84,12 @@
         ]);
       }
 
-      $access = $res->fetch_assoc()['access'];
+      if ($res->num_rows === 0) {
+        send(['status' => 404, 'message' => 'Cargo não encontrado']);
+      }
 
       //? Edita o usuário
-      $sql = "UPDATE usuarios SET nome = '$nome', email = '$email', senha = '$senha', cargo_id = '$cargo_id', cargo = '$access' WHERE id = '$id'";
+      $sql = "UPDATE usuarios SET nome = '$nome', email = '$email', senha = '$senha', cargo_id = '$cargo_id' WHERE id = '$id'";
       $res = $conn->query($sql);
 
       if ($res === false) {

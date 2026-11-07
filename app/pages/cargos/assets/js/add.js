@@ -19,9 +19,9 @@ $(document).on('click', '#add-cargo', function() {
   `);
 
   //? Requisição para carregar os cargos
-  $.getJSON('/assets/json/cargos.json')
+  $.getJSON('/api/cargos/permissions')
   .done(function(data) {
-    var pages = data.cargos;
+    var pages = data.permissions;
     var list = createListAdd(pages);
 
     modalBody.html(`

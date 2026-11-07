@@ -3,7 +3,7 @@ $(document).ready(function () {
   var script = document.createElement('script');
   script.src = '/assets/js/navigation.js';
   document.head.appendChild(script);
-  
+
   $('body').addClass('sb-nav-fixed');
 
   navbar = `
@@ -19,7 +19,7 @@ $(document).ready(function () {
 
       <ul class="navbar-nav ms-auto ms-md-0 me-lg-4">
         <li class="nav-item dropdown">
-        
+
           <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
             <i class="far fa-circle-user fa-lg me-1"></i>
             <span class="d-none d-sm-block me-1 user-name"></span>
@@ -58,7 +58,7 @@ $(document).ready(function () {
     error: function (data) {
       status = data.responseJSON.status;
       if (status == 401) {
-        window.location.href = '/sair';
+        window.location.href = '/logout';
       }else {
         console(data);
       }
@@ -88,7 +88,7 @@ $(document).ready(function () {
       <div id="layoutSidenav_content">
         ${main}
       </div>
-      
+
     </div>
 
   `;
