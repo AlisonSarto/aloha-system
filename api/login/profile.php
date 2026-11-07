@@ -1,6 +1,6 @@
 <?php
 
-  //? Puxa o perfil do usuário 
+  //? Puxa o perfil do usuário
 
   function send($message) {
     header('Content-Type: application/json;');
@@ -26,7 +26,7 @@
       'status' => 200,
       'profile' => $_SESSION,
     ]);
-		
+
 	} else {
     send([
       'status' => 405,

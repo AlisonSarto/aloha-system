@@ -1,6 +1,7 @@
 #* Variaveis de ambiente
 .env.local
 .env.prod
+.env
 
 #* Arquivos para testes
 /tests/

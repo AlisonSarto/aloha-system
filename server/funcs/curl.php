@@ -44,23 +44,7 @@
 
     curl_close($curl);
 
-    //* Verifica se é um JSON
-    if (strpos($response, '{') === false) {
-
-      return [
-        'message' => $response,
-        'isJson' => false
-      ];
-
-    }else {
-
-      $response = json_decode($response, true);
-      return [
-        'message' => $response,
-        'isJson' => true
-      ];
-
-    }
+    return $response;
 
   }
 

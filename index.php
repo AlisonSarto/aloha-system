@@ -12,7 +12,7 @@
     exit;
 
   }else {
-    header('Location: /sair');
+    header('Location: /logout');
     exit;
   }
 

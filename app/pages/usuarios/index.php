@@ -9,8 +9,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="/assets/imgs/favicon.ico" type="image/x-icon">
-  <title>Usuários - Gelo System</title>
+  <title>Usuários - Aloha System</title>
   <link rel="stylesheet" href="/libs/bootstrap/bootstrap.css">
 </head>
 <body>
@@ -35,8 +34,8 @@
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
       <div id="toast" class="toast" role="alert">
         <div class="toast-header text-bg-success">
-          <img src="/assets/imgs/favicon.ico" class="rounded icone me-2" width="27">
-          <strong class="me-auto">Gelo System</strong>
+          <img src="/favicon.ico" class="rounded icone me-2" width="27">
+          <strong class="me-auto">Aloha System</strong>
           <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
         </div>
         <div class="toast-body"></div>

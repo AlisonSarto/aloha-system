@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="/assets/imgs/favicon.ico" type="image/x-icon">
   <title>Página não encontrada</title>
   <link href="/libs/bootstrap/bootstrap.css" rel="stylesheet">
 </head>
@@ -22,7 +21,7 @@
     <footer class="py-4 bg-light mt-auto">
       <div class="container-fluid px-4">
         <div class="d-flex align-items-center justify-content-between small">
-          <div class="text-muted">Copyright &copy; Gelo System</div>
+          <div class="text-muted">Copyright &copy; Aloha System</div>
         </div>
       </div>
     </footer>

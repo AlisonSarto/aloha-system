@@ -5,7 +5,7 @@
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		if (isset($_POST['email']) && isset($_POST['senha'])) {
-			
+
 			$email = $_POST['email'];
 			if (strpos($email, '@aloha.com') === false) {
 				$email .= '@aloha.com';
@@ -26,7 +26,7 @@
 				session_set_cookie_params($expireTime);
 				session_start();
 				session_unset();
-				
+
 				$_SESSION['id'] = $db['id'];
 				$_SESSION['email'] = $db['email'];
 				$_SESSION['nome'] = $db['nome'];
@@ -46,7 +46,7 @@
 					'message' => 'Email ou senha incorretos'
 				]);
 			}
-			
+
 		} else {
 			send([
 				'status' => 400,
@@ -59,5 +59,5 @@
 			'message' => 'Método não permitido'
 		]);
 	}
-	
+
 ?>

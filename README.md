@@ -1,4 +1,4 @@
-# [Aloha System](https://www.alohasystem.com.br/)
+# [Aloha System](https://system.alohagelos.com.br/)
 
 ## Instalar e rodar o sistema
 
@@ -8,9 +8,19 @@ Rodar o Aloha System em sua máquina local é uma tarefa extremamente simples.
 
 Você precisa ter duas principais dependências instaladas:
 
-- WampServer (ou equivalente)
-- MySQL Workbench (ou equivalente)
+- Docker
+- Docker compose
 
 ### Rodar o projeto
 
-Para rodar o projeto localmente, basta configurar o projeto no WampServer e acessa a URL `http://alohasystem/dev` para acessar a página feita exclusivamente para desenvolvedores, lá você encontrará um passo a passo de como configurar o banco de dados e o projeto.
+Copie `.env.example` para `.env` e preencha as credenciais do banco. O arquivo `.env` é usado pela aplicação, pelo Docker Compose e pelo runner de migrations.
+
+docker compose up --build -d
+
+Depois que o banco estiver saudável, aplique as migrations:
+
+`docker compose exec app php server/db/migrate.php up`
+
+ou mais simples:
+
+`make migrate`

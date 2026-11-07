@@ -10,7 +10,7 @@ $(document).ready(function () {
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
 
       <a href="/">
-        <img src="/assets/imgs/logo.png" alt="Gelo System" class="mx-4" width="145">
+        <img src="/assets/imgs/logo.png" alt="Aloha System" class="mx-4" width="145">
       </a>
 
       <button class="btn btn-link - order-1 order-lg-0 - me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
@@ -35,7 +35,7 @@ $(document).ready(function () {
                 <i class="fa-solid fa-expand me-1"></i>
                 Tela Cheia
               </button>
-              <a class="dropdown-item text-danger fw-semibold" id="exit-menu" href="/sair">
+              <a class="dropdown-item text-danger fw-semibold" id="exit-menu" href="/logout">
                 <i class="fas fa-door-closed me-1"></i>
                 Sair
               </a>

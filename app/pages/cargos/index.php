@@ -10,11 +10,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="/assets/imgs/favicon.ico" type="image/x-icon">
-  <title>Cargos - Gelo System</title>
+  <title>Cargos - Aloha System</title>
   <link rel="stylesheet" href="/libs/bootstrap/bootstrap.css">
 </head>
 <body>
-  
+
   <main class="container-fluid px-4">
 
     <!-- Modal -->
@@ -36,7 +36,7 @@
       <div id="toast" class="toast" role="alert">
         <div class="toast-header text-bg-success">
           <img src="/assets/imgs/favicon.ico" class="rounded icone me-2" width="27">
-          <strong class="me-auto">Gelo System</strong>
+          <strong class="me-auto">Aloha System</strong>
           <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
         </div>
         <div class="toast-body"></div>

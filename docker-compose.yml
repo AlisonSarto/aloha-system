@@ -6,23 +6,26 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "8001:80"
+      - "${APP_EXTERNAL_PORT}:80"
     volumes:
       - .:/var/www/html
+    env_file:
+      - .env
     restart: unless-stopped
 
   db:
     image: mysql:8.0
+    env_file:
+      - .env
     environment:
-      MYSQL_DATABASE: aloha_system
-      MYSQL_USER: aloha
-      MYSQL_PASSWORD: aloha_secret
-      MYSQL_ROOT_PASSWORD: root_secret
+      MYSQL_DATABASE: ${DB_NAME:?Defina DB_NAME no .env}
+      MYSQL_USER: ${DB_USER:?Defina DB_USER no .env}
+      MYSQL_PASSWORD: ${DB_PASS:?Defina DB_PASS no .env}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:?Defina DB_ROOT_PASS no .env}
     ports:
-      - "3307:3306"
+      - "${DB_EXTERNAL_PORT}:3306"
     volumes:
       - aloha_mysql_data:/var/lib/mysql
-      - ./dev/db/create.sql:/docker-entrypoint-initdb.d/01-create.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s

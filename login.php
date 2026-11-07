@@ -4,16 +4,15 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Gelo System</title>
-  <link rel="shortcut icon" href="/assets/imgs/favicon.ico" type="image/x-icon">
+  <title>Login - Aloha System</title>
   <link href="/libs/bootstrap/bootstrap.css" rel="stylesheet">
 </head>
 <body class="text-center d-flex justify-content-center align-items-center" style="background:#1d2a35;height:100vh">
-  
+
   <div class="card border-0 m-4" style="max-width:400px">
 
     <div class="card-header d-flex justify-content-center" style="background:#04AA6D">
-      <img src="/assets/imgs/logo.png" class="img-fluid" alt="Gelo System" width="220">
+      <img src="/assets/imgs/logo.png" class="img-fluid" alt="Aloha System" width="220">
     </div>
 
     <div class="card-body p-4">
@@ -29,7 +28,7 @@
           </div>
           <input type="text" class="form-control" id="email">
         </div>
-        
+
         <div class="input-group">
           <div class="input-group-text">
             <i class="fas fa-lock"></i>
@@ -49,8 +48,8 @@
   <div class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header text-bg-success">
-        <img src="/assets/imgs/favicon.ico" class="rounded icone me-2" width="27">
-        <strong class="me-auto">Gelo System</strong>
+        <img src="/favicon.ico" class="rounded icone me-2" width="27">
+        <strong class="me-auto">Aloha System</strong>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body"></div>
@@ -63,7 +62,7 @@
   <script>
     $(document).ready(function() {
 
-      toast('Bem vindo ao Gelo System!','success');
+      toast('Bem vindo ao Aloha System!','success');
 
       $('#email').focus();
 
@@ -113,7 +112,7 @@
           });
         }
       });
-      
+
       function toast(text,color) {
         $('.toast-header').removeClass('text-bg-success text-bg-danger text-bg-primary');
         $('.toast-header').addClass('text-bg-'+color);

@@ -2,20 +2,15 @@
 
   function env($envName) {
 
-    //* Define as variáveis de ambiente por ordem de prioridade
-    $root = $_SERVER['DOCUMENT_ROOT'];
-
-    //? Verifica se tem public_html no caminho (apenas em produção)
-    if (strpos($root, '/public_html') !== false) {
-      $root = substr($root, 0, strpos($root, '/public_html'));
+    // No Docker, as variáveis do .env já são injetadas no processo do Apache.
+    // Isso permite manter o arquivo .env protegido contra leitura pelo usuário web.
+    $processValue = getenv($envName);
+    if ($processValue !== false) {
+      return $processValue;
     }
 
-    $root .= '/.env.prod';
-
-    $env = [
-      "Produção" => $root,
-      "Localhost" => $_SERVER['DOCUMENT_ROOT'].'/.env.local',
-    ];
+    $root = dirname(__DIR__, 2);
+    $env = [".env" => $root.'/.env'];
     
     //? Verifica se o arquivo existe
     $envFile = null;
@@ -27,7 +22,7 @@
       }
     }
 
-    if (!$envFile) {
+    if (!$envFile || !is_readable($envFile)) {
       echo "Arquivo .env não encontrado";
       exit;
     }
@@ -37,11 +32,12 @@
     $envData = [];
 
     foreach ($envContent as $line) {
-      if (strpos($line, '#') !== false) {
+      $line = trim($line);
+      if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {
         continue;
       }
       [$key, $value] = explode('=', $line, 2);
-      $envData[$key] = $value;
+      $envData[trim($key)] = trim($value, " \t\"'");
     }
 
     if (array_key_exists($envName, $envData)) {
