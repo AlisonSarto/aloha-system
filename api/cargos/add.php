@@ -2,15 +2,15 @@
 
   //? Cria um cargo
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('cargos', 'adicionar');
-  
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
+  accessApi('cargos', 'adicionar');
+
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $cargo = mysqli_real_escape_string($conn, $_POST['cargo']) ?? null;
-    $acess = json_encode($_POST['acess']) ?? null;
+    $access = json_encode($_POST['access']) ?? null;
 
-    if ($cargo && $acess) {
+    if ($cargo && $access) {
 
       //? Verifica se já existe um cargo com esse nome
       $sql = "SELECT * FROM cargos WHERE cargo = '$cargo'";
@@ -30,7 +30,7 @@
       }
 
       //? Cria o cargo
-      $sql = "INSERT INTO cargos(cargo, acess) VALUES('$cargo', '$acess')";
+      $sql = "INSERT INTO cargos(cargo, access) VALUES('$cargo', '$access')";
       $res = $conn->query($sql);
 
       if ($res == false) {
@@ -42,7 +42,7 @@
       }
 
       $id = $conn->insert_id;
-      
+
       send([
         'status' => 200,
         'message' => 'Cargo criado com sucesso',

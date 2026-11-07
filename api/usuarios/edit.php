@@ -2,9 +2,9 @@
 
   //? Edita um usuário
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('usuarios', 'editar');
-  
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
+  accessApi('usuarios', 'editar');
+
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $id = $_POST['id'] ?? null;
@@ -72,7 +72,7 @@
         ]);
       }
 
-      //? Puxa o acess do cargo
+      //? Puxa o access do cargo
       $sql = "SELECT * FROM cargos WHERE id = '$cargo_id'";
       $res = $conn->query($sql);
 
@@ -84,10 +84,10 @@
         ]);
       }
 
-      $acess = $res->fetch_assoc()['acess'];
+      $access = $res->fetch_assoc()['access'];
 
       //? Edita o usuário
-      $sql = "UPDATE usuarios SET nome = '$nome', email = '$email', senha = '$senha', cargo_id = '$cargo_id', cargo = '$acess' WHERE id = '$id'";
+      $sql = "UPDATE usuarios SET nome = '$nome', email = '$email', senha = '$senha', cargo_id = '$cargo_id', cargo = '$access' WHERE id = '$id'";
       $res = $conn->query($sql);
 
       if ($res === false) {

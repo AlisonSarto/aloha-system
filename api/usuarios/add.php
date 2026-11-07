@@ -2,9 +2,9 @@
 
   //? Cria um usuário
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('usuarios', 'adicionar');
-  
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
+  accessApi('usuarios', 'adicionar');
+
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nome = $_POST['nome'] ?? null;
@@ -19,7 +19,7 @@
       $cargo_id = $conn->real_escape_string($cargo_id);
       $email = $conn->real_escape_string($email);
       $senha = $conn->real_escape_string($senha);
-      
+
       if (strpos($email, '@aloha.com') === false) {
         $email = $email . '@aloha.com';
       }
@@ -54,7 +54,7 @@
       }
 
       $db = $res->fetch_assoc();
-      $cargo = $db['acess'];
+      $cargo = $db['access'];
 
       //? Cria o usuário
       $sql = "INSERT INTO usuarios (nome, email, senha, cargo_id, cargo) VALUES ('$nome', '$email', '$senha', $cargo_id, '$cargo')";

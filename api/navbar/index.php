@@ -2,9 +2,9 @@
 
   //? Retorna um JSON com os dados da navbar
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
 
-  if (env('ALOHA_ACESS') === 'false') {
+  if (env('ALOHA_ACCESS') === 'false') {
     $_SESSION['cargo']['nome'] = 'Admin';
   }
 
@@ -19,7 +19,7 @@
 
     $navbar = [];
     $cargo = $_SESSION['cargo'];
-    $acess = $_SESSION['cargo']['acess'] ?? [];
+    $access = $_SESSION['cargo']['access'] ?? [];
     $admin = $cargo['nome'] == 'Admin' ? true : false;
 
     //? Dashboard
@@ -41,7 +41,7 @@
 
     }
 
-    if (env('ALOHA_ACESS') === 'false') {
+    if (env('ALOHA_ACCESS') === 'false') {
       session_destroy();
     }
 

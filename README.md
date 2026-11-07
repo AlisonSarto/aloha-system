@@ -24,3 +24,19 @@ Depois que o banco estiver saudável, aplique as migrations:
 ou mais simples:
 
 `make migrate`
+
+### Permissões
+
+As permissões novas usam o formato `recurso.ação`, por exemplo:
+
+```json
+["usuarios.view", "usuarios.create", "produtos.*"]
+```
+
+`recurso.*` libera todas as ações daquele recurso. O arquivo `server/funcs/access.php` mantém compatibilidade com cargos antigos e oferece:
+
+```php
+access('usuarios', 'view');
+requireAccess('usuarios', 'edit');
+accessApi('usuarios', 'delete');
+```

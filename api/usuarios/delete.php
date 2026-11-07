@@ -2,9 +2,9 @@
 
   //? Delete um usuário
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('usuarios', 'deletar');
-  
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
+  accessApi('usuarios', 'deletar');
+
 	if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     if (isset($_GET['id'])) {
@@ -38,7 +38,7 @@
           'status' => 500,
           'message' => 'Erro ao apagar o usuário',
           'error' => $conn->error
-        ]);  
+        ]);
       }
 
       send([

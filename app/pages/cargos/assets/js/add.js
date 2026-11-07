@@ -9,7 +9,7 @@ $(document).on('click', '#add-cargo', function() {
   //? Standby no botão de adicionar
   btn.html('<i class="fas fa-spinner fa-spin"></i> Carregando...');
   btn.attr('disabled', true);
-  
+
   //? Informações do modal
   modal.find('.modal-dialog').addClass('modal-lg');
   modalTitle.text('Adicionar Cargo');
@@ -45,11 +45,11 @@ $(document).on('click', '#add-cargo', function() {
       </div>
 
       <hr>
-      
+
       <div class="alert alert-warning mt-3" role="alert">
         <i class="fas fa-exclamation-triangle"></i>
         Se o usuário não tiver a permissão de <b>Visualizar</b> ou <b>Gerenciar</b>,
-        ele não terá acesso a página.
+        ele não terá accesso a página.
       </div>
     `);
 
@@ -164,9 +164,9 @@ function eventListAdd(pages) {
 
     dados = {
       cargo: cargo,
-      acess: {
+      access: {
         nome: cargo,
-        acess: permissoes
+        access: permissoes
       }
     };
 

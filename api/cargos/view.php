@@ -1,8 +1,8 @@
 <?php
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('cargos', 'visualizar');
-  
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
+  accessApi('cargos', 'visualizar');
+
 	if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if (isset($_GET['id'])) {
@@ -15,7 +15,7 @@
 
       //? Puxa todos os cargos
       $sql = "SELECT * FROM cargos";
-      
+
     }
 
     $res = $conn->query($sql);
@@ -27,7 +27,7 @@
         'error' => $conn->error
       ]);
     }
-    
+
     if ($res->num_rows == 0) {
       send([
         'status' => 404,
@@ -38,7 +38,7 @@
     $data = [];
 
     while ($db = $res->fetch_assoc()) {
-      $db['acess'] = json_decode($db['acess']);
+      $db['access'] = json_decode($db['access']);
       if (isset($_GET['id'])) {
         $data = $db;
       } else {

@@ -17,12 +17,12 @@
     exit;
   }
 
-  //*---------- Acess ----------*//
+  //*---------- Access ----------*//
 
-  function acessApi($page, $func) {
+  function accessApi($page, $func) {
     global $_SESSION;
 
-    if (env('ALOHA_ACESS') == 'false') {
+    if (env('ALOHA_ACCESS') == 'false') {
       return;
     }
 
@@ -40,25 +40,25 @@
     }
 
     $cargo = $_SESSION['cargo'];
-    
-    //? Apenas admin tem acesso a todas as páginas
+
+    //? Apenas admin tem accesso a todas as páginas
     if ($cargo['nome'] == 'Admin') {
       return;
     }
 
-    $acess = $_SESSION['cargo']['acess'];
+    $access = $_SESSION['cargo']['access'];
 
-    //? Verifica se o user tem acesso a pelo menos uma função da página
-    $acess_page = $acess[$page] ?? null;
-    if ($acess_page === null) {
+    //? Verifica se o user tem accesso a pelo menos uma função da página
+    $access_page = $access[$page] ?? null;
+    if ($access_page === null) {
       err401();
     }
 
-    //? Verifica se o user tem acesso a função da página
+    //? Verifica se o user tem accesso a função da página
     if (is_array($func)) {
       $ok = false;
       foreach ($func as $f) {
-        if (in_array($f, $acess[$page]) == true) {
+        if (in_array($f, $access[$page]) == true) {
           $ok = true;
         }
       }
@@ -66,17 +66,17 @@
         err401();
       }
     } else {
-      if (in_array($func, $acess[$page]) == false) {
+      if (in_array($func, $access[$page]) == false) {
         err401();
       }
     }
 
   }
 
-  function acess($page, $func) {
+  function access($page, $func) {
     global $_SESSION;
 
-    if (env('ALOHA_ACESS') == 'false') {
+    if (env('ALOHA_ACCESS') == 'false') {
       return;
     }
 
@@ -86,22 +86,22 @@
     }
 
     $cargo = $_SESSION['cargo'];
-    
-    //? Apenas admin tem acesso a todas as páginas
+
+    //? Apenas admin tem accesso a todas as páginas
     if ($cargo['nome'] == 'Admin') {
       return;
     }
 
-    $acess = $_SESSION['cargo']['acess'];
+    $access = $_SESSION['cargo']['access'];
 
-    //? Verifica se o user tem acesso a pelo menos uma função da página
-    if (!$acess[$page]) {
+    //? Verifica se o user tem accesso a pelo menos uma função da página
+    if (!$access[$page]) {
       header('Location: /err/401');
       exit;
     }
 
-    //? Verifica se o user tem acesso a função da página
-    if (in_array($func, $acess[$page]) == false) {
+    //? Verifica se o user tem accesso a função da página
+    if (in_array($func, $access[$page]) == false) {
       header('Location: /err/401');
       exit;
     }

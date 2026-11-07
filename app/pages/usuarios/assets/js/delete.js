@@ -15,14 +15,14 @@ $(document).on('click', '.delete-usuario', function() {
   $('#modal .modal-body').html(`
     <p>
       Deseja realmente deletar o usuario <b>${usuario}</b>? <br>
-      <b>Obs:</b> Após o usuário deslogar ele não conseguirá mais acessar o sistema.
+      <b>Obs:</b> Após o usuário deslogar ele não conseguirá mais accessar o sistema.
     </p>
   `);
   $('#modal').modal('show');
-  
+
   //* Libera o deletar depois do tempo
   var interval = setInterval(function() {
-    
+
     contador--;
     $('#delete').html(`Deletar ${contador}s`);
     if (contador == 0) {

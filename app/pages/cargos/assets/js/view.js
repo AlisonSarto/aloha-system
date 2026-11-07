@@ -40,9 +40,9 @@ function creatModal(cargo) {
   `);
 
   let html = '';
-  acess = cargo.acess.acess;
+  access = cargo.access.access;
 
-  $.each(acess, function(key, value) {
+  $.each(access, function(key, value) {
     var title = key.charAt(0).toUpperCase() + key.slice(1);
     var func = value;
 
@@ -76,7 +76,7 @@ function creatModal(cargo) {
   });
 
   modal.find('.modal-body').html(`
-  
+
     <div class="row">
       <div class="col-md-12 mb-3">
         <label class="form-label h5">Nome do Cargo</label>
@@ -87,7 +87,7 @@ function creatModal(cargo) {
       </div>
       ${html}
     </div>
-  
+
   `);
 
   $('#modal').modal('show');

@@ -1,7 +1,7 @@
 <?php
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acess('cargos', 'visualizar');
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
+  access('cargos', 'visualizar');
 
 ?>
 <!DOCTYPE html>

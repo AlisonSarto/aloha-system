@@ -2,9 +2,9 @@
 
   //? Delete um cargo
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('cargos', 'deletar');
-  
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
+  accessApi('cargos', 'deletar');
+
 	if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     if (isset($_GET['id'])) {

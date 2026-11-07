@@ -6,7 +6,7 @@
   session_set_cookie_params($expireTime);
   session_start();
 
-  if (isset($_SESSION['email']) || env('ALOHA_ACESS') === 'false') {
+  if (isset($_SESSION['email']) || env('ALOHA_ACCESS') === 'false') {
 
     header("Location: /app");
     exit;

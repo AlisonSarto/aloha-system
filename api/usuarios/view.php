@@ -1,10 +1,10 @@
 <?php
 
-  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/acess.php';
-  acessApi('usuarios', 'visualizar');
-  
+  include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
+  accessApi('usuarios', 'visualizar');
+
 	if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    
+
     $data = [];
 
     if (isset($_GET['id'])) {
@@ -14,7 +14,7 @@
       $id = mysqli_real_escape_string($conn, $id);
       $sql = "SELECT * FROM usuarios WHERE id = $id";
     } else {
-      
+
       //? Puxa todos os usuários
       $sql = "SELECT * FROM usuarios ORDER BY nome";
     }
