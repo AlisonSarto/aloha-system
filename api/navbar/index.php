@@ -25,8 +25,8 @@
     //? Dashboard
     if ($admin === true) {
       array_push($navbar,
-        [ 'type' => 'link', 'title' => 'Dashboard', 'icon' => 'tachometer-alt', 'path' => 'dashboard' ],
-      2);
+        [ 'type' => 'link', 'title' => 'Dashboard', 'icon' => 'tachometer-alt', 'path' => 'dashboard' ]
+      );
     }
 
     //? Admin

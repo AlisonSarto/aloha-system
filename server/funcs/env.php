@@ -5,6 +5,12 @@
     // No Docker, as variáveis do .env já são injetadas no processo do Apache.
     // Isso permite manter o arquivo .env protegido contra leitura pelo usuário web.
     $processValue = getenv($envName);
+    if ($processValue === false && $envName === 'ALOHA_ACCESS') {
+      $processValue = getenv('ALOHA_ACESS');
+    }
+    if ($processValue === false && $envName === 'ALOHA_ACESS') {
+      $processValue = getenv('ALOHA_ACCESS');
+    }
     if ($processValue !== false) {
       return $processValue;
     }
