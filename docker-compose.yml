@@ -1,0 +1,34 @@
+services:
+  app:
+    build:
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8001:80"
+    volumes:
+      - .:/var/www/html
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: aloha_system
+      MYSQL_USER: aloha
+      MYSQL_PASSWORD: aloha_secret
+      MYSQL_ROOT_PASSWORD: root_secret
+    ports:
+      - "3307:3306"
+    volumes:
+      - aloha_mysql_data:/var/lib/mysql
+      - ./dev/db/create.sql:/docker-entrypoint-initdb.d/01-create.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  aloha_mysql_data:
