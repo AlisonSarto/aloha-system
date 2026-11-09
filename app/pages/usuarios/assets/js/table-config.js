@@ -14,6 +14,7 @@ function newTable() {
       <tr>
         <th>Nome</th>
         <th>Cargo</th>
+        <th>Fábricas</th>
         <th>Ações</th>
       </tr>
     </thead>
@@ -42,10 +43,16 @@ function newTable() {
           disabled = 'disabled';
         }
 
+        var nomesFabricas = (db.fabricas || []).map(function(fabrica) {
+          return $('<div>').text(fabrica.nome).html();
+        });
+        var fabricas = nomesFabricas.length ? nomesFabricas.join(', ') : '<span class="text-body-secondary">Sem vínculo</span>';
+
         tableContent += `
           <tr>
-            <td>${db.nome}</td>
-            <td>${db.cargo.nome}</td>
+            <td>${$('<div>').text(db.nome).html()}</td>
+            <td>${$('<div>').text(db.cargo.nome).html()}</td>
+            <td>${fabricas}</td>
             <td>
               <div class="d-flex flex-nowrap" data-id="${db.id}" data-name="${db.nome}">
                 <button class="btn btn-sm btn-primary view-usuario"><i class="fas fa-magnifying-glass"></i></button>
@@ -67,7 +74,7 @@ function newTable() {
   function returnEmptyTable() {
     tableContent += `
       <tr>
-        <td colspan="3" class="text-center">Nenhum usuário encontrado</td>
+        <td colspan="4" class="text-center">Nenhum usuário encontrado</td>
       </tr>
     `;
     dataTable(tableContent);

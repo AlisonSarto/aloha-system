@@ -1,6 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/db/connect.php';
+  include_once $_SERVER['DOCUMENT_ROOT'].'/server/funcs/fabricas.php';
 
   $expireTime = 604800;
   session_set_cookie_params($expireTime);
@@ -29,24 +30,46 @@
     //? Acesso a API com token
     $headers = getallheaders();
     $token = $headers['token'] ?? null;
+    $tokenAuth = $token == env('TOKEN');
 
-    if ($token == env('TOKEN')) {
+    //? Retorna se o usuário não estiver logado
+    if (empty($_SESSION) && !$tokenAuth) {
+      err401();
+    }
+
+    if ($page !== 'fabricas' && !fabricaVerificarSetup($conn)) {
+      send([
+        'status' => 428,
+        'message' => 'Conclua a configuração inicial da fábrica e da marca',
+        'setup_required' => true
+      ]);
+    }
+
+    if ($tokenAuth) {
       return;
     }
 
-    //? Retorna se o usuário não estiver logado
-    if (empty($_SESSION)) {
-      err401();
+    if ($page === 'contexto') {
+      return;
     }
 
     $cargo = $_SESSION['cargo'];
 
-    //? Apenas admin tem accesso a todas as páginas
-    if ($cargo['nome'] == 'Admin') {
-      return;
+    if ($page === 'fabricas' && $cargo['nome'] !== 'Admin') {
+      err401();
     }
 
-    if (!hasAccess($conn, $_SESSION['cargo']['id'], $page, $func)) {
+    //? Apenas admin tem accesso a todas as páginas
+    if ($cargo['nome'] == 'Admin') {
+      if ($page === 'fabricas') return;
+    }
+
+    if ($page !== 'fabricas' && $page !== 'contexto') {
+      $res = $conn->query("SELECT 1 FROM fabrica_usuarios WHERE usuario_id = " . (int) $_SESSION['id'] . " LIMIT 1");
+      if (!$res || $res->num_rows === 0) send(['status' => 403, 'message' => 'Seu usuário não está associado a uma fábrica']);
+    }
+
+    if ($cargo['nome'] !== 'Admin' && !hasAccess($conn, $_SESSION['cargo']['id'], $page, $func)) {
       err401();
     }
 
@@ -64,14 +87,32 @@
       exit;
     }
 
+    if ($page !== 'fabricas' && !fabricaVerificarSetup($conn)) {
+      header('Location: /app/?fabricas');
+      exit;
+    }
+
     $cargo = $_SESSION['cargo'];
+
+    if ($page === 'fabricas' && $cargo['nome'] !== 'Admin') {
+      header('Location: /err/401');
+      exit;
+    }
 
     //? Apenas admin tem accesso a todas as páginas
     if ($cargo['nome'] == 'Admin') {
-      return;
+      if ($page === 'fabricas') return;
     }
 
-    if (!hasAccess($conn, $_SESSION['cargo']['id'], $page, $func)) {
+    if ($page !== 'fabricas' && $page !== 'contexto') {
+      $res = $conn->query("SELECT 1 FROM fabrica_usuarios WHERE usuario_id = " . (int) $_SESSION['id'] . " LIMIT 1");
+      if (!$res || $res->num_rows === 0) {
+        header('Location: /err/401');
+        exit;
+      }
+    }
+
+    if ($cargo['nome'] !== 'Admin' && !hasAccess($conn, $_SESSION['cargo']['id'], $page, $func)) {
       header('Location: /err/401');
       exit;
     }

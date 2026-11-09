@@ -20,12 +20,12 @@ $(document).on('click', '#add-usuario', function() {
       <div class="card-body row">
 
         <div class="col-md-6">
-          <label class="form-label">Nome</label>
+          <label class="form-label" for="nome">Nome</label>
           <input type="text" id="nome" class="form-control">
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Cargo</label>
+          <label class="form-label" for="cargo">Cargo</label>
           <select class="form-select" id="cargo">
             <option disabled selected></option>
           </select>
@@ -44,7 +44,7 @@ $(document).on('click', '#add-usuario', function() {
       <div class="card-body row">
 
         <div class="col-md-6">
-          <label class="form-label">E-mail</label>
+          <label class="form-label" for="email">E-mail</label>
           <div class="input-group">
             <input type="text" class="form-control" id="email">
             <span class="input-group-text">@aloha.com</span>
@@ -52,11 +52,24 @@ $(document).on('click', '#add-usuario', function() {
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Senha</label>
+          <label class="form-label" for="senha">Senha</label>
           <input type="text" class="form-control" id="senha">
         </div>
 
       </div>            
+    </div>
+
+    <br>
+
+    <div class="card">
+      <div class="card-header"><i class="fas fa-industry me-1" aria-hidden="true"></i> Acesso às fábricas</div>
+      <div class="card-body">
+        <p class="text-body-secondary">Selecione as fábricas que este usuário poderá acessar.</p>
+        <fieldset>
+          <legend class="visually-hidden">Fábricas disponíveis para o usuário</legend>
+          <div id="fabricas-usuario" class="d-flex flex-wrap gap-3"><span class="text-body-secondary">Carregando fábricas...</span></div>
+        </fieldset>
+      </div>
     </div>
 
   `);
@@ -71,9 +84,35 @@ $(document).on('click', '#add-usuario', function() {
       `);
     });
 
-    modal.modal('show');
-    btn.html('<i class="fas fa-plus"></i> Adicionar');
-    btn.attr('disabled', false);
+    $.ajax({
+      url: '/api/fabricas/view',
+      type: 'GET',
+      success: function(fabricaData) {
+        $('#fabricas-usuario').empty();
+        if (!fabricaData.fabricas.length) {
+          $('#fabricas-usuario').html('<span class="text-body-secondary">Cadastre uma fábrica antes de criar usuários.</span>');
+          toast('Cadastre uma fábrica antes de adicionar usuários', 'danger');
+        }
+        $.each(fabricaData.fabricas, function(i, fabrica) {
+          var nomeFabrica = $('<div>').text(fabrica.nome).html();
+          $('#fabricas-usuario').append(`
+            <div class="form-check">
+              <input class="form-check-input fabrica-usuario" type="checkbox" id="fabrica-usuario-${fabrica.id}" value="${fabrica.id}">
+              <label class="form-check-label" for="fabrica-usuario-${fabrica.id}">${nomeFabrica}</label>
+            </div>
+          `);
+        });
+        modal.modal('show');
+        btn.html('<i class="fas fa-plus"></i> Adicionar');
+        btn.attr('disabled', false);
+      },
+      error: function(error) {
+        var message = error.responseJSON && error.responseJSON.message ? error.responseJSON.message : 'Não foi possível carregar as fábricas';
+        toast(message, 'danger');
+        btn.html('<i class="fas fa-plus"></i> Adicionar');
+        btn.attr('disabled', false);
+      }
+    });
 
     //* Salvar
     $('#salvar').click(function() {
@@ -82,6 +121,8 @@ $(document).on('click', '#add-usuario', function() {
       cargo = $('#cargo').val();
       email = $('#email').val();
       senha = $('#senha').val();
+      fabricaIds = [];
+      $('.fabrica-usuario:checked').each(function() { fabricaIds.push($(this).val()); });
 
       if (cargo == null || cargo == undefined) {
         toast('Preencha todos os campos', 'danger');
@@ -98,11 +139,17 @@ $(document).on('click', '#add-usuario', function() {
         return;
       }
 
+      if (fabricaIds.length === 0) {
+        toast('Selecione ao menos uma fábrica para o usuário', 'danger');
+        return;
+      }
+
       dados = {
         nome: nome,
         cargo: cargo,
         email: email,
-        senha: senha
+        senha: senha,
+        fabrica_ids: fabricaIds
       };
 
       btn = $(this);

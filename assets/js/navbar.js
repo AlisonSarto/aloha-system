@@ -35,6 +35,9 @@ $(document).ready(function () {
                 <i class="fa-solid fa-expand me-1"></i>
                 Tela Cheia
               </button>
+
+              <div class="dropdown-item-text p-3" id="fabrica-contexto" style="width: min(22rem, calc(100vw - 2rem));"></div>
+
               <a class="dropdown-item text-danger fw-semibold" id="exit-menu" href="/logout">
                 <i class="fas fa-door-closed me-1"></i>
                 Sair
@@ -95,6 +98,8 @@ $(document).ready(function () {
 
   $('body').html(page);
 
+  carregarContextoFabrica();
+
   //? Puxa o nome do usuário logado e coloca no navbar
   $.ajax({
     url: '/api/login/profile',
@@ -144,6 +149,46 @@ $(document).ready(function () {
     }
   });
 
+});
+
+function carregarContextoFabrica(fabricaId) {
+  var dados = {};
+  if (fabricaId) dados.fabrica_id = fabricaId;
+  $.ajax({
+    url: '/api/fabricas/context',
+    type: 'GET',
+    data: dados,
+    success: function(data) {
+
+      var fabricas = data.fabricas || [];
+      if (!fabricas.length) return;
+
+      var html = `
+        <div class="d-flex align-items-center text-uppercase small fw-semibold text-secondary border-bottom border-secondary pb-2 mb-3">
+          <i class="fas fa-industry me-2" aria-hidden="true"></i>
+          Fábrica ativa
+        </div>
+        <label class="form-label small fw-semibold mb-1" for="contexto-fabrica">Selecione uma fábrica</label>
+        <select class="form-select form-select-sm bg-dark text-light border-secondary w-100" id="contexto-fabrica" aria-label="Fábrica ativa">
+      `;
+      $.each(fabricas, function(i, fabrica) {
+        var selected = Number(fabrica.id) === Number(data.fabrica_id) ? 'selected' : '';
+        html += `<option value="${fabrica.id}" ${selected}>${escaparContexto(fabrica.nome)}</option>`;
+      });
+      html += `
+        </select>
+      `;
+      $('#fabrica-contexto').html(html);
+    }
+  });
+}
+
+function escaparContexto(texto) {
+  return $('<div>').text(texto == null ? '' : texto).html();
+}
+
+$(document).on('change', '#contexto-fabrica', function() {
+  carregarContextoFabrica($(this).val());
 });
 
 //* Funções
