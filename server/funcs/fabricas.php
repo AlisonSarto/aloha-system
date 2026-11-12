@@ -55,6 +55,25 @@
     return ['ok' => true, 'data' => $json['data'] ?? [], 'meta' => $json['meta'] ?? []];
   }
 
+  function fabricaEnviarGestaoClick($fabrica, $rota, $metodo, $consulta, $dados) {
+    $url = 'https://api.gestaoclick.com/api/' . ltrim($rota, '/');
+    if (!empty($consulta)) $url .= '?' . http_build_query($consulta);
+    $headers = [
+      'access-token: ' . $fabrica['access_token'],
+      'secret-access-token: ' . $fabrica['secret_access_token']
+    ];
+    $response = curl($url, $headers, $metodo, $dados);
+    if (is_array($response)) return ['ok' => false, 'message' => $response['message'] ?? 'Erro ao conectar com o Gestão Click'];
+    $json = json_decode($response, true);
+    if (!is_array($json)) return ['ok' => false, 'message' => 'Resposta inválida do Gestão Click'];
+    if (($json['status'] ?? '') !== 'success' || (int) ($json['code'] ?? 200) >= 400) {
+      $message = $json['data']['mensagem'] ?? $json['data']['erro'] ?? 'Não foi possível atualizar o Gestão Click';
+      $code = (int) ($json['code'] ?? 502);
+      return ['ok' => false, 'message' => $message, 'code' => $code >= 400 ? $code : 502];
+    }
+    return ['ok' => true, 'data' => $json['data'] ?? []];
+  }
+
   function fabricaLojasGestaoClick($accessToken, $secretAccessToken) {
     return fabricaChamarGestaoClick($accessToken, $secretAccessToken, 'lojas');
   }
@@ -81,6 +100,7 @@
   function fabricaTodosProdutosGestaoClick($fabrica, $grupoId) {
     $produtos = [];
     $pagina = 1;
+    $totalPaginas = null;
     do {
       $res = fabricaChamarGestaoClick($fabrica['access_token'], $fabrica['secret_access_token'], 'produtos', [
         'loja_id' => $fabrica['loja_id'],

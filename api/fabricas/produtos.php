@@ -1,4 +1,4 @@
-nav<?php
+<?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
   accessApi('contexto', 'visualizar');

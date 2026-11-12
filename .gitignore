@@ -6,3 +6,5 @@
 #* Arquivos para testes
 /tests/
 /test/
+
+.db

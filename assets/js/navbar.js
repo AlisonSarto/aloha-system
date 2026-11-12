@@ -98,6 +98,12 @@ $(document).ready(function () {
 
   $('body').html(page);
 
+  if (localStorage.getItem('alohaSidebarToggled') === 'true') {
+    $('body').addClass('sb-sidenav-toggled');
+  } else if (localStorage.getItem('alohaSidebarToggled') === 'false') {
+    $('body').removeClass('sb-sidenav-toggled');
+  }
+
   carregarContextoFabrica();
 
   //? Puxa o nome do usuário logado e coloca no navbar
@@ -117,11 +123,13 @@ $(document).ready(function () {
   $('#sidebarToggle').on('click', function(e) {
     e.preventDefault();
     $('body').toggleClass('sb-sidenav-toggled');
+    localStorage.setItem('alohaSidebarToggled', $('body').hasClass('sb-sidenav-toggled') ? 'true' : 'false');
 
     $(document).on('click', function(e) {
       if ($(window).width() <= 991 && $('body').hasClass('sb-sidenav-toggled')) {
         if ($(e.target).closest('#layoutSidenav_content').length === 1 || $(e.target).closest('.navigation').length === 1) {
           $('body').removeClass('sb-sidenav-toggled');
+          localStorage.setItem('alohaSidebarToggled', 'false');
         }
       }
     });
