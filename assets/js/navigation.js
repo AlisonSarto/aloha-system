@@ -90,8 +90,13 @@ function iframe(url) {
 
     return;
   }
-  
-  $('iframe').attr('src', url);
+
+  var pagina = url.replace('/app/pages/', '').replace(/\/$/, '');
+  var paginasComIndice = ['fabricas', 'marcas', 'usuarios', 'cargos', 'estoque'];
+  var urlIframe = url;
+  if (paginasComIndice.indexOf(pagina) !== -1 && urlIframe.slice(-1) !== '/') urlIframe += '/';
+
+  $('iframe').attr('src', urlIframe);
 
   url = url.replace('pages/', '');
   url = url.replace('app/', 'app/?');
