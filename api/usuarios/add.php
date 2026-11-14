@@ -11,8 +11,12 @@
     $cargo_id = $_POST['cargo'] ?? null;
     $email = $_POST['email'] ?? null;
     $senha = $_POST['senha'] ?? null;
+    $fabricaIds = $_POST['fabrica_ids'] ?? [];
 
-    if ($nome && $cargo_id && $email && $senha) {
+    if (!is_array($fabricaIds)) $fabricaIds = [];
+    $fabricaIds = array_values(array_unique(array_map('intval', $fabricaIds)));
+
+    if ($nome && $cargo_id && $email && $senha && count($fabricaIds) > 0) {
 
       //* Previne o SQL Injection
       $nome = $conn->real_escape_string($nome);
@@ -54,11 +58,24 @@
       }
 
       $db = $res->fetch_assoc();
+      if (!$db) {
+        send(['status' => 404, 'message' => 'Cargo não encontrado']);
+      }
+
+      foreach ($fabricaIds as $fabricaId) {
+        $fabricaCheck = $conn->query("SELECT id FROM fabricas WHERE id = $fabricaId");
+        if ($fabricaId < 1 || !$fabricaCheck || $fabricaCheck->num_rows === 0) {
+          send(['status' => 400, 'message' => 'Selecione somente fábricas cadastradas']);
+        }
+      }
+
       //? Cria o usuário
+      $conn->begin_transaction();
       $sql = "INSERT INTO usuarios (nome, email, senha, cargo_id) VALUES ('$nome', '$email', '$senha', $cargo_id)";
       $res = $conn->query($sql);
 
       if ($res === false) {
+        $conn->rollback();
         send([
           'status' => 500,
           'message' => 'Erro ao criar o usuário',
@@ -67,6 +84,15 @@
       }
 
       $id = $conn->insert_id;
+      $stmtFabrica = $conn->prepare('INSERT INTO fabrica_usuarios (fabrica_id, usuario_id) VALUES (?, ?)');
+      foreach ($fabricaIds as $fabricaId) {
+        $stmtFabrica->bind_param('ii', $fabricaId, $id);
+        if (!$stmtFabrica->execute()) {
+          $conn->rollback();
+          send(['status' => 500, 'message' => 'Erro ao vincular o usuário às fábricas']);
+        }
+      }
+      $conn->commit();
 
       send([
         'status' => 200,
@@ -77,7 +103,7 @@
     }else {
       send([
         'status' => 400,
-        'message' => 'Dados inválidos'
+        'message' => 'Preencha os dados do usuário e selecione ao menos uma fábrica'
       ]);
     }
 

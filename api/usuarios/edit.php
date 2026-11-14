@@ -12,8 +12,12 @@
     $nome = $_POST['nome'] ?? null;
     $email = $_POST['email'] ?? null;
     $senha = $_POST['senha'] ?? null;
+    $fabricaIds = $_POST['fabrica_ids'] ?? [];
 
-    if ($id && $cargo_id && $nome && $email && $senha) {
+    if (!is_array($fabricaIds)) $fabricaIds = [];
+    $fabricaIds = array_values(array_unique(array_map('intval', $fabricaIds)));
+
+    if ($id && $cargo_id && $nome && $email && $senha && count($fabricaIds) > 0) {
 
       //* Previne o SQL Injection
       $id = $conn->real_escape_string($id);
@@ -36,7 +40,9 @@
         ]);
       }
 
-      $antigo_cargo_id = $res->fetch_assoc()['cargo_id'];
+      $usuarioAtual = $res->fetch_assoc();
+      if (!$usuarioAtual) send(['status' => 404, 'message' => 'Usuário não encontrado']);
+      $antigo_cargo_id = $usuarioAtual['cargo_id'];
 
       //? Verifica se já existe um usuário com esse nome ou email
       $sql = "SELECT * FROM usuarios WHERE (nome = '$nome' OR email = '$email') AND id != '$id'";
@@ -88,11 +94,20 @@
         send(['status' => 404, 'message' => 'Cargo não encontrado']);
       }
 
+      foreach ($fabricaIds as $fabricaId) {
+        $fabricaCheck = $conn->query("SELECT id FROM fabricas WHERE id = $fabricaId");
+        if ($fabricaId < 1 || !$fabricaCheck || $fabricaCheck->num_rows === 0) {
+          send(['status' => 400, 'message' => 'Selecione somente fábricas cadastradas']);
+        }
+      }
+
       //? Edita o usuário
+      $conn->begin_transaction();
       $sql = "UPDATE usuarios SET nome = '$nome', email = '$email', senha = '$senha', cargo_id = '$cargo_id' WHERE id = '$id'";
       $res = $conn->query($sql);
 
       if ($res === false) {
+        $conn->rollback();
         send([
           'status' => 500,
           'message' => 'Erro ao editar o usuário',
@@ -100,15 +115,29 @@
         ]);
       }
 
+      if (!$conn->query("DELETE FROM fabrica_usuarios WHERE usuario_id = '$id'")) {
+        $conn->rollback();
+        send(['status' => 500, 'message' => 'Erro ao atualizar os vínculos de fábrica']);
+      }
+      $stmtFabrica = $conn->prepare('INSERT INTO fabrica_usuarios (fabrica_id, usuario_id) VALUES (?, ?)');
+      foreach ($fabricaIds as $fabricaId) {
+        $stmtFabrica->bind_param('ii', $fabricaId, $id);
+        if (!$stmtFabrica->execute()) {
+          $conn->rollback();
+          send(['status' => 500, 'message' => 'Erro ao atualizar os vínculos de fábrica']);
+        }
+      }
+      $conn->commit();
+
       send([
         'status' => 200,
-        'message' => 'Cargo editado com sucesso'
+        'message' => 'Usuário atualizado com sucesso'
       ]);
 
     }else {
       send([
         'status' => 400,
-        'message' => 'Dados inválidos'
+        'message' => 'Preencha os dados do usuário e selecione ao menos uma fábrica'
       ]);
     }
 

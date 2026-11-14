@@ -34,6 +34,11 @@
       while ($db = $res->fetch_assoc()) {
         $db['cargo'] = ['nome' => $db['cargo_nome']];
         unset($db['cargo_nome']);
+        $db['fabricas'] = [];
+        $fabricaRes = $conn->query("SELECT fabricas.id, fabricas.nome FROM fabricas INNER JOIN fabrica_usuarios ON fabrica_usuarios.fabrica_id = fabricas.id WHERE fabrica_usuarios.usuario_id = " . (int) $db['id'] . " ORDER BY fabricas.nome");
+        if ($fabricaRes) {
+          while ($fabrica = $fabricaRes->fetch_assoc()) $db['fabricas'][] = $fabrica;
+        }
         if (isset($_GET['id'])) {
           $data = $db;
         } else {

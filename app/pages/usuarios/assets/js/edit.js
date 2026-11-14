@@ -1,18 +1,12 @@
-$(document).on('click', '.edit-usuario', function () {
+$(document).on('click', '.edit-usuario', function() {
 
-  btn = $(this);
-  btn.html('<i class="fas fa-spinner fa-spin"></i>');
-  btn.attr('disabled', true);
-  id = $(this).parent().data('id');
+  var botao = $(this);
+  var id = botao.parent().data('id');
+  botao.html('<i class="fas fa-spinner fa-spin"></i>');
+  botao.attr('disabled', true);
 
-  //? Verifica é o último usuário admin
-  if ($(this).parent().parent().find('.delete-usuario').attr('disabled') == 'disabled') {
-    disabled = 'disabled';
-  } else {
-    disabled = '';
-  }
-
-  modal = $('#modal');
+  var disabled = botao.parent().parent().find('.delete-usuario').attr('disabled') === 'disabled' ? 'disabled' : '';
+  var modal = $('#modal');
   modal.find('.modal-title').text('Editar Usuário');
   modal.find('.modal-footer').html(`
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -21,169 +15,144 @@ $(document).on('click', '.edit-usuario', function () {
   modal.find('.modal-body').html(`
 
     <div class="card">
-      <div class="card-header">
-        <i class="fas fa-user"></i>
-        Infomações Gerais
-      </div>
-      <div class="card-body row">
-
+      <div class="card-header"><i class="fas fa-user" aria-hidden="true"></i> Informações gerais</div>
+      <div class="card-body row g-3">
         <div class="col-md-6">
-          <label class="form-label">Nome</label>
+          <label class="form-label" for="nome">Nome</label>
           <input type="text" id="nome" class="form-control">
         </div>
-          
         <div class="col-md-6">
-          <label class="form-label">Cargo</label>
+          <label class="form-label" for="cargo">Cargo</label>
           <select class="form-select" id="cargo" ${disabled}></select>
         </div>
-
       </div>
     </div>
 
     <br>
 
     <div class="card">
-      <div class="card-header">
-        <i class="fas fa-key"></i>
-        Infomações de Acesso
-      </div>
-      <div class="card-body row">
-
+      <div class="card-header"><i class="fas fa-key" aria-hidden="true"></i> Informações de acesso</div>
+      <div class="card-body row g-3">
         <div class="col-md-6">
-          <label class="form-label">E-mail</label>
+          <label class="form-label" for="email">E-mail</label>
           <div class="input-group">
             <input type="text" class="form-control" id="email">
             <span class="input-group-text">@aloha.com</span>
           </div>
         </div>
-
         <div class="col-md-6">
-          <label class="form-label">Senha</label>
+          <label class="form-label" for="senha">Senha</label>
           <input type="text" class="form-control" id="senha">
         </div>
+      </div>
+    </div>
 
-      </div>            
+    <br>
+
+    <div class="card">
+      <div class="card-header"><i class="fas fa-industry me-1" aria-hidden="true"></i> Acesso às fábricas</div>
+      <div class="card-body">
+        <p class="text-body-secondary">Selecione as fábricas que este usuário poderá acessar.</p>
+        <fieldset>
+          <legend class="visually-hidden">Fábricas disponíveis para o usuário</legend>
+          <div id="fabricas-usuario" class="d-flex flex-wrap gap-3"><span class="text-body-secondary">Carregando fábricas...</span></div>
+        </fieldset>
+      </div>
     </div>
 
   `);
 
-  //? Carregar cargos no select
-  $.ajax({
-    url: '/api/cargos/view',
-    method: 'GET',
-    success: function (data) {
-      cargos = data.cargos;
-      $.each(cargos, function (i, item) {
-        $('#cargo').append(`
-          <option value="${item.id}">${item.cargo}</option>
-        `);
-      });
-    },
-    error: function (err) {
-      console.log(err);
-      message = err.responseJSON.message;
-      toast(message, 'danger');
-    }
-  });
+  $.when(
+    $.ajax({ url: '/api/cargos/view', type: 'GET' }),
+    $.ajax({ url: '/api/usuarios/view', data: { id: id }, type: 'GET' }),
+    $.ajax({ url: '/api/fabricas/view', type: 'GET' })
+  ).done(function(cargoResponse, usuarioResponse, fabricaResponse) {
+    var cargos = cargoResponse[0].cargos || [];
+    var usuario = usuarioResponse[0].usuarios;
+    var fabricas = fabricaResponse[0].fabricas || [];
+    var fabricasUsuario = (usuario.fabricas || []).map(function(fabrica) { return Number(fabrica.id); });
 
-  //? Carregar os dados do usuário
-  $.ajax({
-    url: '/api/usuarios/view',
-    data: { id: id },
-    method: 'GET',
-    success: function (data) {
-      usuario = data.usuarios;
+    $.each(cargos, function(i, item) {
+      var nomeCargo = $('<div>').text(item.cargo).html();
+      $('#cargo').append(`<option value="${item.id}">${nomeCargo}</option>`);
+    });
+    $('#nome').val(usuario.nome);
+    $('#cargo').val(usuario.cargo_id);
+    $('#email').val(usuario.email.replace('@aloha.com', ''));
+    $('#senha').val(usuario.senha);
 
-      $('#nome').val(usuario.nome);
-      $('#cargo').val(usuario.cargo_id);
-      $('#email').val(usuario.email.replace('@aloha.com', ''));
-      $('#senha').val(usuario.senha);
-
-      btn.html('<i class="fas fa-pen-to-square"></i>');
-      btn.attr('disabled', false);
-      modal.modal('show');
-    },
-    error: function (err) {
-      console.log(err);
-      message = err.responseJSON.message;
-      toast(message, 'danger');
-      btn.html('<i class="fas fa-pen-to-square"></i>');
-      btn.attr('disabled', false);
-    }
-  });
-
-  //* Salvar
-  $('#salvar').click(function () {
-
-    nome = $('#nome').val();
-    cargo = $('#cargo').val();
-    email = $('#email').val();
-    senha = $('#senha').val();
-
-    //? Verifica se mudou alguma coisa em comparação com o banco de dados
-    if (nome == usuario.nome && cargo == usuario.cargo_id && email == usuario.email.replace('@aloha.com', '') && senha == usuario.senha) {
-      toast('Nada foi alterado', 'danger');
-      return;
-    }
-
-    if (cargo == null || cargo == undefined) {
-      toast('Preencha todos os campos', 'danger');
-      return;
-    }
-
-    if (nome == '' || cargo == '' || email == '' || senha == '') {
-      toast('Preencha todos os campos', 'danger');
-      return;
-    }
-
-    if (nome == ' ' || cargo == ' ' || email == ' ' || senha == ' ') {
-      toast('Preencha todos os campos', 'danger');
-      return;
-    }
-
-    dados = {
-      id: id,
-      cargo: cargo,
-      nome: nome,
-      email: email,
-      senha: senha
-    };
-
-    btn = $(this);
-    btn.html('<i class="fas fa-spinner fa-spin"></i> Salvando...');
-    btn.attr('disabled', true);
-
-    $.ajax({
-      url: '/api/usuarios/edit',
-      type: 'POST',
-      data: dados,
-      beforeSend: function () {
-        $('#salvar').html('<i class="fas fa-spinner fa-spin"></i> Salvando...');
-        $('#salvar').attr('disabled', true);
-      },
-      success: function (data) {
-        message = data.message;
-        modal.modal('hide');
-        toast(message, 'success');
-        newTable();
-      },
-      error: function (error) {
-        console.log(error);
-        message = error.responseJSON.message;
-        $('#salvar').html('Salvar');
-        $('#salvar').attr('disabled', false);
-        toast(message, 'danger');
-      }
+    $.each(fabricas, function(i, fabrica) {
+      var nomeFabrica = $('<div>').text(fabrica.nome).html();
+      var checked = fabricasUsuario.indexOf(Number(fabrica.id)) > -1 ? 'checked' : '';
+      $('#fabricas-usuario').append(`
+        <div class="form-check">
+          <input class="form-check-input fabrica-usuario" type="checkbox" id="fabrica-usuario-${fabrica.id}" value="${fabrica.id}" ${checked}>
+          <label class="form-check-label" for="fabrica-usuario-${fabrica.id}">${nomeFabrica}</label>
+        </div>
+      `);
     });
 
-  });
+    botao.html('<i class="fas fa-pen-to-square"></i>');
+    botao.attr('disabled', false);
+    modal.modal('show');
 
-  //? E-Mail rápido
-  $(document).on('keyup', '#nome', function () {
-    nome = $(this).val();
-    nome = nome.toLowerCase();
-    nome = nome.replace(/ /g, '');
-    $('#email').val(nome);
+    $('#salvar').on('click', function() {
+      var nome = $('#nome').val().trim();
+      var cargo = $('#cargo').val();
+      var email = $('#email').val().trim();
+      var senha = $('#senha').val();
+      var fabricaIds = [];
+      $('.fabrica-usuario:checked').each(function() { fabricaIds.push($(this).val()); });
+
+      if (!nome || !cargo || !email || !senha) {
+        toast('Preencha todos os campos', 'danger');
+        return;
+      }
+      if (fabricaIds.length === 0) {
+        toast('Selecione ao menos uma fábrica para o usuário', 'danger');
+        return;
+      }
+
+      var fabricasAtuais = (usuario.fabricas || []).map(function(fabrica) { return Number(fabrica.id); }).sort();
+      var fabricasNovas = fabricaIds.map(Number).sort();
+      var fabricasMudaram = fabricasAtuais.join(',') !== fabricasNovas.join(',');
+      if (nome === usuario.nome && cargo == usuario.cargo_id && email === usuario.email.replace('@aloha.com', '') && senha === usuario.senha && !fabricasMudaram) {
+        toast('Nada foi alterado', 'danger');
+        return;
+      }
+
+      var dados = {
+        id: id,
+        cargo: cargo,
+        nome: nome,
+        email: email,
+        senha: senha,
+        fabrica_ids: fabricaIds
+      };
+      var salvar = $(this);
+      salvar.html('<i class="fas fa-spinner fa-spin"></i> Salvando...').attr('disabled', true);
+      $.ajax({
+        url: '/api/usuarios/edit',
+        type: 'POST',
+        data: dados,
+        success: function(data) {
+          modal.modal('hide');
+          toast(data.message, 'success');
+          newTable();
+        },
+        error: function(error) {
+          var message = error.responseJSON && error.responseJSON.message ? error.responseJSON.message : 'Não foi possível salvar o usuário';
+          toast(message, 'danger');
+          salvar.text('Salvar').attr('disabled', false);
+        }
+      });
+    });
+
+  }).fail(function(error) {
+    var message = error.responseJSON && error.responseJSON.message ? error.responseJSON.message : 'Não foi possível carregar os dados do usuário';
+    toast(message, 'danger');
+    botao.html('<i class="fas fa-pen-to-square"></i>');
+    botao.attr('disabled', false);
   });
 
 });
@@ -193,4 +162,4 @@ function toast(text, color) {
   $('.toast-header').addClass('text-bg-' + color);
   $('.toast-body').text(text);
   $('#toast').toast('show');
-};
+}
