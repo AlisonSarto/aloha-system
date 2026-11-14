@@ -1,3 +1,4 @@
 .db
+.volumes
 .git
 .env

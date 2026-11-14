@@ -8,5 +8,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends libcurl4-openss
 WORKDIR /var/www/html
 
 COPY . /var/www/html
+COPY docker/entrypoint.sh /usr/local/bin/aloha-system-entrypoint
 
-RUN chown -R www-data:www-data /var/www/html
+RUN chmod +x /usr/local/bin/aloha-system-entrypoint \
+    && chown -R www-data:www-data /var/www/html
+
+ENTRYPOINT ["/usr/local/bin/aloha-system-entrypoint"]
+CMD ["apache2-foreground"]

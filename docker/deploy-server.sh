@@ -34,13 +34,13 @@ cleanup() {
         if [ ! -e "$project" ] && [ -d "$rollback" ]; then
             mv "$rollback" "$project" || true
         fi
-        if [ -d "$staging/.db" ] && [ -d "$project" ] && [ ! -e "$project/.db" ]; then
-            mv "$staging/.db" "$project/.db" || true
+        if [ -d "$staging/.volumes" ] && [ -d "$project" ] && [ ! -e "$project/.volumes" ]; then
+            mv "$staging/.volumes" "$project/.volumes" || true
+            if [ -d "$project/.volumes/db" ] && [ ! -e "$project/.db" ]; then
+                ln -s .volumes/db "$project/.db" || true
+            fi
         fi
-        if [ -d "$staging/uploads" ] && [ -d "$project" ] && [ ! -e "$project/uploads" ]; then
-            mv "$staging/uploads" "$project/uploads" || true
-        fi
-        if [ -d "$staging" ] && [ ! -e "$staging/.db" ] && [ ! -e "$staging/uploads" ]; then
+        if [ -d "$staging" ] && [ ! -e "$staging/.volumes" ]; then
             rm -rf "$staging"
         fi
         if [ -d "$project" ]; then
@@ -51,11 +51,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
-test -d "$project/.db"
+test -d "$project/.db" || test -d "$project/.volumes/db"
 test -f "$project/.env"
-mkdir -p "$project/uploads/estoque/carrinhos" "$backup_root" "$backup"
+mkdir -p "$backup_root" "$backup"
 chmod 700 "$backup_root" "$backup"
-chown -R 33:33 "$project/uploads"
 
 # Clone and build the exact commit before interrupting the live service.
 (
@@ -101,19 +100,52 @@ if [ "$table_count" -lt 1 ]; then
 fi
 docker rm -f "$restore_test" >/dev/null
 
-# Save raw database files and photos after stopping writes.
+# Move persistent files under the project-local .volumes directory after writes stop.
 compose_in "$project" stop app db
-tar -czf "$backup/data.tar.gz" -C "$project" .db uploads
+if [ -d "$project/.volumes" ]; then
+    mv "$project/.volumes" "$staging/.volumes"
+else
+    mkdir -p "$staging/.volumes"
+fi
+if [ -L "$project/.db" ]; then
+    rm "$project/.db"
+fi
+if [ -d "$project/.db" ]; then
+    mv "$project/.db" "$staging/.volumes/db"
+elif [ ! -d "$staging/.volumes/db" ]; then
+    echo "Database directory was not found in .db or .volumes/db." >&2
+    exit 1
+fi
+if [ ! -d "$staging/.volumes/uploads" ]; then
+    mkdir -p "$staging/.volumes/uploads"
+    if [ -d "$project/uploads" ] && find "$project/uploads" -type f -print -quit | grep -q .; then
+        docker run --rm \
+            -v "$project/uploads:/legacy:ro" \
+            -v "$staging/.volumes/uploads:/uploads" \
+            alpine:3.22 sh -c 'cp -a /legacy/. /uploads/'
+    fi
+fi
+# Back up the complete persistent directory and verify its archive.
+docker run --rm --entrypoint sh \
+    -v "$staging/.volumes:/source:ro" \
+    -v "$backup:/backup" \
+    -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" \
+    mysql:8.0 -c 'tar -czf /backup/data.tar.gz -C /source . && chown "$HOST_UID:$HOST_GID" /backup/data.tar.gz && chmod 600 /backup/data.tar.gz'
 tar -tzf "$backup/data.tar.gz" >/dev/null
 chmod 600 "$backup/database.sql.gz" "$backup/data.tar.gz" "$backup/.env"
 sha256sum "$backup/database.sql.gz" "$backup/data.tar.gz" "$backup/.env"
 
-# Keep the database and uploaded photos at the same project-relative paths.
-mv "$project/.db" "$staging/.db"
-mv "$project/uploads" "$staging/uploads"
+# Keep .volumes at the same project-relative path across the code swap.
 mv "$project" "$rollback"
 mv "$staging" "$project"
 swapped=1
+
+# Preserve paths expected by the previous code if it needs to be restored.
+ln -s "$project/.volumes/db" "$rollback/.db"
+if [ -e "$rollback/uploads" ] || [ -L "$rollback/uploads" ]; then
+    rm -rf "$rollback/uploads"
+fi
+ln -s "$project/.volumes/uploads" "$rollback/uploads"
 
 compose_in "$project" up -d db
 db_container="$(compose_in "$project" ps -q db)"

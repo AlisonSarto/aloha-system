@@ -9,10 +9,10 @@ services:
       - "${APP_EXTERNAL_PORT}:80"
     volumes:
       - .:/var/www/html
+      - ./.volumes/uploads:/var/www/html/uploads
     env_file:
       - .env
     restart: unless-stopped
-
   db:
     image: mysql:8.0
     env_file:
@@ -25,13 +25,10 @@ services:
     ports:
       - "${DB_EXTERNAL_PORT}:3306"
     volumes:
-      - ./.db:/var/lib/mysql
+      - ./.volumes/db:/var/lib/mysql
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s
       timeout: 5s
       retries: 20
     restart: unless-stopped
-
-volumes:
-  aloha_mysql_data:
