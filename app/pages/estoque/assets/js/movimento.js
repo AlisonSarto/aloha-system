@@ -4,12 +4,22 @@ var produtosEstoque = [];
 var marcaSelecionadaEstoque = null;
 var produtoSelecionadoEstoque = null;
 var carregandoProdutosEstoque = false;
+var fotoCapturadaCarrinho = null;
+var cameraCarrinhoStream = null;
 
 $(document).ready(function() {
   operacaoEstoque = $('#form-movimento-estoque').data('operacao');
   carregarContextoEstoque();
   carregarHistoricoEstoque();
   $('#quantidade-estoque').on('input', atualizarConversaoQuantidadeEstoque);
+  $('#abrir-camera-carrinho').on('click', iniciarCameraCarrinho);
+  $('#capturar-foto-carrinho').on('click', capturarFotoCarrinho);
+  $('#refazer-foto-carrinho').on('click', function() {
+    fotoCapturadaCarrinho = null;
+    $('#previa-foto-carrinho').addClass('d-none').attr('src', '');
+    $('#refazer-foto-carrinho').addClass('d-none');
+    iniciarCameraCarrinho();
+  });
 });
 
 function escaparEstoque(valor) {
@@ -27,6 +37,54 @@ function mostrarMensagemEstoque(texto, tipo) {
 
 function mensagemErroEstoque(xhr, fallback) {
   return xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : fallback;
+}
+
+function pararCameraCarrinho() {
+  if (cameraCarrinhoStream) cameraCarrinhoStream.getTracks().forEach(function(track) { track.stop(); });
+  cameraCarrinhoStream = null;
+  $('#camera-carrinho').addClass('d-none').get(0).srcObject = null;
+  $('#capturar-foto-carrinho').addClass('d-none');
+}
+
+function iniciarCameraCarrinho() {
+  var video = $('#camera-carrinho').get(0);
+  $('#erro-camera-carrinho').text('');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    $('#erro-camera-carrinho').text('Este navegador não permite acessar a câmera. Abra a página em um navegador compatível e com conexão segura.');
+    return;
+  }
+  pararCameraCarrinho();
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false }).then(function(stream) {
+    cameraCarrinhoStream = stream;
+    video.srcObject = stream;
+    $('#camera-carrinho').removeClass('d-none');
+    $('#capturar-foto-carrinho').removeClass('d-none');
+  }).catch(function() {
+    $('#erro-camera-carrinho').text('Não foi possível abrir a câmera. Permita o acesso à câmera para tirar a foto do carrinho.');
+  });
+}
+
+function capturarFotoCarrinho() {
+  var video = $('#camera-carrinho').get(0);
+  if (!cameraCarrinhoStream || !video.videoWidth) {
+    $('#erro-camera-carrinho').text('A câmera ainda está sendo preparada. Tente novamente em instantes.');
+    return;
+  }
+  var canvas = $('#captura-carrinho').get(0);
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+  canvas.toBlob(function(blob) {
+    if (!blob) {
+      $('#erro-camera-carrinho').text('Não foi possível capturar a foto. Tente novamente.');
+      return;
+    }
+    fotoCapturadaCarrinho = new File([blob], 'carrinho.jpg', { type: 'image/jpeg' });
+    $('#previa-foto-carrinho').attr('src', URL.createObjectURL(blob)).removeClass('d-none');
+    $('#refazer-foto-carrinho').removeClass('d-none');
+    $('#erro-camera-carrinho').text('');
+    pararCameraCarrinho();
+  }, 'image/jpeg', 0.9);
 }
 
 function formatarQuantidadeEstoque(quantidade) {
@@ -182,19 +240,27 @@ $(document).on('click', '[data-voltar-etapa]', function() {
 $('#form-movimento-estoque').on('submit', function(event) {
   event.preventDefault();
   if (!marcaSelecionadaEstoque || !produtoSelecionadoEstoque) return;
+  var fotoCarrinho = fotoCapturadaCarrinho;
+  if (operacaoEstoque === 'entrada_carrinho' && !fotoCarrinho) {
+    mostrarMensagemEstoque('Tire uma foto do carrinho antes de registrar a entrada.', 'warning');
+    $('#abrir-camera-carrinho').trigger('focus');
+    return;
+  }
   var botao = $('#salvar-movimento-estoque');
-  var dados = {
-    operacao: operacaoEstoque,
-    marca_id: marcaSelecionadaEstoque.id,
-    produto_id: produtoSelecionadoEstoque.id,
-    quantidade: $('#quantidade-estoque').val()
-  };
+  var dados = new FormData();
+  dados.append('operacao', operacaoEstoque);
+  dados.append('marca_id', marcaSelecionadaEstoque.id);
+  dados.append('produto_id', produtoSelecionadoEstoque.id);
+  dados.append('quantidade', $('#quantidade-estoque').val());
+  if (fotoCarrinho) dados.append('foto_carrinho', fotoCarrinho);
   botao.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1" aria-hidden="true"></i>Salvando...');
   $.ajax({
     url: '/api/estoque/movimentar',
     type: 'POST',
     dataType: 'json',
     data: dados,
+    processData: false,
+    contentType: false,
     success: function(data) {
       var quantidade = Number(data.quantidade);
       var quantidadeFormatada = operacaoEstoque === 'entrada_carrinho'
@@ -235,7 +301,12 @@ function carregarHistoricoEstoque() {
       $.each(movimentos, function(i, item) {
         var total = item.total_produto_hoje;
         var quantidade = operacaoEstoque === 'entrada_carrinho' ? Number(item.quantidade).toLocaleString('pt-BR') : formatarQuantidadeEstoque(item.quantidade);
-        html += `<tr><th scope="row">${escaparEstoque(item.produto_nome)}</th><td>${quantidade}</td><td>${formatarQuantidadeEstoque(total)}</td><td>${escaparEstoque(item.usuario_nome)}</td><td>${escaparEstoque(item.registrado_em)}</td></tr>`;
+        var foto = operacaoEstoque === 'entrada_carrinho' && item.foto_carrinho
+          ? `<a href="${escaparEstoque(item.foto_carrinho)}" target="_blank" rel="noopener">Ver foto</a>`
+          : (operacaoEstoque === 'entrada_carrinho' ? '—' : '');
+        html += operacaoEstoque === 'entrada_carrinho'
+          ? `<tr><th scope="row">${escaparEstoque(item.produto_nome)}</th><td>${quantidade}</td><td>${foto}</td><td>${formatarQuantidadeEstoque(total)}</td><td>${escaparEstoque(item.usuario_nome)}</td><td>${escaparEstoque(item.registrado_em)}</td></tr>`
+          : `<tr><th scope="row">${escaparEstoque(item.produto_nome)}</th><td>${quantidade}</td><td>${formatarQuantidadeEstoque(total)}</td><td>${escaparEstoque(item.usuario_nome)}</td><td>${escaparEstoque(item.registrado_em)}</td></tr>`;
       });
       $('#historico-estoque').html(html || '<tr><td colspan="5" class="text-center text-body-secondary py-4">Nenhum lançamento registrado.</td></tr>');
     },

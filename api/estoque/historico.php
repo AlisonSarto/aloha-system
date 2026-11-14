@@ -14,7 +14,7 @@
   $inicioDiaLocal = (new DateTimeImmutable('now', $fusoLocal))->setTime(0, 0, 0);
   $inicioDiaUtc = $inicioDiaLocal->setTimezone($fusoUtc)->format('Y-m-d H:i:s');
   $fimDiaUtc = $inicioDiaLocal->modify('+1 day')->setTimezone($fusoUtc)->format('Y-m-d H:i:s');
-  $stmt = $conn->prepare('SELECT e.id, e.produto_id, e.produto_nome, e.quantidade, e.estoque_anterior, e.estoque_atual, e.registrado_em, u.nome AS usuario_nome FROM estoque_movimentos e INNER JOIN usuarios u ON u.id = e.usuario_id WHERE e.fabrica_id = ? AND e.operacao = ? AND e.usuario_id = ? AND e.registrado_em >= ? AND e.registrado_em < ? ORDER BY e.registrado_em ASC, e.id ASC');
+  $stmt = $conn->prepare('SELECT e.id, e.produto_id, e.produto_nome, e.quantidade, e.foto_carrinho, e.estoque_anterior, e.estoque_atual, e.registrado_em, u.nome AS usuario_nome FROM estoque_movimentos e INNER JOIN usuarios u ON u.id = e.usuario_id WHERE e.fabrica_id = ? AND e.operacao = ? AND e.usuario_id = ? AND e.registrado_em >= ? AND e.registrado_em < ? ORDER BY e.registrado_em ASC, e.id ASC');
   $stmt->bind_param('isiss', $fabrica['id'], $operacao, $usuarioId, $inicioDiaUtc, $fimDiaUtc);
   if (!$stmt->execute()) send(['status' => 500, 'message' => 'Não foi possível carregar os lançamentos de hoje']);
   $res = $stmt->get_result();

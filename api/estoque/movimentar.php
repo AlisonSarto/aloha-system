@@ -12,6 +12,24 @@
   $categoria = estoqueCategoria($operacao);
   $marcaId = (int) ($_POST['marca_id'] ?? 0);
   $produtoId = trim($_POST['produto_id'] ?? '');
+  $fotoTemporaria = null;
+  $fotoExtensao = null;
+  if ($operacao === 'entrada_carrinho') {
+    $foto = $_FILES['foto_carrinho'] ?? null;
+    if (!$foto || ($foto['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+      send(['status' => 400, 'message' => 'Tire uma foto do carrinho antes de registrar a entrada']);
+    }
+    if (($foto['size'] ?? 0) < 1 || $foto['size'] > 8 * 1024 * 1024 || !is_uploaded_file($foto['tmp_name'])) {
+      send(['status' => 400, 'message' => 'A foto deve ter até 8 MB']);
+    }
+    $imagem = @getimagesize($foto['tmp_name']);
+    $extensoesImagem = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
+    if (!$imagem || !isset($extensoesImagem[$imagem[2]])) {
+      send(['status' => 400, 'message' => 'Envie uma foto válida em JPEG, PNG ou WebP']);
+    }
+    $fotoTemporaria = $foto['tmp_name'];
+    $fotoExtensao = $extensoesImagem[$imagem[2]];
+  }
   $quantidadeTexto = str_replace(',', '.', trim($_POST['quantidade'] ?? ''));
   if (!$categoria || $marcaId < 1 || $produtoId === '' || !is_numeric($quantidadeTexto) || (float) $quantidadeTexto <= 0) {
     send(['status' => 400, 'message' => 'Selecione a marca, o produto e informe uma quantidade maior que zero']);
@@ -80,9 +98,24 @@
     send(['status' => $status, 'message' => $gravacao['message'] ?? 'Não foi possível atualizar o estoque no Gestão Click']);
   }
 
-  $stmt = $conn->prepare('INSERT INTO estoque_movimentos (fabrica_id, marca_id, operacao, produto_id, produto_nome, quantidade, estoque_anterior, estoque_atual, usuario_id, registrado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())');
+  $fotoCaminho = null;
+  if ($fotoTemporaria !== null) {
+    $diretorioFotos = $_SERVER['DOCUMENT_ROOT'] . '/uploads/estoque/carrinhos';
+    if (!is_dir($diretorioFotos) && !mkdir($diretorioFotos, 0750, true) && !is_dir($diretorioFotos)) {
+      $conn->rollback();
+      send(['status' => 500, 'message' => 'Não foi possível salvar a foto do carrinho']);
+    }
+    $nomeFoto = bin2hex(random_bytes(16)) . '.' . $fotoExtensao;
+    if (!move_uploaded_file($fotoTemporaria, $diretorioFotos . '/' . $nomeFoto)) {
+      $conn->rollback();
+      send(['status' => 500, 'message' => 'Não foi possível salvar a foto do carrinho']);
+    }
+    $fotoCaminho = '/uploads/estoque/carrinhos/' . $nomeFoto;
+  }
+
+  $stmt = $conn->prepare('INSERT INTO estoque_movimentos (fabrica_id, marca_id, operacao, produto_id, produto_nome, quantidade, foto_carrinho, estoque_anterior, estoque_atual, usuario_id, registrado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())');
   $produtoNome = $produto['nome'] ?? '';
-  $stmt->bind_param('iisssdddi', $fabricaId, $marcaId, $operacao, $produtoId, $produtoNome, $quantidade, $estoqueAnterior, $estoqueAtual, $usuarioId);
+  $stmt->bind_param('iisssdsddi', $fabricaId, $marcaId, $operacao, $produtoId, $produtoNome, $quantidade, $fotoCaminho, $estoqueAnterior, $estoqueAtual, $usuarioId);
   if (!$stmt->execute()) {
     $conn->rollback();
     send(['status' => 500, 'message' => 'O saldo foi enviado ao Gestão Click, mas não foi possível salvar o histórico local']);

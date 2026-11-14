@@ -55,6 +55,19 @@
             <h3 class="h4 mb-3" id="etapa-quantidade-titulo">Quantos pacotes há neste carrinho?</h3>
             <div class="row g-3 align-items-end">
               <div class="col-12 col-md-6"><label class="form-label" for="quantidade-estoque">Pacotes neste carrinho</label><input class="form-control form-control-lg" id="quantidade-estoque" type="number" min="1" step="1" inputmode="numeric" required></div>
+              <div class="col-12">
+                <div class="form-label">Foto do carrinho <span class="text-danger">*</span></div>
+                <div class="d-flex flex-wrap gap-2">
+                  <button class="btn btn-outline-primary" id="abrir-camera-carrinho" type="button"><i class="fas fa-camera me-1" aria-hidden="true"></i>Abrir câmera</button>
+                  <button class="btn btn-primary d-none" id="capturar-foto-carrinho" type="button"><i class="fas fa-camera me-1" aria-hidden="true"></i>Tirar foto</button>
+                  <button class="btn btn-outline-secondary d-none" id="refazer-foto-carrinho" type="button">Tirar outra</button>
+                </div>
+                <div class="form-text">A foto deve ser tirada agora pela câmera. Não é possível enviar uma imagem da galeria.</div>
+                <video id="camera-carrinho" class="img-fluid rounded mt-2 d-none" autoplay playsinline aria-label="Prévia da câmera"></video>
+                <canvas id="captura-carrinho" class="d-none"></canvas>
+                <img id="previa-foto-carrinho" class="img-fluid rounded mt-2 d-none" alt="Foto capturada do carrinho" style="max-height: 240px">
+                <div id="erro-camera-carrinho" class="small text-danger mt-2" role="alert"></div>
+              </div>
               <div class="col-12 col-md-6 d-grid d-md-flex justify-content-md-end"><button class="btn btn-success btn-lg px-4" id="salvar-movimento-estoque" type="submit"><i class="fas fa-check me-1" aria-hidden="true"></i>Registrar entrada</button></div>
             </div>
           </section>
@@ -75,8 +88,8 @@
       <div class="table-responsive">
         <table class="table table-striped align-middle mb-0">
           <caption class="visually-hidden">Entradas de carrinho lançadas por você hoje</caption>
-          <thead><tr><th scope="col">Produto</th><th scope="col">Pacotes nesta entrada</th><th scope="col">Total do produto hoje</th><th scope="col">Lançado por</th><th scope="col">Horário</th></tr></thead>
-          <tbody id="historico-estoque"><tr><td colspan="5" class="text-center text-body-secondary py-4">Carregando...</td></tr></tbody>
+          <thead><tr><th scope="col">Produto</th><th scope="col">Pacotes nesta entrada</th><th scope="col">Foto</th><th scope="col">Total do produto hoje</th><th scope="col">Lançado por</th><th scope="col">Horário</th></tr></thead>
+          <tbody id="historico-estoque"><tr><td colspan="6" class="text-center text-body-secondary py-4">Carregando...</td></tr></tbody>
         </table>
       </div>
     </section>
