@@ -1,7 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
-  access('estoque', 'visualizar');
+  access('estoque_operacao', 'visualizar');
 
 ?>
 <!DOCTYPE html>
@@ -97,6 +97,6 @@
   <script src="/libs/bootstrap/bootstrap.js"></script>
   <script src="/libs/jquery/jquery.js"></script>
   <script src="/libs/font-aweresome/font-aweresome.js"></script>
-  <script src="./assets/js/movimento.js?v=20261114"></script>
+  <script src="./assets/js/movimento.js?v=20261114-2"></script>
 </body>
 </html>

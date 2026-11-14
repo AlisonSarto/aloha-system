@@ -5,6 +5,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends libcurl4-openss
     && rm -rf /var/lib/apt/lists/* \
     && a2enmod rewrite
 
+RUN printf '<Directory /var/www/html/uploads>\n    Require all denied\n</Directory>\n' \
+    > /etc/apache2/conf-available/deny-uploads.conf \
+    && a2enconf deny-uploads
+
 WORKDIR /var/www/html
 
 COPY . /var/www/html

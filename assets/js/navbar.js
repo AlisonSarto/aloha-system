@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
   var script = document.createElement('script');
-  script.src = '/assets/js/navigation.js?v=20261114';
+  script.src = '/assets/js/navigation.js?v=20261114-3';
   document.head.appendChild(script);
 
   $('body').addClass('sb-nav-fixed');
@@ -52,8 +52,9 @@ $(document).ready(function () {
   `;
 
   $.ajax({
-    url: '/api/navbar/',
+    url: '/api/navbar/?v=20261114-2',
     type: 'GET',
+    cache: false,
     async: false,
     success: function (data) {
       navbarList = data.navbar;

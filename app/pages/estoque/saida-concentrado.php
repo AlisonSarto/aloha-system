@@ -1,7 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
-  access('estoque', 'visualizar');
+  access('estoque_operacao', 'visualizar');
 
 ?>
 <!DOCTYPE html>

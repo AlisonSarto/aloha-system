@@ -1,7 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
-  accessApi('estoque', 'visualizar');
+  accessApi('estoque_operacao', 'visualizar');
   include_once $_SERVER['DOCUMENT_ROOT'].'/server/funcs/estoque.php';
 
   if ($_SERVER['REQUEST_METHOD'] !== 'GET') send(['status' => 405, 'message' => 'Método não aceitado']);
@@ -25,6 +25,8 @@
   while ($movimento = $res->fetch_assoc()) {
     $registradoEm = DateTimeImmutable::createFromFormat('!Y-m-d H:i:s', $movimento['registrado_em'], $fusoUtc);
     if ($registradoEm) $movimento['registrado_em'] = $registradoEm->setTimezone($fusoLocal)->format('d/m/y H:i:s');
+    $movimento['foto_url'] = $movimento['foto_carrinho'] ? '/api/estoque/foto?id=' . (int) $movimento['id'] : null;
+    unset($movimento['foto_carrinho']);
     $produtoId = (string) $movimento['produto_id'];
     $quantidade = (float) $movimento['quantidade'];
     $acumulados[$produtoId] = ($acumulados[$produtoId] ?? 0) + $quantidade;

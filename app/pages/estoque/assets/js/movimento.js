@@ -314,8 +314,8 @@ function carregarHistoricoEstoque() {
       $.each(movimentos, function(i, item) {
         var total = item.total_produto_hoje;
         var quantidade = operacaoEstoque === 'entrada_carrinho' ? Number(item.quantidade).toLocaleString('pt-BR') : formatarQuantidadeEstoque(item.quantidade);
-        var foto = operacaoEstoque === 'entrada_carrinho' && item.foto_carrinho
-          ? `<a href="${escaparEstoque(item.foto_carrinho)}" target="_blank" rel="noopener">Ver foto</a>`
+        var foto = operacaoEstoque === 'entrada_carrinho' && item.foto_url
+          ? `<a href="${escaparEstoque(item.foto_url)}" target="_blank" rel="noopener">Ver foto</a>`
           : (operacaoEstoque === 'entrada_carrinho' ? '—' : '');
         html += operacaoEstoque === 'entrada_carrinho'
           ? `<tr><th scope="row">${escaparEstoque(item.produto_nome)}</th><td>${quantidade}</td><td>${foto}</td><td>${formatarQuantidadeEstoque(total)}</td><td>${escaparEstoque(item.usuario_nome)}</td><td>${escaparEstoque(item.registrado_em)}</td></tr>`

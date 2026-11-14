@@ -42,12 +42,18 @@
       ]);
     }
 
-    if ($admin === true || hasAccess($conn, (int) $_SESSION['cargo']['id'], 'estoque', 'visualizar')) {
+    if ($admin === false && hasAccess($conn, (int) $_SESSION['cargo']['id'], 'estoque', 'visualizar')) {
       $navbar[] = [ 'type' => 'collapse', 'title' => 'Operações', 'icon' => 'boxes-stacked', 'pages' => [
         [ 'type' => 'link', 'title' => 'Início', 'icon' => 'house', 'path' => 'estoque' ],
         [ 'type' => 'link', 'title' => 'Entrada de carrinhos', 'icon' => 'cart-plus', 'path' => 'estoque/entrada-carrinho' ],
         [ 'type' => 'link', 'title' => 'Saída de concentrado', 'icon' => 'flask', 'path' => 'estoque/saida-concentrado' ],
         [ 'type' => 'link', 'title' => 'Saída de bobina', 'icon' => 'scroll', 'path' => 'estoque/saida-bobina' ]
+      ]];
+    }
+
+    if ($admin === true) {
+      $navbar[] = [ 'type' => 'collapse', 'title' => 'Relatórios', 'icon' => 'chart-line', 'pages' => [
+        [ 'type' => 'link', 'title' => 'Produção por usuário', 'icon' => 'clipboard-check', 'path' => 'estoque/relatorio' ]
       ]];
     }
 

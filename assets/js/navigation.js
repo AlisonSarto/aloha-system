@@ -96,6 +96,8 @@ function iframe(url) {
   var urlIframe = url;
   if (paginasComIndice.indexOf(pagina) !== -1 && urlIframe.slice(-1) !== '/') urlIframe += '/';
 
+  urlIframe += (urlIframe.indexOf('?') === -1 ? '?' : '&') + 'v=20261114-3';
+
   $('iframe').attr('src', urlIframe);
 
   url = url.replace('pages/', '');

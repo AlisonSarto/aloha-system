@@ -1,7 +1,7 @@
 <?php
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
-  accessApi('estoque', 'visualizar');
+  accessApi('estoque_operacao', 'visualizar');
   include_once $_SERVER['DOCUMENT_ROOT'].'/server/funcs/estoque.php';
 
   if ($_SERVER['REQUEST_METHOD'] !== 'GET') send(['status' => 405, 'message' => 'Método não aceitado']);

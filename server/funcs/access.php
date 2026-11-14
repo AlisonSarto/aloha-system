@@ -55,6 +55,9 @@
 
     $cargo = $_SESSION['cargo'];
 
+    if ($page === 'estoque_operacao' && ($cargo['nome'] ?? '') === 'Admin') err401();
+    if ($page === 'estoque_relatorio' && ($cargo['nome'] ?? '') !== 'Admin') err401();
+
     if ($page === 'fabricas' && $cargo['nome'] !== 'Admin') {
       err401();
     }
@@ -64,12 +67,15 @@
       if ($page === 'fabricas') return;
     }
 
-    if ($page !== 'fabricas' && $page !== 'contexto') {
+    if ($page !== 'fabricas' && $page !== 'contexto'
+      && !($page === 'estoque_relatorio' && ($cargo['nome'] ?? '') === 'Admin')
+      && !($page === 'estoque_foto' && ($cargo['nome'] ?? '') === 'Admin')) {
       $res = $conn->query("SELECT 1 FROM fabrica_usuarios WHERE usuario_id = " . (int) $_SESSION['id'] . " LIMIT 1");
       if (!$res || $res->num_rows === 0) send(['status' => 403, 'message' => 'Seu usuário não está associado a uma fábrica']);
     }
 
-    if ($cargo['nome'] !== 'Admin' && !hasAccess($conn, $_SESSION['cargo']['id'], $page, $func)) {
+    $permissaoPage = in_array($page, ['estoque_operacao', 'estoque_foto'], true) ? 'estoque' : $page;
+    if ($cargo['nome'] !== 'Admin' && !hasAccess($conn, $_SESSION['cargo']['id'], $permissaoPage, $func)) {
       err401();
     }
 
@@ -94,6 +100,15 @@
 
     $cargo = $_SESSION['cargo'];
 
+    if ($page === 'estoque_operacao' && ($cargo['nome'] ?? '') === 'Admin') {
+      header('Location: /err/401');
+      exit;
+    }
+    if ($page === 'estoque_relatorio' && ($cargo['nome'] ?? '') !== 'Admin') {
+      header('Location: /err/401');
+      exit;
+    }
+
     if ($page === 'fabricas' && $cargo['nome'] !== 'Admin') {
       header('Location: /err/401');
       exit;
@@ -104,7 +119,7 @@
       if ($page === 'fabricas') return;
     }
 
-    if ($page !== 'fabricas' && $page !== 'contexto') {
+    if ($page !== 'fabricas' && $page !== 'contexto' && !($page === 'estoque_relatorio' && ($cargo['nome'] ?? '') === 'Admin')) {
       $res = $conn->query("SELECT 1 FROM fabrica_usuarios WHERE usuario_id = " . (int) $_SESSION['id'] . " LIMIT 1");
       if (!$res || $res->num_rows === 0) {
         header('Location: /err/401');
@@ -112,7 +127,8 @@
       }
     }
 
-    if ($cargo['nome'] !== 'Admin' && !hasAccess($conn, $_SESSION['cargo']['id'], $page, $func)) {
+    $permissaoPage = in_array($page, ['estoque_operacao', 'estoque_foto'], true) ? 'estoque' : $page;
+    if ($cargo['nome'] !== 'Admin' && !hasAccess($conn, $_SESSION['cargo']['id'], $permissaoPage, $func)) {
       header('Location: /err/401');
       exit;
     }
