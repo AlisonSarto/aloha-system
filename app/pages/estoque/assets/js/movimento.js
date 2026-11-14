@@ -49,6 +49,10 @@ function pararCameraCarrinho() {
 function iniciarCameraCarrinho() {
   var video = $('#camera-carrinho').get(0);
   $('#erro-camera-carrinho').text('');
+  if (!window.isSecureContext) {
+    $('#erro-camera-carrinho').text('A câmera só funciona em uma página segura (HTTPS ou localhost).');
+    return;
+  }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     $('#erro-camera-carrinho').text('Este navegador não permite acessar a câmera. Abra a página em um navegador compatível e com conexão segura.');
     return;
@@ -59,8 +63,17 @@ function iniciarCameraCarrinho() {
     video.srcObject = stream;
     $('#camera-carrinho').removeClass('d-none');
     $('#capturar-foto-carrinho').removeClass('d-none');
-  }).catch(function() {
-    $('#erro-camera-carrinho').text('Não foi possível abrir a câmera. Permita o acesso à câmera para tirar a foto do carrinho.');
+    video.play().catch(function() {
+      $('#erro-camera-carrinho').text('A câmera foi autorizada, mas a prévia não iniciou. Toque em “Abrir câmera” novamente.');
+    });
+  }).catch(function(erro) {
+    var mensagens = {
+      NotAllowedError: 'Acesso à câmera negado. Autorize a câmera nas permissões do navegador e tente novamente.',
+      NotFoundError: 'Nenhuma câmera foi encontrada neste dispositivo.',
+      NotReadableError: 'A câmera está sendo usada por outro aplicativo. Feche-o e tente novamente.',
+      OverconstrainedError: 'Não foi possível usar a câmera traseira. Verifique a câmera do dispositivo e tente novamente.'
+    };
+    $('#erro-camera-carrinho').text(mensagens[erro && erro.name] || 'Não foi possível abrir a câmera. Verifique a permissão de câmera do navegador e tente novamente.');
   });
 }
 
