@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
   var script = document.createElement('script');
-  script.src = '/assets/js/navigation.js?v=20261112';
+  script.src = '/assets/js/navigation.js?v=20261114';
   document.head.appendChild(script);
 
   $('body').addClass('sb-nav-fixed');

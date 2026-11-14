@@ -97,6 +97,6 @@
   <script src="/libs/bootstrap/bootstrap.js"></script>
   <script src="/libs/jquery/jquery.js"></script>
   <script src="/libs/font-aweresome/font-aweresome.js"></script>
-  <script src="./assets/js/movimento.js"></script>
+  <script src="./assets/js/movimento.js?v=20261114"></script>
 </body>
 </html>
