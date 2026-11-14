@@ -168,7 +168,21 @@ compose_in "$project" up -d app
 
 app_port="$(sed -n 's/^APP_EXTERNAL_PORT=//p' "$project/.env" | tail -1 | tr -d "\"'")"
 app_port="${app_port:-8000}"
-curl --fail --silent --show-error --max-time 15 "http://127.0.0.1:$app_port/" -o /dev/null
+http_ready=0
+for attempt in $(seq 1 30); do
+    if curl --fail --silent --max-time 3 "http://127.0.0.1:$app_port/" -o /dev/null; then
+        http_ready=1
+        break
+    fi
+    sleep 2
+done
+if [ "$http_ready" -ne 1 ]; then
+    echo "Application did not return a successful HTTP response. Backup: $backup" >&2
+    echo "Previous code: $rollback" >&2
+    compose_in "$project" ps >&2 || true
+    compose_in "$project" logs --tail=100 app >&2 || true
+    exit 1
+fi
 
 echo "Deployment succeeded: $DEPLOY_SHA"
 echo "Verified backup: $backup"
