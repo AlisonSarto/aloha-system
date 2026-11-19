@@ -81,7 +81,7 @@ docker run -d --rm --name "$restore_test" \
     -e MYSQL_DATABASE="$db_name" mysql:8.0 >/dev/null
 docker exec "$restore_test" sh -c 'umask 077; printf "[client]\nuser=root\npassword=%s\n" "$MYSQL_ROOT_PASSWORD" > /tmp/restore-test.cnf'
 ready=0
-for attempt in $(seq 1 90); do
+for attempt in $(seq 1 180); do
     if docker exec "$restore_test" sh -c 'mysql --defaults-extra-file=/tmp/restore-test.cnf --batch --skip-column-names "$MYSQL_DATABASE" -e "SELECT 1"' >/dev/null 2>&1; then
         ready=1
         break
@@ -90,6 +90,8 @@ for attempt in $(seq 1 90); do
 done
 if [ "$ready" -ne 1 ]; then
     echo "Temporary MySQL authentication did not become ready." >&2
+    docker inspect "$restore_test" --format 'Temporary MySQL state: {{.State.Status}} (exit {{.State.ExitCode}})' >&2 || true
+    docker logs "$restore_test" >&2 || true
     exit 1
 fi
 gzip -dc "$backup/database.sql.gz" | docker exec -i "$restore_test" sh -c 'exec mysql --defaults-extra-file=/tmp/restore-test.cnf "$MYSQL_DATABASE"'
