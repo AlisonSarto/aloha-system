@@ -53,6 +53,7 @@ try {
       PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
     ]
   );
+  $pdo->exec("SET time_zone = '-03:00'");
 } catch (PDOException $e) {
   fwrite(STDERR, "Erro ao conectar no banco: {$e->getMessage()}\n");
   exit(1);

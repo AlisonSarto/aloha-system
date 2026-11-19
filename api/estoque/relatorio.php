@@ -6,8 +6,7 @@
 
   if ($_SERVER['REQUEST_METHOD'] !== 'GET') send(['status' => 405, 'message' => 'Método não aceitado']);
 
-  $timezone = new DateTimeZone('America/Sao_Paulo');
-  $utc = new DateTimeZone('UTC');
+  $timezone = new DateTimeZone('Etc/GMT+3');
   $hoje = new DateTimeImmutable('today', $timezone);
   $deTexto = trim($_GET['de'] ?? $hoje->modify('-29 days')->format('Y-m-d'));
   $ateTexto = trim($_GET['ate'] ?? $hoje->format('Y-m-d'));
@@ -22,13 +21,13 @@
     send(['status' => 400, 'message' => 'O período deve ter no máximo 366 dias e a data inicial não pode ser posterior à final']);
   }
 
-  $inicioUtc = $de->setTimezone($utc)->format('Y-m-d H:i:s');
-  $fimUtc = $ate->modify('+1 day')->setTimezone($utc)->format('Y-m-d H:i:s');
+  $inicioLocal = $de->format('Y-m-d H:i:s');
+  $fimLocal = $ate->modify('+1 day')->format('Y-m-d H:i:s');
   $fabrica = estoqueFabricaAtual($conn);
   $stmt = $conn->prepare('SELECT e.id, e.usuario_id, e.operacao, e.produto_id, e.produto_nome, e.quantidade, e.foto_carrinho, e.registrado_em, u.nome AS usuario_nome FROM estoque_movimentos e INNER JOIN usuarios u ON u.id = e.usuario_id WHERE e.fabrica_id = ? AND e.registrado_em >= ? AND e.registrado_em < ? ORDER BY e.registrado_em DESC, e.id DESC');
   if (!$stmt) send(['status' => 500, 'message' => 'Não foi possível preparar o relatório de produção']);
   $fabricaId = (int) $fabrica['id'];
-  $stmt->bind_param('iss', $fabricaId, $inicioUtc, $fimUtc);
+  $stmt->bind_param('iss', $fabricaId, $inicioLocal, $fimLocal);
   if (!$stmt->execute()) send(['status' => 500, 'message' => 'Não foi possível carregar o resumo de produção']);
 
   $dias = [];
@@ -47,9 +46,8 @@
   $totais = ['produzido_pacotes' => 0, 'concentrado_usado_g' => 0, 'bobina_usada_g' => 0];
   $res = $stmt->get_result();
   while ($item = $res->fetch_assoc()) {
-    $registradoUtc = DateTimeImmutable::createFromFormat('!Y-m-d H:i:s', $item['registrado_em'], $utc);
-    if (!$registradoUtc) continue;
-    $registradoLocal = $registradoUtc->setTimezone($timezone);
+    $registradoLocal = DateTimeImmutable::createFromFormat('!Y-m-d H:i:s', $item['registrado_em'], $timezone);
+    if (!$registradoLocal) continue;
     $chaveDia = $registradoLocal->format('Y-m-d');
     $quantidade = (float) $item['quantidade'];
     if (!isset($dias[$chaveDia])) continue;

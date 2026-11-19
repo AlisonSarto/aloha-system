@@ -113,7 +113,7 @@
     $fotoCaminho = '/uploads/estoque/carrinhos/' . $nomeFoto;
   }
 
-  $stmt = $conn->prepare('INSERT INTO estoque_movimentos (fabrica_id, marca_id, operacao, produto_id, produto_nome, quantidade, foto_carrinho, estoque_anterior, estoque_atual, usuario_id, registrado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())');
+  $stmt = $conn->prepare('INSERT INTO estoque_movimentos (fabrica_id, marca_id, operacao, produto_id, produto_nome, quantidade, foto_carrinho, estoque_anterior, estoque_atual, usuario_id, registrado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
   $produtoNome = $produto['nome'] ?? '';
   $stmt->bind_param('iisssdsddi', $fabricaId, $marcaId, $operacao, $produtoId, $produtoNome, $quantidade, $fotoCaminho, $estoqueAnterior, $estoqueAtual, $usuarioId);
   if (!$stmt->execute()) {

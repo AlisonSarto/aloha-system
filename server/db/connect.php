@@ -11,6 +11,9 @@
   $dbPort = (int) (env('DB_PORT') ?: 3306);
 
   $conn = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName, $dbPort);
+  if (!$conn->connect_error) {
+    $conn->query("SET time_zone = '-03:00'");
+  }
 
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/send.php';
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/curl.php';

@@ -1,7 +1,7 @@
 <?php
   include $_SERVER['DOCUMENT_ROOT'].'/server/funcs/access.php';
   access('estoque_relatorio', 'visualizar');
-  $hoje = new DateTimeImmutable('today', new DateTimeZone('America/Sao_Paulo'));
+  $hoje = new DateTimeImmutable('today', new DateTimeZone('Etc/GMT+3'));
   $dataRelatorio = $hoje->format('Y-m-d');
 ?>
 <!DOCTYPE html>
